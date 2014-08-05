@@ -1,0 +1,116 @@
+.results {
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+	.results ul {
+		height: 80px;
+		width: 100%:
+	}
+		.results ul li {
+			display: block;
+			float: left;
+			width: 33%;
+			height: 100%;
+			line-height: 80px;
+			text-align: center;
+			border-right: 1px solid #d7d7d7;
+		}
+			.results ul li:last-child { border: none; }
+	
+	.results .slider {
+		background: #383838;
+		width: 100%;
+		height: 40px;
+		display: -webkit-flex;
+		-webkit-box-align: center;
+		-webkit-box-pack: center;
+		justify-content: center;
+		align-items: center;
+	}	
+	
+		.results .slider .range-end {
+			color: #fff;
+			width: 10%;
+			text-align: center;
+		}
+	
+		.results .slider .selector {
+			width: 80%;
+			overflow: visible;
+		}
+		.results .slider output {
+		  position: absolute;	 
+		  width: 30px; 
+		  height: 30px; 
+		  text-align: center; 
+		  color: black; 
+		  display: inline-block; 
+		  font-size: 15px;
+		  font-weight: 600;
+		  bottom: -12px;
+		  left: 0;
+		  margin-left: -1%;
+		}
+			form { position: relative; margin: 50px; }
+		
+		.results .slider input[type='range'] {
+			-webkit-appearance: none;
+			border-radius: 5px;
+			background-color: #606060;
+			height: 10px;
+			width: 100%;
+			vertical-align: middle;
+		}
+		
+		.results .slider input[type='range']::-webkit-slider-thumb {
+			-webkit-appearance: none !important;
+			border-radius: 30px;
+			background-color: #fff;
+			height: 30px;
+			width: 30px;
+		}
+	
+	.results .list {}
+		.results .list .beer-sum { 
+			clear: left;
+			border-bottom: 1px solid #d7d7d7;
+			padding: 15px;
+			box-sizing: border-box;
+			display: -webkit-flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+			.results .list .beer-sum .h2 {}
+			.results .list .beer-sum .description {}
+			.results .list .beer-sum .levels {
+		
+			} 
+				.results .list .beer-sum .levels .level {
+					width: 20px;
+					height: 20px;
+					line-height: 21px;
+					font-size: 12px;
+					text-align: center;
+					border-radius: 100%;
+					float: left;
+					margin: 0 2px;
+					color: #fff;
+					font-weight: normal;
+				}
+					.results .list .beer-sum .levels .hoppy-level { background: #373737; }
+					.results .list .beer-sum .levels .boozy-level { background: #606060; }
+					.results .list .beer-sum .levels .complex-level { background: #b0b0b0; } 	
+		
+		.results .list .num-results {
+			text-align: center;
+			color: #b0b0b0;
+			font-size: 12px;
+			margin-top: 10px;
+		}
+				
+				
+				
+				
+				
+				

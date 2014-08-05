@@ -1,0 +1,64 @@
+<div pos-view="hoppiness:" class="hoppy question">
+	
+	<div class="content">
+			<h3>How Hoppy?</h3>
+			<p>How bitter do you like your brew? 
+			Easy on the hops? 
+			Bitter beer face level? 
+			Remember that commercial?</p>
+	
+		<div class="selector">
+			<div id="hoppy-subtract" class="subtract control">-</div>
+			<div id="hoppy-level" class="level">5</div>
+			<div id="hoppy-add" class="add control">+</div>
+		</div>
+		
+		<div class="button"
+			pos-action-1="toggleview:hoppiness"
+			pos-action-2="toggleview:alcohol">Next
+		</div>
+
+	</div>
+</div>
+
+<div pos-view="alcohol:" class="boozy question pos-invisible">
+	<div class="content">
+		<h3>How boozy?</h3>
+		<p>Work in the morning? Perhaps more of a light buzz is in order. No work? Let’s have some fun!</p>
+		
+		<div class="selector">
+			<div id="boozy-subtract" class="subtract control">-</div>
+			<div id="boozy-level" class="level">5</div>
+			<div id="boozy-add" class="add control">+</div>
+		</div>
+		
+		<div class="button"
+			pos-action-1="toggleview:alcohol"
+			pos-action-2="toggleview:complexity">Next
+		</div>
+	</div>
+</div>
+
+<div pos-view="complexity:" class="complex question pos-invisible">
+	<div class="content">
+		<h3>How complex?</h3>
+		<p>Keep it simple? Or like to read between the lines? The higher the number, the more complex the brew!</p>
+		
+		<div class="selector">
+			<div id="complex-subtract" class="subtract control">-</div>
+			<div id="complex-level" class="level">5</div>
+			<div id="complex-add" class="add control">+</div>
+		</div>
+		
+		<div class="button"
+		pos-action-1="toggleview: results"
+		pos-action-2="toggleview: complexity">Done</div>
+	</div>
+</div>
+
+
+
+<div pos-view="results" class="results pos-invisible"></div>
+<div pos-view="single" class="single pos-invisible"></div>
+
+

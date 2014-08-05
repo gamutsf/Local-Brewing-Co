@@ -1,0 +1,57 @@
+.pos-invisible
+{
+	display: none !important;
+}
+
+.pos-transition-visible
+{
+	animation-duration: 400ms;
+	animation-name: pos-fade-in;
+}
+
+.pos-transition-visible-quick
+{
+	animation-duration: 10ms;
+	animation-name: pos-fade-in;
+}
+
+.pos-visible
+{
+	opacity: 1;
+}
+
+.pos-transition-invisible
+{
+	animation-duration: 400ms;
+	animation-name: pos-fade-out;
+}
+
+.pos-visible
+{
+	opacity: 1;
+}
+
+@keyframes pos-fade-in
+{
+	0%
+	{
+		opacity: 0;
+	}
+	100%
+	{
+		opacity: 1;
+	}
+}
+
+@keyframes pos-fade-out
+{
+	0%
+	{
+		opacity: 1;
+	}
+	100%
+	{
+		opacity: 0;
+	}
+}
+

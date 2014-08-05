@@ -1,0 +1,65 @@
+.single {
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+	.single header {
+		padding: 15px;
+		font-weight: 600;
+	}
+		.single header div { width: 50%; float: left; }
+			.single header div:last-child { text-align: right; }
+	.single .circle {
+		width: 205px;
+		height: 205px;
+		text-align: center;
+		border-radius: 100%;
+		background: #383738;
+		color: #fff;
+		margin: 30px auto;
+		padding-top: 20px;
+		box-sizing: border-box;
+	}
+		.single .circle h1 {
+			font-size: 60px;
+			letter-spacing: 1.4px;
+			line-height: 1;
+			margin-bottom: 5px;
+		}
+		.single .circle h3 {
+			font-size: 18px;
+		}
+			
+	.single .data { 
+		width: 60%; 
+		margin: 0 auto;
+	}
+		.single .data div { 
+			width: 50%; 
+			float: left; 
+			font-size: 36px; 
+			font-weight: 600;
+			margin-bottom: 15px;
+		}
+			.single .data .ibu { text-align: left; }
+			.single .data .abv { text-align: right; }
+			.single .data span { 
+				font-size: 18px; 
+				text-transform: uppercase;
+				display: inline-table;
+				vertical-align: middle;
+			}
+			
+	.single .long-desc {
+		width: 60%;
+		margin: 0 auto;
+		font-size: 16px;
+		font-weight: normal;
+		line-height: 1.4;
+		clear: left;
+	}
+	
+	
+@media (max-width: 480px) {
+	.single .data, .single .long-desc { width: 80%; }
+}

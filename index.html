@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Local</title>
+
+<!-- styles -->
+
+<link href="positron/positron.css" type="text/css" rel="stylesheet"></link>
+<link href="base.css" type="text/css" rel="stylesheet"></link>
+
+
+<!-- scripts -->
+
+<script src="positron/prefixfree.min.js" type="text/javascript"></script>
+<script src="positron/prefixfree.dynamic-dom.min.js" type="text/javascript"></script>
+<script src="positron/positron.js" type="text/javascript"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+	
+	<section pos-view="beerfinder" class="pos-visible beer-finder"></section>
+	<section pos-view="taplist" class="pos-invisible tap-list"></section>
+
+	<footer>
+		<ul>
+			<li 
+				pos-action-1="hideview: beerfinder"
+				pos-action-2="showview: taplist">Tap List</li>
+			<li
+				pos-action-1="hideview: taplist"
+				pos-action-2="showview: beerfinder">Beer Finder</li>
+		</ul>
+	</footer>
+	<img src="img/logo.png" class="logo" alt="logo" width="62" />
+</body>
+
+</html>
