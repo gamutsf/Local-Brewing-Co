@@ -1,11 +1,8 @@
-<div pos-view="hoppiness:" class="hoppy question">
+<div pos-view="hoppiness:" class="hoppy question pos-visible">
 	
 	<div class="content">
 			<h3>How Hoppy?</h3>
-			<p>How bitter do you like your brew? 
-			Easy on the hops? 
-			Bitter beer face level? 
-			Remember that commercial?</p>
+			<p>How bitter do you like your brew? Easy on the hops? Bitter beer face level? Remember that commercial?</p>
 	
 		<div class="selector">
 			<div id="hoppy-subtract" class="subtract control">-</div>
@@ -14,8 +11,8 @@
 		</div>
 		
 		<div class="button"
-			pos-action-1="toggleview:hoppiness"
-			pos-action-2="toggleview:alcohol">Next
+			pos-action-1="hideview: hoppiness/pos-transition-visible-quick"
+			pos-action-2="showview: alcohol/pos-transition-visible-quick">Next
 		</div>
 
 	</div>
@@ -33,8 +30,8 @@
 		</div>
 		
 		<div class="button"
-			pos-action-1="toggleview:alcohol"
-			pos-action-2="toggleview:complexity">Next
+			pos-action-1="hideview: alcohol/pos-transition-visible-quick"
+			pos-action-2="showview: complexity/pos-transition-visible-quick">Next
 		</div>
 	</div>
 </div>
@@ -51,8 +48,8 @@
 		</div>
 		
 		<div class="button"
-		pos-action-1="toggleview: results"
-		pos-action-2="toggleview: complexity">Done</div>
+		pos-action-1="showview: results/pos-transition-visible-quick"
+		pos-action-2="hideview: complexity/pos-transition-visible-quick">Done</div>
 	</div>
 </div>
 

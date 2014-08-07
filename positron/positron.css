@@ -5,7 +5,7 @@
 
 .pos-transition-visible
 {
-	animation-duration: 400ms;
+	animation-duration: 1s;
 	animation-name: pos-fade-in;
 }
 
@@ -22,7 +22,7 @@
 
 .pos-transition-invisible
 {
-	animation-duration: 400ms;
+	animation-duration: 1s;
 	animation-name: pos-fade-out;
 }
 

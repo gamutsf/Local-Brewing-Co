@@ -17,6 +17,14 @@
 	"viewClassName" : "positron.View",
 	"windowClassName" : "positron.Window",
 	
+	"crossDomainStrategy" :
+	{
+		"safari" : "jsonp",
+		"chrome" : "jsonp",
+		"firefox" : "cors",
+		"default" : "jsonp"
+	},
+	
 	"attributeOrder" :
 	[
 		"pos-view",
@@ -35,15 +43,18 @@
 	{
 		"addclass" : "positron.action.AddClassAction",
 		"ajaxform" : "positron.action.AjaxFormAction",
+		"ajaxurl" : "positron.action.AjaxURLAction",
 		"alert" : "positron.action.AlertAction",
 		"call" : "positron.action.CallAction",
 		"dispatchform" : "positron.action.DispatchFormAction",
 		"gotourl" : "positron.action.GotoURLAction",
 		"hideview" : "positron.action.HideViewAction",
 		"indexedinsert" : "positron.action.IndexedInsertAction",
+		"log" : "positron.action.LogAction",
 		"refreshview" : "positron.action.RefreshViewAction",
 		"removeclass" : "positron.action.RemoveClassAction",
 		"runview" : "positron.action.RunViewAction",
+		"selectclass" : "positron.action.SelectClassAction",
 		"sendwebsocket" : "positron.action.SendWebSocketAction",
 		"setattribute" : "positron.action.SetAttributeAction",
 		"setlocalstorage" : "positron.action.SetLocalStorageAction",

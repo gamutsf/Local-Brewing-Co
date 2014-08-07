@@ -1,13 +1,37 @@
 <ul class="question-tabs">
-	<li>Hoppyness</li>
-	<li>Alcohol</li>
-	<li>Complexity</li>
+	<li 
+		pos-action-1="showview: slider/pos-transition-visible-quick"
+		pos-action-1-params="section: hoppy;"
+		pos-action-2="call: getProfile"
+		pos-action-2-params="section: hoppy;"
+		pos-action-3="removeclass: active/.question-tabs li"
+		pos-action-4="addclass: active/.tab.hoppyness"
+		class="hoppyness tab"
+	>Hoppyness</li>
+	<li
+		pos-action-1="showview: slider/pos-transition-visible-quick"
+		pos-action-1-params="section: boozy;"
+		pos-action-2="call: getProfile"
+		pos-action-2-params="section: boozy;"
+		pos-action-3="removeclass: active/.question-tabs li"
+		pos-action-4="addclass: active/.tab.alcohol"
+		class="alcohol tab"
+	>Alcohol</li>
+	<li
+		pos-action-1="showview: slider/pos-transition-visible-quick"
+		pos-action-1-params="section: complex;"
+		pos-action-2="call: getProfile"
+		pos-action-2-params="section: complex;"
+		pos-action-3="removeclass: active/.question-tabs li"
+		pos-action-4="addclass: active/.tab.complexity"
+		class="complexity tab"
+	>Complexity</li>
 </ul>
-<div class="slider">
+<div class="slider pos-invisible" pos-view="slider:">
 	<div class="range-end">Less</div>
 	<div class="selector">
 		<form>
-			<input type="range" name="level" id="input-level"  min="0" max="10" style="width: 100%">
+			<input type="range" name="level" id="input-level"  min="1" max="11" style="width: 100%">
 			<output for="input-level" onforminput="value = input-level.valueAsNumber;"></output>
 		</form>
 	</div>

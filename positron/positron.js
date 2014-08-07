@@ -1083,7 +1083,20 @@ positron.DOM.hasChildren = function (inElement)
 
 positron.DOM.hasClass = function (inElement, inClassName)
 {
-	return inElement.classList.contains (inClassName);
+	var	has = false;
+	
+	// i've seen this... don't know how
+	if (inElement.classList)
+	{
+		has = inElement.classList.contains (inClassName);
+	}
+	else
+	{
+		console.log ("null class list for ");
+		console.log (inElement);
+	}
+
+	return has;
 };
 
 positron.DOM.hasPrefixedClass = function (inElement, inClassName)
@@ -1536,14 +1549,25 @@ positron.Util = function ()
 }
 
 // pretends to be jquery $.ajax
-// CAUTION: inRequest.url && inRequest.data may be changed by this method
 positron.Util.ajax = function (inRequest)
 {
   var fullURL = inRequest.url;
   
-  if (inRequest.data && inRequest.data.length)
+  var	data = "";
+  
+  // if data is an object, then serialise it, to be nice
+  if (typeof (inRequest.data) == "object")
   {
-    fullURL += "?" + inRequest.data;
+  	data = positron.Util.objectToURIData (inRequest.data);
+  }
+  else
+  {
+  	data = inRequest.data;
+  }
+  
+  if (data && data.length)
+  {
+    fullURL += "?" + data;
   }
 
 	var	type = inRequest.type && inRequest.type.length ? inRequest.type : "GET";
@@ -1554,11 +1578,11 @@ positron.Util.ajax = function (inRequest)
 
 	var	async = inRequest.async ? true : false;
 
-	
 	inRequest.dataType = inRequest.dataType.toLowerCase ();
 	
-	if (inRequest.dataType == "jsonp"
-		|| (inRequest.dataType == "json" && positron.Util.isCrossDomainRequest (inRequest.url)))
+	var	jsonp = positron.Util.isJSONPRequest (inRequest);
+	
+	if (jsonp)
 	{
 		console.log ("using jsonp for url: " + inRequest.url);
 		
@@ -1636,9 +1660,9 @@ positron.Util.ajax = function (inRequest)
 		// also have to do this with GET urls
 		if (type == "GET" || type == "HEAD")
 		{
-			if (inRequest.data && inRequest.data.length)
+			if (data && data.length)
 			{
-				url += "?" + inRequest.data;
+				url += "?" + data;
 			}
 		}
 	
@@ -1662,13 +1686,13 @@ positron.Util.ajax = function (inRequest)
 		{
 			if (inRequest.type == "POST")
 			{
-				var	length = inRequest.data && inRequest.data.length ? inRequest.data.length : 0;
+				var	length = data && data.length ? data.length : 0;
 
 				request.setRequestHeader ("Content-type", "application/x-www-form-urlencoded");
 				request.setRequestHeader ("Content-length", length);
 				request.setRequestHeader ("Connection", "close");
 	
-				request.send (inRequest.data);
+				request.send (data);
 			}
 			else
 			{
@@ -2257,8 +2281,7 @@ positron.Util.isCrossDomainRequest = function (inURL)
 	there.href = inURL.toLowerCase ();
 	
 	// host includes the port, if any
-	return here.protocol != there.protocol
-		|| here.host != there.host;
+	return here.protocol != there.protocol || here.host != there.host;
 }
 
 positron.Util.isEmpty = function (inObject)
@@ -2274,6 +2297,37 @@ positron.Util.isEmpty = function (inObject)
 	return empty;
 }
 
+positron.Util.isJSONPRequest = function (inRequest)
+{
+	var	jsonp = true;
+	
+	if (positron.Util.isCrossDomainRequest (inRequest.url))
+	{
+		if (gApplication.config.crossDomainStrategy)
+		{
+			var	browserName = gApplication.browser.name;
+			
+			if (browserName && browserName.length)
+			{
+				var	strategy = gApplication.config.crossDomainStrategy [browserName];
+					console.log ("browser cross-domain strategy is " + strategy);
+				
+				if (strategy && strategy.length)
+				{
+					jsonp = strategy == "jsonp";
+				}
+			}
+		}
+	}
+	else
+	{
+		// safe request, leave alone
+		jsonp = false;
+	}
+
+	return jsonp;	
+}
+
 positron.Util.jsonpSequence = 0;
 
 positron.Util.jsonp = function (inRequest)
@@ -2284,9 +2338,21 @@ positron.Util.jsonp = function (inRequest)
 	var	url = inRequest.url;
 	url += "?";
 	
-	if (inRequest.data && inRequest.data.length)
+  var	data = "";
+  
+  // if data is an object, then serialise it, to be nice
+  if (typeof (inRequest.data) == "object")
+  {
+  	data = positron.Util.objectToURIData (inRequest.data);
+  }
+  else
+  {
+  	data = inRequest.data;
+  }
+
+	if (data && data.length)
 	{
-		url += inRequest.data;
+		url += data;
 	}
 	
 	url += "&callback=" + jsonpCallbackName;
@@ -2524,6 +2590,33 @@ positron.Util.merge = function (inObject, outObject)
 		}
 		
 	}
+}
+
+positron.Util.objectToURIData = function (inObject)
+{
+	var	data = "";
+	
+	for (var key in inObject)
+	{
+		if (typeof (key) == "string")
+		{
+			var	value = inObject [key];
+			
+			if (typeof (value) == "string" || typeof (value) == "number" || typeof (value) == "boolean")
+			{
+				if (data.length > 0)
+				{
+					data += "&";
+				}
+				
+				data += key;
+				data += "=";
+				data += encodeURIComponent ("" + value);
+			}
+		}
+	}
+	
+	return data;
 }
 
 positron.Util.parseFloat = function (inString, inDefault)
@@ -4301,6 +4394,11 @@ positron.action.ValidateFormAction.prototype.fire = function (inEvent)
 			
 			var	valid = true;
 			
+			if (tagName == "button")
+			{
+				// nothing to be validated for a button
+			}
+			else
 			if (tagName == "input")
 			{
 				valid = this.validateInput (element);
@@ -4311,9 +4409,9 @@ positron.action.ValidateFormAction.prototype.fire = function (inEvent)
 				valid = this.validateSelect (element);
 			}
 			else
-			if (tagName == "button")
+			if (tagName == "textarea")
 			{
-				// nothing to be validated for a button
+				valid = this.validateTextArea (element);
 			}
 			else
 			{
@@ -4434,6 +4532,29 @@ positron.action.ValidateFormAction.prototype.validateSelect = function (inSelect
 		valid = option.value && option.value.length;
 	}
 	
+	return valid;
+}
+
+positron.action.ValidateFormAction.prototype.validateTextArea = function (inTextArea)
+{
+	var	valid = true;
+	var	value = inTextArea.value;
+
+	if (value == null)
+	{
+		value = "";
+	}
+	
+	var	required = inTextArea.getAttribute ("required");
+	
+	// sadly we have to let the zero length attribute mean "true"
+	// thanks, DOM designers!
+	if (required && (required.toLowerCase () != "false"))
+	{
+		valid = value != null && value.length > 0;
+	}
+
+	// looks like "required" is the only validator allowed on <textarea>
 	return valid;
 }
 
@@ -4648,7 +4769,7 @@ positron.action.AjaxFormAction.prototype.fire = function (inEvent)
 		var	element = form.elements [i];
 		var	tagName = element.tagName.toLowerCase ();
 		
-		if (tagName == "input")
+		if (tagName == "input" || tagName == "textarea")
 		{
 			if (element.type == "file")
 			{
@@ -4674,7 +4795,7 @@ positron.action.AjaxFormAction.prototype.fire = function (inEvent)
 				parameters += "&";
 			}
 			
-			parameters += element.name + '=' + selectedOption.value + '&';
+			parameters += element.name + '=' + selectedOption.value;
 		}
 		else
 		{
@@ -4743,6 +4864,52 @@ positron.action.AjaxFormAction.prototype.fire = function (inEvent)
 	
 };
 
+
+/**
+*
+* @license
+* Copyright © 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
+positron.provide ("positron.action.AjaxURLAction");
+
+positron.action.AjaxURLAction = function ()
+{
+	positron.action.Action.call (this);
+}
+positron.inherits (positron.action.AjaxURLAction, positron.action.Action);
+
+positron.action.AjaxURLAction.prototype.fire = function (inEvent)
+{
+	positron.action.Action.prototype.fire.call (this, inEvent);
+
+	var	url = this.actionArgString;
+	
+	if (url == null || url.length == 0)
+	{
+		console.error ("AjaxURLAction with no URL in arguments");
+	}
+	else
+	{
+		positron.Util.ajax
+		({
+			url: url,
+			data: this.explicitParams,
+			dataType: "json",
+			async: true,
+			type: "GET",
+			success: function (inData, inTextStatus, inXHR)
+			{
+			},
+			error: function (inXHR, inTextStatus, inError)
+			{
+				console.error ("load of " + url + " failed");
+				console.error (inError);
+			}
+		});
+	}
+};
 
 /**
 *
@@ -5000,7 +5167,7 @@ positron.action.DispatchFormAction.prototype.fire = function (inEvent)
 	if (dispatch)
 	{
 		var	event = positron.DOM.createEvent
-			(gApplication.getEventPrefix () + "formdispatched", eventDetail);
+			(gApplication.getEventPrefix () + "formdispatch", eventDetail);
 		
 		this.element.dispatchEvent (event);
 	}
@@ -5184,6 +5351,39 @@ positron.action.IndexedInsertAction.prototype.fire = function (inEvent)
 /**
 *
 * @license
+* Copyright © 2014 Jason Proctor.  All rights reserved.
+*
+**/
+
+positron.provide ("positron.action.LogAction");
+
+positron.action.LogAction = function ()
+{
+	positron.action.Action.call (this);
+}
+positron.inherits (positron.action.LogAction, positron.action.Action);
+
+positron.action.LogAction.prototype.fire = function (inEvent)
+{
+	positron.action.Action.prototype.fire.call (this, inEvent);
+
+	if (typeof (console) != "undefined" && typeof (console.log) == "function")
+	{
+		if (this.actionArgs.length > 0 && this.actionArgs [0].length > 0)
+		{
+			console.log (this.actionArgs [0]);
+		}
+		else
+		{
+			console.log ("LogAction with no action argument to log");
+		}
+	}
+};
+
+
+/**
+*
+* @license
 * Copyright © 2013 Jason Proctor.  All rights reserved.
 *
 **/
@@ -5327,9 +5527,9 @@ positron.action.SendWebSocketAction.prototype.fire = function (inEvent)
 		if (webSocket)
 		{
 			// console.log ("sending to web socket: " + webSocketName);
-			// console.log (JSON.stringify (this.params));
+			// console.log (JSON.stringify (this.explicitParams));
 			
-			webSocket.send (JSON.stringify (this.params));
+			webSocket.send (JSON.stringify (this.explicitParams));
 		}
 		else
 		{
@@ -5339,6 +5539,89 @@ positron.action.SendWebSocketAction.prototype.fire = function (inEvent)
 	else
 	{
 		console.error ("SendWebSocketAction with no socket name argument");
+	}
+};
+
+/**
+*
+* @license
+* Copyright © 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
+positron.provide ("positron.action.SelectClassAction");
+
+positron.action.SelectClassAction = function ()
+{
+	positron.action.Action.call (this);
+}
+positron.inherits (positron.action.SelectClassAction, positron.action.Action);
+
+positron.action.SelectClassAction.prototype.fire = function (inEvent)
+{
+	positron.action.Action.prototype.fire.call (this, inEvent);
+
+	// ok try to find the element we should select
+	var	receivers = null;
+
+	var	className = null;
+	var	viewKey = null;
+	
+	// if there is only one action argument, assume just the selector
+	if (this.actionArgs.length > 0)
+	{
+		if (this.actionArgs.length > 1)
+		{
+			viewKey = this.actionArgs [0];
+			className = this.actionArgs [1];
+		}
+		else
+		{
+			className = this.actionArgs [0];
+		}
+	}
+	
+	if (className)
+	{
+		var	selectedClassName = className + "-selected";
+		
+		var	classSelector = "." + className;
+	
+		if (viewKey)
+		{
+			receivers = positron.DOM.resolveCompositeElement (this.element, viewKey, classSelector);
+		}
+		else
+		{
+			receivers = positron.DOM.resolveCompositeElement (this.element, null, classSelector);
+		}
+	
+		if (receivers)
+		{
+			for (var i = 0; i < receivers.length; i++)
+			{
+				for (var key in this.params)
+				{
+					positron.DOM.removeClass (receivers [i], selectedClassName);
+				}
+			}
+		}
+
+		for (var parentNode = this.element; parentNode; parentNode = parentNode.parentNode)
+		{
+			if (positron.DOM.hasClass (parentNode, className))
+			{
+				if (! positron.DOM.hasClass (parentNode, selectedClassName))
+				{
+					removeClass = true;
+					
+					positron.DOM.addClass (parentNode, selectedClassName);
+					parentNode.classList.add (selectedClassName);
+				}
+				
+				break;
+			}
+		}
 	}
 };
 
@@ -5716,17 +5999,16 @@ positron.inherits (positron.action.SubmitFormAction, positron.action.ValidateFor
 
 positron.action.SubmitFormAction.prototype.fire = function (inEvent)
 {
-	var	form = null;
+	var	formElement = null;
 	
 	if (this.actionArgs.length > 0 && this.actionArgs [0].length)
 	{
-		form = document.forms [this.actionArgs [0]];
+		formElement = document.forms [this.actionArgs [0]];
 	}
 	else
 	if (this.element.form)
 	{
-		// we're on a form element, easy
-		form = this.element.form;
+		formElement = this.element;
 	}
 	else
 	{
@@ -5734,22 +6016,20 @@ positron.action.SubmitFormAction.prototype.fire = function (inEvent)
 		{
 			if (element.tagName.toLowerCase () == "form")
 			{
-				form = element;
+				formElement = element;
 				break;
 			}
 		}
 	}
 	
-	if (form)
+	if (formElement)
 	{
-		if (typeof (form.submit) == "function")
-		{
-			form.submit ();
-		}
-		else
-		{
-			console.error ("SubmitFormAction can't call submit off form");
-		}
+		// we can't call submit() off the form
+		// because that will bypass any onsubmit handlers
+		// which is a huge bug IMHO
+		// so instead we fake up a submit event
+		// rubbish web
+		formElement.dispatchEvent (positron.DOM.createEvent ("submit", {}));
 	}
 	else
 	{
@@ -7519,13 +7799,22 @@ positron.tag.ListTag.prototype.process = function (inElement, inContext, inTreeW
 	{
 		var	offset = 0;
 	  var limit = elements.length;
+	  var	pageSize = 0;
 	  
 	  var offsetAttribute = inElement.getAttribute ("offset");
 	  
 	  if (offsetAttribute && offsetAttribute.length)
 	  {
 	    offset = parseInt (offsetAttribute);
-	    offset = Math.max (offset, 0);
+	    
+	    if (isNaN (offset))
+	    {
+	    	offset = 0;
+	    }
+	    else
+	    {
+		    offset = Math.max (offset, 0);
+		  }
 	  }
 	  
 	  var limitAttribute = inElement.getAttribute ("limit");
@@ -7533,7 +7822,27 @@ positron.tag.ListTag.prototype.process = function (inElement, inContext, inTreeW
 	  if (limitAttribute && limitAttribute.length)
 	  {
 	    limit = parseInt (limitAttribute);
-	    limit = Math.min (limit, elements.length);
+	    
+	    if (isNaN (limit))
+	    {
+	    	limit = elements.length;
+	    }
+	    else
+	    {
+		    limit = Math.min (limit, elements.length);
+		  }
+	  }
+	  
+	  var pageSizeAttribute = inElement.getAttribute ("pagesize");
+	  
+	  if (pageSizeAttribute && pageSizeAttribute.length)
+	  {
+	    pageSize = parseInt (pageSizeAttribute);
+	    
+	    if (isNaN (pageSize))
+	    {
+	    	pageSize = 0;
+	    }
 	  }
 	  
 	  var	searchKey = inElement.getAttribute ("searchkey");
@@ -7607,6 +7916,21 @@ positron.tag.ListTag.prototype.process = function (inElement, inContext, inTreeW
 					elementContext.put (name + ".meta.count", limit);
 					elementContext.put (name + ".meta.isfirst", index == 0);
 					elementContext.put (name + ".meta.islast", index == (limit - 1));
+					
+					// local page-oriented stuff
+					var	pageIndex = 0;
+					var	pageCount = 1;
+					
+					if (pageSize > 0)
+					{
+						pageIndex = Math.floor (index / pageSize);
+						pageCount = Math.ceil (limit / pageSize);
+					}
+					
+					elementContext.put (name + ".meta.pageindex", pageIndex);
+					elementContext.put (name + ".meta.pagecount", pageCount);
+					elementContext.put (name + ".meta.isfirstpage", pageIndex == 0);
+					elementContext.put (name + ".meta.islastpage", pageIndex == (pageCount - 1));
 					
 					positron.DOM.copyChildren (inElement, elementPlaceholder);
 
@@ -8844,8 +9168,15 @@ positron.tag.WebSocketTag.prototype.process = function (inElement, inContext, in
 			}
 		}
 
-		// removed the onerror handler, seemed to fire at random times
-		// removed the onclose handler, too many chickens and eggs
+		webSocket.onerror = function ()
+		{
+			console.error ("websocket onerror called (ignored)...");
+		}
+		
+		webSocket.onclose = function ()
+		{
+			// console.error ("websocket onclose called...");
+		}
 	}
 	catch (inError)
 	{
@@ -9130,7 +9461,6 @@ positron.trigger.ClickTrigger.prototype.register = function (inAction)
 				else
 				{
 					console.log ("rejecting click due to slop of " + distance);
-					active = false;
 				}
 
 				active = false;
@@ -11189,12 +11519,12 @@ function Application_getWebSocket (inName)
 positron.Application.prototype.removeWebSocket = 
 function Application_removeWebSocket (inName)
 {
-	console.log ("removing web socket: " + inName);
-	
 	var	webSocket = this.webSockets [inName];
 	
 	if (webSocket)
 	{
+		console.log ("removing web socket: " + inName);
+	
 		// if it's connecting or open, close it
 		if (webSocket.readyState == 0 || webSocket.readyState == 1)
 		{

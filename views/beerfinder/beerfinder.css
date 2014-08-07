@@ -16,7 +16,7 @@
 	margin-bottom: 20px;
 }
 .beer-finder .question p { 
-	width: 50%; 
+	width: 70%; 
 	text-align: center; 
 	margin: 0 auto;
 	line-height: 1.4;
@@ -24,8 +24,9 @@
 
 .selector { 
 	margin: 0 auto;
-	width: 259px; 
+	width: 260px; 
 	overflow: hidden;
+	margin-top:20px;
 }
 
 .selector div { float: left; }
@@ -33,19 +34,30 @@
 .selector .control { 
 	width: 40px;
 	height: 40px;
-	line-height: 35px;
+	line-height: 40px;
 	background: #111;
 	border-radius: 100%;
 	color: #fff;
 	font-size: 38px;
 	text-align: center;
-	margin-top: 80px;
+	margin-top: 40px;
+	-webkit-user-select: none;
+	position: absolute;
 }
+
+	.selector .control.subtract { 
+		left: 40px;
+	}
+	
+	.selector .control.add { 
+		right: 40px;
+	}
 
 .selector .level {
 	font-size: 160px;
 	font-weight: 600;
-	margin: 0 35px;
+	margin: 0 auto;
+	width: 100%;
 }
 
 .beer-finder .button {
