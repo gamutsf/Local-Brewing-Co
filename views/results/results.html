@@ -38,58 +38,34 @@
 	<div class="range-end">More</div>
 </div>
 
-<div class="list">
-	<div class="beer-sum" 
-		pos-action-1="toggleview: single"
-		pos-action-2="toggleview: results">
-		<div class="info">
-			<h2 class="name">Beer Name</h2>
-			<div class="description">It's a beer</div>
-		</div>
-		<div class="levels">
-			<div class="hoppy-level level">8</div>
-			<div class="boozy-level level">8</div>
-			<div class="complex-level level">8</div>
-		</div>
-	</div>
-	<div class="beer-sum"
-		pos-action-1="toggleview: single"
-		pos-action-2="toggleview: results">
-		<div class="info">
-			<h2 class="name">Beer Name</h2>
-			<div class="description">It's a beer</div>
-		</div>
-		<div class="levels">
-			<div class="hoppy-level level">8</div>
-			<div class="boozy-level level">8</div>
-			<div class="complex-level level">8</div>
-		</div>
-	</div>
-	<div class="beer-sum"
-		pos-action-1="toggleview: single"
-		pos-action-2="toggleview: results">
-		<div class="info">
-			<h2 class="name">Beer Name</h2>
-			<div class="description">It's a beer</div>
-		</div>
-		<div class="levels">
-			<div class="hoppy-level level">8</div>
-			<div class="boozy-level level">8</div>
-			<div class="complex-level level">8</div>
-		</div>
-	</div>
-	<div class="beer-sum"
-		pos-action-1="toggleview: single"
-		pos-action-2="toggleview: results">
-		<div class="info">
-			<h2 class="name">Beer Name</h2>
-			<div class="description">It's a beer</div>
-		</div>
-		<div class="levels">
-			<div class="hoppy-level level">8</div>
-			<div class="boozy-level level">8</div>
-			<div class="complex-level level">8</div>
-		</div>
-	</div>
-	<div class="num-results">4 matches</div>
+<div class="list output">
+
+	<!--
+	<pos-json
+		url="sampledata.json"
+		name="beers"
+	>
+	  <pos-list key="beers.beers" name="beer">
+
+			<div class="beer-sum" 
+				pos-action-1="toggleview: single"
+				pos-action-2="toggleview: results">
+				<div class="info">
+					<h2 class="name">$beer.name;</h2>
+					<div class="description">$beer.style;</div>
+				</div>
+				<div class="levels">
+					<div class="hoppy-level level">$beer.hoppyness;</div>
+					<div class="boozy-level level">$beer.alcohol;</div>
+					<div class="complex-level level">$beer.complexity;</div>
+				</div>
+			</div>
+		
+		</pos-list>
+	
+		<div class="num-results">$beers.beers.length; matches</div>
+	
+	</pos-json>
+	-->
+	
 </div>
