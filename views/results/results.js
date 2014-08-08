@@ -19,6 +19,36 @@ ResultsView.prototype.onDOMReady = function ()
 	console.log ("ResultsView.onDOMReady()");
 	
 	this.rangeOutput();
+	
+	/*
+	function toggleSlider(x, section){
+		if( $(x).hasClass('active') ){
+			$(x).removeClass('active');
+			gApplication.hideView('slider', 'pos-transition-visible-quick');
+		}
+		else {
+			$('.tab').removeClass('active');
+			$(x).addClass('active');
+			
+			var params = new Object();
+					params.section = section;
+			gApplication.showView('slider', null, 'pos-transition-visible-quick');
+		}
+	}
+	
+	$(document).on('click', '.hoppyness.tab', function(){
+		toggleSlider(this, 'hoppy');
+	});
+	
+	$(document).on('click', '.alcohol.tab', function(){
+		toggleSlider(this, 'boozy');
+	});
+	
+	$(document).on('click', '.complexity.tab', function(){
+		toggleSlider(this, 'complex');
+	});
+	*/
+	
 }
 
 ResultsView.prototype.getProfile = function (){
@@ -142,19 +172,15 @@ ResultsView.prototype.rangeOutput = function (){
 
 ResultsView.prototype.findMatches = function (){
 	
-	 var matches;
-	 var allMatches = [];
-	 var primaryMatches = [];
-	 var secondaryMatches = [];
-	 var tertiaryMatches = [];
+	 var matches = [];
 	 var nonDuplicatedArray = [];
 	 var orderedList = [];
+	 var variability = 1;
 
 	 $.ajax({
 	   url: "sampledata.json"
 	 })
 	 .done(function(inData) {
-	   console.log('Found ' +inData.beers.length + ' records');
 	   
 	   $('.output.list').empty();
 	   
@@ -167,47 +193,26 @@ ResultsView.prototype.findMatches = function (){
 	   	 var complexity = beer.complexity;
 	   	 
 	   	 // Logic here	 
-	   	 // First, find exact matches
-	   	 
-	   	 if( hoppyness == beerProfile.hoppy ){
-	   	 	 //console.log('hoppy primary match: '+ name);
-	   	 	 primaryMatches.push(beer);
-	   	 }
-	   	 
-	   	 if( alcohol == beerProfile.boozy ){
-	   	 	 //console.log('alcohol primary match: '+ name);
-	   	 	 primaryMatches.push(beer);
-	   	 }
-	   	 
-	   	 if( complexity == beerProfile.complex ){
-	   	 	 //console.log('complexity primary match: '+ name);
-	   	 	 primaryMatches.push(beer);
-	   	 }
-	   	 
-	   	 // Second, check for close matches +/- variability
-	   	 
-	   	 var variability = 1;
+	   	 // First, find matches
 	   	 
 	   	 if( (beerProfile.hoppy >= (hoppyness - variability)) && (beerProfile.hoppy <= (hoppyness + variability)) ){
 	   	 	 //console.log('hoppy secondary match: '+ name);
-	   	 	 secondaryMatches.push(beer);
+	   	 	 matches.push(beer);
 	   	 }
 	   	 
 	   	 if( (beerProfile.boozy >= (alcohol - variability)) && (beerProfile.boozy <= (alcohol + variability)) ){
 	   	 	 //console.log('alcohol secondary match: '+ name);
-	   	 	 secondaryMatches.push(beer);
+	   	 	 matches.push(beer);
 	   	 }
 	   	 
 	   	 if( (beerProfile.complex >= (complexity - variability)) && (beerProfile.complex <= (complexity + variability)) ){
 	   	 	 //console.log('complexity secondary match: '+ name);
-	   	 	 secondaryMatches.push(beer);
+	   	 	 matches.push(beer);
 	   	 }
 							
 		 });
 		 
-		 
-		 // Finally, combine all matches
-	   matches = allMatches.concat(primaryMatches, secondaryMatches);
+		 //console.log(matches);
 		 
 		 
 		 // Remove duplicate matches
@@ -226,9 +231,7 @@ ResultsView.prototype.findMatches = function (){
 			 
 			 //console.log(nonDuplicatedArray);
 			 
-			 // Print results
-		
-			 getPrimaryMatches();
+			 // Print results 
 			 
 			 function getPrimaryMatches(){
 				 for(x=0; x < nonDuplicatedArray.length; x++){
@@ -238,7 +241,7 @@ ResultsView.prototype.findMatches = function (){
 				 	 	  (nonDuplicatedArray[x].alcohol == beerProfile.boozy) &&
 				 	 	  (nonDuplicatedArray[x].complexity == beerProfile.complex)
 				 	 ){
-					 	 console.log('3/3 match: '+ nonDuplicatedArray[x].name);
+					 	 //console.log('3/3 match: '+ nonDuplicatedArray[x].name);
 					 	 orderedList.push(nonDuplicatedArray[x]);
 				 	 }
 										
@@ -249,102 +252,125 @@ ResultsView.prototype.findMatches = function (){
 			 
 			 function getSecondaryMatches(){
 			 	 for(x=0; x < nonDuplicatedArray.length; x++){
-			 
-					 // secondary matches
-				 	 if((nonDuplicatedArray[x].hoppyness == beerProfile.hoppy) &&
-				 	 	  (nonDuplicatedArray[x].alcohol == beerProfile.boozy) &&
+
+			 	 	 // secondary matches
+					 if(((beerProfile.hoppy >= (parseInt(nonDuplicatedArray[x].hoppyness) - variability)) && 
+					    (beerProfile.hoppy <= (parseInt(nonDuplicatedArray[x].hoppyness) + variability))) ||
+					    ((beerProfile.boozy >= (parseInt(nonDuplicatedArray[x].alcohol) - variability)) && 
+					    (beerProfile.boozy <= (parseInt(nonDuplicatedArray[x].alcohol) + variability))) &&
 				 	 		(nonDuplicatedArray[x].complexity != beerProfile.complex)
 				 	 ){
-					 	 console.log('2/3 match: '+ nonDuplicatedArray[x].name);
+					 	 //console.log('2/3 match: '+ nonDuplicatedArray[x].name);
 					 	 orderedList.push(nonDuplicatedArray[x]);
 				 	 }
 				 	 
 				 	 else 
-				 	 if((nonDuplicatedArray[x].hoppyness == beerProfile.hoppy) &&
-				 	 	  (nonDuplicatedArray[x].alcohol != beerProfile.boozy) &&
-				 	 		(nonDuplicatedArray[x].complexity == beerProfile.complex)
+				 	 if(((beerProfile.hoppy >= (parseInt(nonDuplicatedArray[x].hoppyness) - variability)) && 
+					    (beerProfile.hoppy <= (parseInt(nonDuplicatedArray[x].hoppyness) + variability))) ||
+					    ((beerProfile.complex >= (parseInt(nonDuplicatedArray[x].complexity) - variability)) && 
+					    (beerProfile.complex <= (parseInt(nonDuplicatedArray[x].complexity) + variability))) &&
+				 	 	  (nonDuplicatedArray[x].alcohol != beerProfile.boozy)
 				 	 ){
-					 	 console.log('2/3 match: '+ nonDuplicatedArray[x].name);
+					 	 //console.log('2/3 match: '+ nonDuplicatedArray[x].name);
 					 	 orderedList.push(nonDuplicatedArray[x]);
 				 	 }
 				 	 
 				 	 else 
-				 	 if((nonDuplicatedArray[x].hoppyness != beerProfile.hoppy) &&
-				 	 	  (nonDuplicatedArray[x].alcohol == beerProfile.boozy) &&
-				 	 		(nonDuplicatedArray[x].complexity == beerProfile.complex)
+				 	 if(((beerProfile.boozy >= (parseInt(nonDuplicatedArray[x].alcohol) - variability)) && 
+					    (beerProfile.boozy <= (parseInt(nonDuplicatedArray[x].alcohol) + variability))) ||
+					    ((beerProfile.complex >= (parseInt(nonDuplicatedArray[x].complexity) - variability)) && 
+					    (beerProfile.complex <= (parseInt(nonDuplicatedArray[x].complexity) + variability))) &&
+				 	 		(nonDuplicatedArray[x].hoppyness != beerProfile.hoppy)
 				 	 ){
-					 	 console.log('2/3 match: '+ nonDuplicatedArray[x].name);
+					 	 //console.log('2/3 match: '+ nonDuplicatedArray[x].name);
 					 	 orderedList.push(nonDuplicatedArray[x]);
 				 	 }
 			 	 
 			 	 }
 			 	 
-			 	 getTertiaryMatches();	 	  
+			 	 getTertiaryMatches();  
 			 }
 			 
 			 
 			 function getTertiaryMatches(){
 			 	 for(x=0; x < nonDuplicatedArray.length; x++){
-			 
+
 					 // tertiary matches
-				 	 if((nonDuplicatedArray[x].hoppyness != beerProfile.hoppy) &&
-				 	 	  (nonDuplicatedArray[x].alcohol != beerProfile.boozy) &&
-				 	 		(nonDuplicatedArray[x].complexity == beerProfile.complex)
+					 
+				 	 if(((beerProfile.complex >= (parseInt(nonDuplicatedArray[x].complexity) - variability)) && 
+					    (beerProfile.complex <= (parseInt(nonDuplicatedArray[x].complexity) + variability))) &&
+				 	 		(nonDuplicatedArray[x].hoppyness != beerProfile.hoppy) &&
+				 	 	  (nonDuplicatedArray[x].alcohol != beerProfile.boozy)
 				 	 ){
-					 	 console.log('1/3 match: '+ nonDuplicatedArray[x].name);
+					 	 //console.log('1/3 match: '+ nonDuplicatedArray[x].name);
 					 	 orderedList.push(nonDuplicatedArray[x]);
 				 	 }
 				 	 
 				 	 else 
-				 	 if((nonDuplicatedArray[x].hoppyness == beerProfile.hoppy) &&
+				 	 if(((beerProfile.hoppy >= (parseInt(nonDuplicatedArray[x].hoppyness) - variability)) && 
+					    (beerProfile.hoppy <= (parseInt(nonDuplicatedArray[x].hoppyness) + variability))) &&
 				 	 	  (nonDuplicatedArray[x].alcohol != beerProfile.boozy) &&
 				 	 		(nonDuplicatedArray[x].complexity != beerProfile.complex)
 				 	 ){
-					 	 console.log('1/3 match: '+ nonDuplicatedArray[x].name);
+					 	 //console.log('1/3 match: '+ nonDuplicatedArray[x].name);
 					 	 orderedList.push(nonDuplicatedArray[x]);
 				 	 }
 				 	 
 				 	 else 
-				 	 if((nonDuplicatedArray[x].hoppyness != beerProfile.hoppy) &&
-				 	 	  (nonDuplicatedArray[x].alcohol == beerProfile.boozy) &&
+				 	 if(((beerProfile.boozy >= (parseInt(nonDuplicatedArray[x].alcohol) - variability)) && 
+					    (beerProfile.boozy <= (parseInt(nonDuplicatedArray[x].alcohol) + variability))) &&
+				 	 	  (nonDuplicatedArray[x].hoppyness != beerProfile.hoppy) &&
 				 	 		(nonDuplicatedArray[x].complexity != beerProfile.complex)
 				 	 ){
-					 	 console.log('1/3 match: '+ nonDuplicatedArray[x].name);
+					 	 //console.log('1/3 match: '+ nonDuplicatedArray[x].name);
 					 	 orderedList.push(nonDuplicatedArray[x]);
 				 	 }
 			 	 
 			 	 }
 			 	 
-			 	 printMatches();
-			 }	 
-			 
+			 	 printMatches();	 
+			 } 
+			 	 
+			 getPrimaryMatches();
 		 }
+		 
+		 removeDuplicates(matches);
 		 
 		 function printMatches(){
 		 
-		 	 for(y=0; y < orderedList.length; y++){
+		 	 //console.log(orderedList);
+		 
+		 	 var output = [];
+		 	 var arrResult = {};
+			 for (i = 0, n = orderedList.length; i < n; i++) {
+				    var item = orderedList[i];
+				    arrResult[ item.name ] = item;
+			 }
+			 
+			 i = 0;    
+			 for(var item in arrResult) {
+			    output[i++] = arrResult[item];
+			 }
+		 
+		 	 for(y=0; y < output.length; y++){
 		 
 				 $('.output.list')
 			   	.append('<div class="beer-sum">'+
 										'<div class="info">'+
-											'<h2 class="name">'+ orderedList[y].name +'</h2>'+
-											'<div class="description">'+ orderedList[y].style +'</div>'+
+											'<h2 class="name">'+ output[y].name +'</h2>'+
+											'<div class="description">'+ output[y].style +'</div>'+
 										'</div>'+
 										'<div class="levels">'+
-											'<div class="hoppy-level level">'+ orderedList[y].hoppyness +'</div>'+
-											'<div class="boozy-level level">'+ orderedList[y].alcohol +'</div>'+
-											'<div class="complex-level level">'+ orderedList[y].complexity +'</div>'+
+											'<div class="hoppy-level level">'+ output[y].hoppyness +'</div>'+
+											'<div class="boozy-level level">'+ output[y].alcohol +'</div>'+
+											'<div class="complex-level level">'+ output[y].complexity +'</div>'+
 										'</div>'+
 									'</div>');
 								
 				}
 				
-				$('.output.list').append('<div class="num-results">'+ orderedList.length +' matches</div>');
+				$('.output.list').append('<div class="num-results">'+ output.length +' matches</div>');
 		 }
-		 
-		 removeDuplicates(matches);
-		 
-		 //console.log(matches);
 	   
 	 });
 	 

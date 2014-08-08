@@ -1,4 +1,38 @@
-.chug
-{
-	color: blue;
-}
+.tap-list .list {}
+		.tap-list .list .beer-sum { 
+			clear: left;
+			border-bottom: 1px solid #d7d7d7;
+			padding: 15px;
+			box-sizing: border-box;
+			display: -webkit-flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+			.tap-list .list .beer-sum .info { width: 100%; }
+			.tap-list .list .beer-sum .h2 {}
+			.tap-list .list .beer-sum .description {}
+			.tap-list .list .beer-sum .levels {
+		
+			} 
+				.tap-list .list .beer-sum .levels .level {
+					width: 20px;
+					height: 20px;
+					line-height: 21px;
+					font-size: 12px;
+					text-align: center;
+					border-radius: 100%;
+					float: left;
+					margin: 0 2px;
+					color: #fff;
+					font-weight: normal;
+				}
+					.tap-list .list .beer-sum .levels .hoppy-level { background: #373737; }
+					.tap-list .list .beer-sum .levels .boozy-level { background: #606060; }
+					.tap-list .list .beer-sum .levels .complex-level { background: #b0b0b0; } 	
+		
+		.tap-list .list .num-results {
+			text-align: center;
+			color: #b0b0b0;
+			font-size: 12px;
+			margin-top: 10px;
+		}

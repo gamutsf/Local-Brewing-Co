@@ -1,6 +1,6 @@
 .beer-finder {
 	width: 100%;
-	height: 100vh;
+	height: auto;
 }
 .beer-finder .question {  
 	display: -webkit-flex;

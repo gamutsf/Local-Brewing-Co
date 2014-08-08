@@ -19,7 +19,7 @@ section {
 }
 
 footer {
-	position: absolute;
+	position: fixed;
 	bottom: 0;
 	height: 52px;
 	line-height: 52px;
@@ -34,7 +34,8 @@ footer {
 	}
 	
 	.logo {
-		position: absolute;
+		position: fixed;
 		bottom: 0;
-		left: -webkit-calc(50% - 32px);
+		left: 50%;
+		margin-left: -31px;
 	}
