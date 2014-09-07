@@ -1,20 +1,34 @@
-<header>
-	<div class="back"
-	pos-action-1="toggleview: single"
-	pos-action-2="toggleview: results">Back</div>
-	<div class="fave">fave</div>
-</header>
+<pos-json
+	url="sampledata.json"
+	name="beers"
+>
+  <pos-list key="beers.beers" name="beer">
+  
+  	<pos-if true="'$params.name;' == '$beer.name;'">
 
-<div class="circle">
-	<h1>Beer Name</h1>
-	<h3>It's a Beer</h3>
-</div>
+			<header>
+				<div class="back"
+				pos-action-1="hideview: single/nu-slide-out-to-right"
+				pos-action-2="showview: results">Back</div>
+				<div class="fave">fave</div>
+			</header>
+			
+			<div class="circle">
+				<h1>$beer.name;</h1>
+				<h3>$beer.style;</h3>
+			</div>
+			
+			<div class="data">
+				<div class="ibu">$beer.ibu; <span>ibu</span></div>
+				<div class="abv">$beer.abv;% <span>abv</span></div>
+			</div>
+			
+			<p class="long-desc">
+			$beer.description;
+			</p>
+		
+  	</pos-if>
+	
+	</pos-list>
 
-<div class="data">
-	<div class="ibu">47 <span>ibu</span></div>
-	<div class="abv">15% <span>abv</span></div>
-</div>
-
-<p class="long-desc">
-City Pale is a crowd favorite, and this version has an extra-special something. We brewed this with fresh hops from Hopland. The combination of hops and malt create a slightly sweet flavor balanced by crisp citrus notes.
-</p>
+</pos-json>

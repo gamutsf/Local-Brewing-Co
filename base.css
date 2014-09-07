@@ -1,5 +1,5 @@
 body {
-	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+	font-family: Arial, Helvetica, "Lucida Grande", sans-serif; 
 	font-weight: 300;
 	margin: 0;
 	padding: 0;
@@ -25,6 +25,7 @@ footer {
 	line-height: 52px;
 	width: 100%;
 	background: #333333;
+	z-index: 99999;
 }
 	footer ul li { 
 		width: 50%; 
@@ -38,4 +39,421 @@ footer {
 		bottom: 0;
 		left: 50%;
 		margin-left: -31px;
+		z-index: 999999;
 	}
+	
+/* Neutrino global stock animations and transitions */
+
+/* global default transition in */
+.nu-transition-visible
+{
+	animation-name: nu-fade-in;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-fade-in
+{
+	0%
+	{
+		opacity: 0;
+	}
+	
+	100%
+	{
+		opacity: 1;
+	}
+}
+
+/* global default transition out */
+.nu-transition-invisible
+{
+	animation-name: nu-fade-out;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-fade-out
+{
+	0%
+	{
+		opacity: 1;
+	}
+	
+	100%
+	{
+		opacity: 0;
+	}
+}
+
+.nu-slide-in
+{
+	animation-name: nu-slide-in;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-slide-in
+{
+	0%
+	{
+		transform: translate3d(-500px, 0, 0);
+	}
+	
+	100%
+	{
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+.nu-slide-out
+{
+	animation-name: nu-slide-out;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-slide-out
+{
+	0%
+	{
+		transform: translate3d(0, 0, 0);
+	}
+	
+	100%
+	{
+		transform: translate3d(-2000px, 0, 0);
+	}
+}
+
+.nu-slide-out-to-left
+{
+	animation-name: nu-slide-out-to-left;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-slide-out-to-left {
+	0% {
+		transform: translate3d(0, 0, 0);
+	}
+	
+	100% {
+		transform: translate3d(-1200px, 0, 0);
+	}
+}
+
+.nu-slide-out-to-right
+{
+	animation-name: nu-slide-out-to-right;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-slide-out-to-right {
+	0% {
+		transform: translate3d(0, 0, 0);
+	}
+	
+	100% {
+		transform: translate3d(1200px, 0, 0);
+	}
+}
+
+.nu-slide-out-to-top
+{
+	animation-name: nu-slide-out-to-top;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-slide-out-to-top {
+	0% {
+		transform: translate3d(0, 0, 0);
+	}
+	
+	100% {
+		transform: translate3d(0, -1200px, 0);
+	}
+}
+
+.nu-slide-out-to-bottom
+{
+	animation-name: nu-slide-out-to-bottom;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-slide-out-to-bottom {
+	0% {
+		transform: translate3d(0, 0, 0);
+	}
+	
+	100% {
+		transform: translate3d(0, 1200px, 0);
+	}
+}
+
+.nu-slide-in-from-bottom
+{
+	animation-name: nu-slide-in-from-bottom;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-slide-in-from-bottom {
+	0% {
+		transform: translate3d(0, 1200px, 0);
+	}
+	
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+.nu-slide-in-from-top
+{
+	animation-name: nu-slide-in-from-top;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-slide-in-from-top {
+	0% {
+		transform: translate3d(0px, -1200px, 0);
+	}
+	
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+.nu-slide-in-from-bottom
+{
+	animation-name: nu-slide-in-from-bottom;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+.nu-slide-in-from-left
+{
+	animation-name: nu-slide-in-from-left;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-slide-in-from-left {
+	0% {
+		transform: translate3d(-1200px, 0, 0);
+	}
+	
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+.nu-slide-in-from-right
+{
+	animation-name: nu-slide-in-from-right;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-slide-in-from-right {
+	0% {
+		transform: translate3d(1200px, 0, 0);
+	}
+	
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+
+.nu-fall-forward
+{
+	animation-name: nu-fall-forward;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-fall-forward {
+	0% {
+		transform-origin: left bottom;
+		transform: rotateX(0);
+	}
+	
+	100% {
+		transform-origin: left bottom;
+		transform: translate3d(0, 0, -40px) rotateX(-100deg);
+	}
+}
+
+.nu-open-to-left
+{
+	animation-name: nu-open-to-left;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-open-to-left {
+	0% {
+		transform-origin: left center;
+		transform: rotateY(0);
+	}
+	
+	100% {
+		transform-origin: left center;
+		transform: rotateY(-100deg);
+	}
+}
+
+.nu-open-to-right
+{
+	animation-name: nu-open-to-right;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-open-to-right {
+	0% {
+		transform-origin: right center;
+		transform: rotateY(0);
+	}
+	
+	100% {
+		transform-origin: right center;
+		transform: rotateY(100deg);
+	}
+}
+
+.nu-close-to-left
+{
+	animation-name: nu-close-to-left;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-close-to-left {
+	0% {
+		transform-origin: right center;
+		transform: rotateY(100deg);
+	}
+	
+	100% {
+		transform-origin: right center;
+		transform: rotateY(0deg);
+	}
+}
+
+.nu-close-to-right
+{
+	animation-name: nu-close-to-right;
+	animation-duration: 400ms;
+	animation-timing-function: linear;
+}
+
+@keyframes nu-close-to-right {
+	0% {
+		transform-origin: left center;
+		transform: rotateY(-100deg);
+	}
+	
+	100% {
+		transform-origin: left center;
+		transform: rotateY(0deg);
+	}
+}
+
+.nu-fade-out
+{
+	animation-name: nu-fade-out;
+	animation-duration: 200ms;
+	animation-timing-function: linear;
+}
+
+.nu-transition-visible
+{
+	animation-name: nu-fade-in;
+	animation-duration: 0.01ms;
+	animation-timing-function: linear;
+}
+
+.nu-transition-invisible
+{
+	animation-name: nu-fade-out;
+	animation-duration: 0.01ms;
+	animation-timing-function: linear;
+	visibility: hidden;
+	display:block;
+}
+
+/****/
+
+.nu-slide-out-to-left
+{
+	animation-name: nu-slide-out-to-left;
+	animation-duration: 200ms;
+	animation-timing-function: ease-out;
+}
+
+@keyframes nu-slide-out-to-left {
+	0% {
+		transform: translateX(0);
+	}
+	
+	100% {
+		transform: translateX(-320px);
+	}
+}
+
+.nu-slide-out-to-right
+{
+	animation-name: nu-slide-out-to-right;
+	animation-duration: 200ms;
+	animation-timing-function: ease-out;
+}
+
+@keyframes nu-slide-out-to-right {
+	0% {
+		transform: translateX(0);
+	}
+	
+	100% {
+		transform: translateX(320px);
+	}
+}
+
+.nu-slide-in-from-left
+{
+	animation-name: nu-slide-in-from-left;
+	animation-duration: 200ms;
+	animation-timing-function: ease-out;
+}
+
+@keyframes nu-slide-in-from-left {
+	0% {
+		transform: translateX(-320px);
+	}
+	
+	100% {
+		transform: translateX(0);
+	}
+}
+
+.nu-slide-in-from-right
+{
+	animation-name: nu-slide-in-from-right;
+	animation-duration: 200ms;
+	animation-timing-function: ease-out;
+}
+
+@keyframes nu-slide-in-from-right {
+	0% {
+		transform: translate3d(320px, 0, 0);
+	}
+	
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+}

@@ -1,4 +1,12 @@
-.tap-list .list {}
+.tap-list {
+	width: 100%;
+	background: #FFF;
+	z-index: 999;
+	height: 100vh;
+}
+.tap-list .list {
+	padding-bottom: 100px;
+}
 		.tap-list .list .beer-sum { 
 			clear: left;
 			border-bottom: 1px solid #d7d7d7;

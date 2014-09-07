@@ -64,7 +64,7 @@
 		  outline:0;
 			border:0;
 			top:-8px;
-			line-height: 30px;
+			line-height: 38px;
 			pointer-events: none;
 		}
 			form { 
@@ -101,6 +101,9 @@
 			align-items: center;
 			justify-content: space-between;
 		}
+		.results .list .beer-sum.noclick {
+			pointer-events: none;
+		}
 			.results .list .beer-sum .info { width: 70%; }
 			.results .list .beer-sum .h2 {}
 			.results .list .beer-sum .description {}
@@ -125,9 +128,11 @@
 		
 		.results .list .num-results {
 			text-align: center;
-			color: #b0b0b0;
+			background: #333;
+			color: #fff;
 			font-size: 12px;
-			margin-top: 10px;
+			padding: 12px;
+			border-bottom: 1px solid #d7d7d7;
 		}
 				
 				

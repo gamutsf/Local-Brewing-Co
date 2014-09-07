@@ -10,5 +10,6 @@ SingleView.prototype.onDOMReady = function ()
 {
 	console.log ("SingleView.onDOMReady()");
 	
+	window.scrollTo(0, 0);
 }
 

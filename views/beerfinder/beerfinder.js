@@ -13,7 +13,7 @@ BeerfinderView.prototype.onDOMReady = function () {
 	
 	/* update hoppyness */
 	
-	$(document).on('click', '#hoppy-subtract', function(){
+	$(document).on('click touchend', '#hoppy-subtract', function(){
 		if( (beerProfile.hoppy - 1) > 0 ){
 			beerProfile.hoppy -= 1;
 			updateHoppy();
@@ -22,7 +22,7 @@ BeerfinderView.prototype.onDOMReady = function () {
 		console.log(beerProfile.hoppy);
 	});
 	
-	$(document).on('click', '#hoppy-add', function(){
+	$(document).on('click touchend', '#hoppy-add', function(){
 		if( (beerProfile.hoppy + 1) <= 11 ){
 			beerProfile.hoppy += 1;
 			updateHoppy();
@@ -33,7 +33,7 @@ BeerfinderView.prototype.onDOMReady = function () {
 	
 	/* update boozyness */	
 	
-	$(document).on('click', '#boozy-subtract', function(){
+	$(document).on('click touchend', '#boozy-subtract', function(){
 		if( (beerProfile.boozy - 1) > 0 ){
 	 		beerProfile.boozy -= 1;
 	 		updateBoozy();
@@ -42,7 +42,7 @@ BeerfinderView.prototype.onDOMReady = function () {
 		console.log(beerProfile.boozy);
 	});
 	
-	$(document).on('click', '#boozy-add', function(){
+	$(document).on('click touchend', '#boozy-add', function(){
 		if( (beerProfile.boozy + 1) <= 11 ){
 			beerProfile.boozy += 1;
 			updateBoozy();
@@ -53,7 +53,7 @@ BeerfinderView.prototype.onDOMReady = function () {
 	
 	/* update complexity */
 	
-	$(document).on('click', '#complex-subtract', function(){
+	$(document).on('click touchend', '#complex-subtract', function(){
 		if( (beerProfile.complex - 1) > 0 ){
 	 		beerProfile.complex -= 1;
 	 		updateComplex();
@@ -62,7 +62,7 @@ BeerfinderView.prototype.onDOMReady = function () {
 		console.log(beerProfile.complex);
 	});
 	
-	$(document).on('click', '#complex-add', function(){
+	$(document).on('click touchend', '#complex-add', function(){
 		if( (beerProfile.complex + 1) <= 11 ){
 			beerProfile.complex += 1;
 			updateComplex();

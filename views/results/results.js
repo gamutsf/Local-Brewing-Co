@@ -7,7 +7,7 @@
 
 var	ResultsView = function ()
 {
-	console.log ("ResultsView()");
+	//console.log ("ResultsView()");
 	
 	positron.View.call (this);
 };
@@ -16,7 +16,7 @@ positron.inherits (ResultsView, positron.View);
 
 ResultsView.prototype.onDOMReady = function ()
 {
-	console.log ("ResultsView.onDOMReady()");
+	//console.log ("ResultsView.onDOMReady()");
 	
 	this.rangeOutput();
 	
@@ -53,8 +53,8 @@ ResultsView.prototype.onDOMReady = function ()
 
 ResultsView.prototype.getProfile = function (){
 
-	console.log(beerProfile);
-	console.log(this.params);
+	//console.log(beerProfile);
+	//console.log(this.params);
 	
 	var el, newPoint, newPlace, offset;
 	
@@ -80,8 +80,8 @@ ResultsView.prototype.getProfile = function (){
 		 var curVal = el.val();
 	 }
 	 
-	 console.log(beerProfile);	 
-	 console.log(section.section + ' value is: '+ curVal);
+	 //console.log(beerProfile);	 
+	 //console.log(section.section + ' value is: '+ curVal);
 	 
 	 el.val(curVal);	   
 	 this.rangeOutput();
@@ -90,8 +90,8 @@ ResultsView.prototype.getProfile = function (){
 
 ResultsView.prototype.rangeOutput = function (){
 
-	console.log(beerProfile);
-	console.log(this.params);
+	//console.log(beerProfile);
+	//console.log(this.params);
 	
 	var el, newPoint, newPlace, offset;
 	
@@ -105,12 +105,12 @@ ResultsView.prototype.rangeOutput = function (){
 	 
 	 // Measure width of range input
 	 width = el.width();
-	 console.log(width);
+	 //console.log(width);
 	 
 	 // Figure out placement percentage between left and right of input
 	 newPoint = (el.val() - el.attr("min")) / (el.attr("max") - el.attr("min"));
 	 newPoint = newPoint.toFixed(1);
-	 console.log(newPoint);
+	 //console.log(newPoint);
 	  
 	 offset = 0;
 	
@@ -130,7 +130,7 @@ ResultsView.prototype.rangeOutput = function (){
 	 
 	 	 var value = el.val();
 	 	 
-		 if(section.section == "hoppy"){
+	 	 if(section.section == "hoppy"){
 			 beerProfile.hoppy = parseInt(value);
 			 var curVal = beerProfile.hoppy;
 		 }
@@ -147,11 +147,7 @@ ResultsView.prototype.rangeOutput = function (){
 		 var curVal = el.val();
 	 }
 	 
-	 console.log(beerProfile);
-	 
-	 if(section != undefined){	 
-	 	 console.log(section.section + ' value is: '+ curVal);
-	 }
+	 //console.log(beerProfile);
 	 
 	 // Move bubble
 	 el
@@ -181,6 +177,12 @@ ResultsView.prototype.findMatches = function (){
 	   url: "sampledata.json"
 	 })
 	 .done(function(inData) {
+	 
+	 	 if(document.location.href.indexOf('localhost') < 0){
+	 	 	 var inData = $.parseJSON( inData );
+	 	 }
+	 
+	 	 //console.log(inData);
 	   
 	   $('.output.list').empty();
 	   
@@ -195,19 +197,29 @@ ResultsView.prototype.findMatches = function (){
 	   	 // Logic here	 
 	   	 // First, find matches
 	   	 
-	   	 if( (beerProfile.hoppy >= (hoppyness - variability)) && (beerProfile.hoppy <= (hoppyness + variability)) ){
-	   	 	 //console.log('hoppy secondary match: '+ name);
-	   	 	 matches.push(beer);
+	   	 if((beerProfile.hoppy == 0) && 
+	   	 	 (beerProfile.boozy == 0) && 
+	   	 	 (beerProfile.complex == 0)
+	   	 	 ){
+		   	 	 matches.push(beer);
 	   	 }
+	   	 else {
 	   	 
-	   	 if( (beerProfile.boozy >= (alcohol - variability)) && (beerProfile.boozy <= (alcohol + variability)) ){
-	   	 	 //console.log('alcohol secondary match: '+ name);
-	   	 	 matches.push(beer);
-	   	 }
+		   	 if( (beerProfile.hoppy >= (hoppyness - variability)) && (beerProfile.hoppy <= (hoppyness + variability)) ){
+		   	 	 //console.log('hoppy secondary match: '+ name);
+		   	 	 matches.push(beer);
+		   	 }
+		   	 
+		   	 if( (beerProfile.boozy >= (alcohol - variability)) && (beerProfile.boozy <= (alcohol + variability)) ){
+		   	 	 //console.log('alcohol secondary match: '+ name);
+		   	 	 matches.push(beer);
+		   	 }
+		   	 
+		   	 if( (beerProfile.complex >= (complexity - variability)) && (beerProfile.complex <= (complexity + variability)) ){
+		   	 	 //console.log('complexity secondary match: '+ name);
+		   	 	 matches.push(beer);
+		   	 }
 	   	 
-	   	 if( (beerProfile.complex >= (complexity - variability)) && (beerProfile.complex <= (complexity + variability)) ){
-	   	 	 //console.log('complexity secondary match: '+ name);
-	   	 	 matches.push(beer);
 	   	 }
 							
 		 });
@@ -236,13 +248,23 @@ ResultsView.prototype.findMatches = function (){
 			 function getPrimaryMatches(){
 				 for(x=0; x < nonDuplicatedArray.length; x++){
 				 
-				 	 // primary matches
-				 	 if((nonDuplicatedArray[x].hoppyness == beerProfile.hoppy) &&
-				 	 	  (nonDuplicatedArray[x].alcohol == beerProfile.boozy) &&
-				 	 	  (nonDuplicatedArray[x].complexity == beerProfile.complex)
-				 	 ){
-					 	 //console.log('3/3 match: '+ nonDuplicatedArray[x].name);
-					 	 orderedList.push(nonDuplicatedArray[x]);
+				 	 if((beerProfile.hoppy == 0) && 
+			   	 	 (beerProfile.boozy == 0) && 
+			   	 	 (beerProfile.complex == 0)
+			   	 ){
+					   	 orderedList.push(nonDuplicatedArray[x]);
+			   	 }
+			   	 else {
+				 
+					 	 // primary matches
+					 	 if((nonDuplicatedArray[x].hoppyness == beerProfile.hoppy) &&
+					 	 	  (nonDuplicatedArray[x].alcohol == beerProfile.boozy) &&
+					 	 	  (nonDuplicatedArray[x].complexity == beerProfile.complex)
+					 	 ){
+						 	 //console.log('3/3 match: '+ nonDuplicatedArray[x].name);
+						 	 orderedList.push(nonDuplicatedArray[x]);
+					 	 }
+				 	 
 				 	 }
 										
 				 }
@@ -355,7 +377,7 @@ ResultsView.prototype.findMatches = function (){
 		 	 for(y=0; y < output.length; y++){
 		 
 				 $('.output.list')
-			   	.append('<div class="beer-sum">'+
+			   	.append('<div class="beer-sum noclick">'+
 										'<div class="info">'+
 											'<h2 class="name">'+ output[y].name +'</h2>'+
 											'<div class="description">'+ output[y].style +'</div>'+
@@ -369,7 +391,22 @@ ResultsView.prototype.findMatches = function (){
 								
 				}
 				
-				$('.output.list').append('<div class="num-results">'+ output.length +' matches</div>');
+				$('.output.list').prepend('<div class="num-results">'+ output.length +' matches</div>');
+				
+				setTimeout(function(){
+					$('.beer-sum').removeClass('noclick');
+				}, 400);
+					
+				$('.beer-sum').click(function(){
+				 var name = $('.name', this).text();
+				 
+				 var params = new Object();
+				 		 params.name = name;
+				 
+				 gApplication.refreshView('single', params, 'nu-slide-in-from-right');
+				 gApplication.hideView('results');
+				 
+			 });
 		 }
 	   
 	 });

@@ -3,6 +3,7 @@
 <html>
 <head>
 <title>Local Brewing Co.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
 <!-- styles -->
 
@@ -20,9 +21,9 @@
 <script type="text/javascript">
 
 	var beerProfile = new Object();
-			beerProfile.hoppy = 5;
-			beerProfile.boozy = 5;
-			beerProfile.complex = 5;
+			beerProfile.hoppy = 0;
+			beerProfile.boozy = 0;
+			beerProfile.complex = 0;
 	
 </script>
 
@@ -30,9 +31,14 @@
 
 <body>
 	
+	<!--
 	<section pos-view="beerfinder" class="pos-visible beer-finder"></section>
+	-->
 	<section pos-view="taplist" class="pos-invisible tap-list"></section>
-
+	<div pos-view="results" class="results pos-visible"></div>
+	<div pos-view="single" class="single pos-invisible"></div>
+	
+	<!--
 	<footer>
 		<ul>
 			<li 
@@ -44,6 +50,7 @@
 		</ul>
 	</footer>
 	<img src="img/logo.png" class="logo" alt="logo" width="62" />
+	-->
 </body>
 
 </html>

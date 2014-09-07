@@ -5,17 +5,19 @@
          "abv":"6.4",
          "ibu":"59",
          "style":"A cascadian dark ale or india black ale",
-         "description":"Named after the year San Francisco’s Presidio and first mission were founded, 1776 hearkens in a new era of IPA: the Cascadian Dark Ale. Local’s version welcomes drinkers with a bright floral, citrusy aroma from Centennial hops. The flavor also carries this strong floral-hop signature along with cedar undertones. Expect moderate bitterness and a surprisingly light body from this San Francisco “first.”",
-         "hoppyness":"6",
-         "alcohol":"5",
-         "complexity":"5"
+         "description":"Named after the year San Francisco‚Äôs Presidio and first mission were founded, 1776 hearkens in a new era of IPA: the Cascadian Dark Ale. Local‚Äôs version welcomes drinkers with a bright floral, citrusy aroma from Centennial hops. The flavor also carries this strong floral-hop signature along with cedar undertones. Expect moderate bitterness and a surprisingly light body from this San Francisco ‚Äúfirst.‚Äù",
+         "hoppyness":"0",
+         "alcohol":"1",
+         "complexity":"0",
+         "ontap":"true",
+         "available":"false"
       },
       {  
          "name":"GLEN PARK PALE ALE",
          "abv":"6.2",
          "ibu":"40",
          "style":"A pale ale",
-         "description":"Floral hops dominate the aroma and flavor of this golden brew. German Munich and caramel malts balance the hop bitterness, resulting in a smoother pale ale than you’ll find on many taps. Sip for citrus and candy notes, which comes from using Amarillo and Glacier hops. The perfect beer for a hot summer day.",
+         "description":"Floral hops dominate the aroma and flavor of this golden brew. German Munich and caramel malts balance the hop bitterness, resulting in a smoother pale ale than you‚Äôll find on many taps. Sip for citrus and candy notes, which comes from using Amarillo and Glacier hops. The perfect beer for a hot summer day.",
          "hoppyness":"4",
          "alcohol":"5",
          "complexity":"3"
@@ -25,7 +27,7 @@
          "abv":"5.1",
          "ibu":"56",
          "style":"A west coast porter",
-         "description":"Local brewed O.B. Porter to match San Francisco’s rugged western boundary. Brewed in true westcoast porter style, this medium-bodied beer has a well-rounded flavor that lingers nicely. You’ll taste hints of chocolate and an earthy backbone, making this an robust beer that won’t fill you up. Perhaps the beverage to pack for your next beach picnic?",
+         "description":"Local brewed O.B. Porter to match San Francisco‚Äôs rugged western boundary. Brewed in true westcoast porter style, this medium-bodied beer has a well-rounded flavor that lingers nicely. You‚Äôll taste hints of chocolate and an earthy backbone, making this an robust beer that won‚Äôt fill you up. Perhaps the beverage to pack for your next beach picnic?",
          "hoppyness":"2",
          "alcohol":"4",
          "complexity":"6"
@@ -35,7 +37,7 @@
          "abv":"5.1",
          "ibu":"26",
          "style":"A golden ale",
-         "description":"Light, crisp, refreshing – with personality. Reminiscent of a German Pils, but brewed with California ale yeast. It includes some German malt and two German hop varietals, creating a perfect “San Francisco summer in September” beer.",
+         "description":"Light, crisp, refreshing ‚Äì with personality. Reminiscent of a German Pils, but brewed with California ale yeast. It includes some German malt and two German hop varietals, creating a perfect ‚ÄúSan Francisco summer in September‚Äù beer.",
          "hoppyness":"2",
          "alcohol":"4",
          "complexity":"3"
