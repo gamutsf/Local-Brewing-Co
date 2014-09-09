@@ -6,9 +6,9 @@
          "ibu":"59",
          "style":"A cascadian dark ale or india black ale",
          "description":"Named after the year San Francisco’s Presidio and first mission were founded, 1776 hearkens in a new era of IPA: the Cascadian Dark Ale. Local’s version welcomes drinkers with a bright floral, citrusy aroma from Centennial hops. The flavor also carries this strong floral-hop signature along with cedar undertones. Expect moderate bitterness and a surprisingly light body from this San Francisco “first.”",
-         "hoppyness":"0",
+         "hoppyness":"1",
          "alcohol":"1",
-         "complexity":"0",
+         "complexity":"2",
          "ontap":"true",
          "available":"false"
       },

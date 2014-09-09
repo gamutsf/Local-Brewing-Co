@@ -147,6 +147,10 @@ ResultsView.prototype.rangeOutput = function (){
 		 var curVal = el.val();
 	 }
 	 
+	 if(curVal == 0){
+		 curVal = 'X';
+	 }
+	 
 	 //console.log(beerProfile);
 	 
 	 // Move bubble
@@ -205,17 +209,23 @@ ResultsView.prototype.findMatches = function (){
 	   	 }
 	   	 else {
 	   	 
-		   	 if( (beerProfile.hoppy >= (hoppyness - variability)) && (beerProfile.hoppy <= (hoppyness + variability)) ){
+		   	 if( (beerProfile.hoppy >= (hoppyness - variability)) && 
+		   	 		 (beerProfile.hoppy <= (hoppyness + variability)) 
+		   	 ){
 		   	 	 //console.log('hoppy secondary match: '+ name);
 		   	 	 matches.push(beer);
 		   	 }
 		   	 
-		   	 if( (beerProfile.boozy >= (alcohol - variability)) && (beerProfile.boozy <= (alcohol + variability)) ){
+		   	 if( (beerProfile.boozy >= (alcohol - variability)) && 
+		   	 		 (beerProfile.boozy <= (alcohol + variability)) 
+		   	 ){
 		   	 	 //console.log('alcohol secondary match: '+ name);
 		   	 	 matches.push(beer);
 		   	 }
 		   	 
-		   	 if( (beerProfile.complex >= (complexity - variability)) && (beerProfile.complex <= (complexity + variability)) ){
+		   	 if( (beerProfile.complex >= (complexity - variability)) && 
+		   	 		 (beerProfile.complex <= (complexity + variability)) 
+		   	 ){
 		   	 	 //console.log('complexity secondary match: '+ name);
 		   	 	 matches.push(beer);
 		   	 }
