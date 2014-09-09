@@ -119,10 +119,10 @@ ResultsView.prototype.rangeOutput = function (){
 	 	 offset = 2; 
 	 }
 	 else if (newPoint >= 1) {
-	 	 offset = -29; 
+	 	 offset = -39; 
 	 }
 	 else {
-	 	 offset = -((newPoint * 100) * 28) / 100; 
+	 	 offset = -((newPoint * 100) * 38) / 100; 
 	 	 //newPlace = width * newPoint + offset;  
 	 }
 	 
@@ -148,10 +148,24 @@ ResultsView.prototype.rangeOutput = function (){
 	 }
 	 
 	 if(curVal == 0){
-		 curVal = 'X';
+		 curVal = 'All';
+		 $('output[for="input-level"]').css({
+		 	'font-size': '12px',
+		 	'text-indent': '-2px'
+		 });
+	 }
+	 else {
+		 $('output[for="input-level"]').css({
+		 	'font-size': '15px',
+		 	'text-indent': '0px'
+		 });
 	 }
 	 
 	 //console.log(beerProfile);
+	 
+	 $('.progress-bar').css({
+		 'width': (newPoint * 100) + "%"
+	 })
 	 
 	 // Move bubble
 	 el
@@ -202,9 +216,9 @@ ResultsView.prototype.findMatches = function (){
 	   	 // First, find matches
 	   	 
 	   	 if((beerProfile.hoppy == 0) && 
-	   	 	 (beerProfile.boozy == 0) && 
-	   	 	 (beerProfile.complex == 0)
-	   	 	 ){
+	   	 	  (beerProfile.boozy == 0) && 
+	   	 	  (beerProfile.complex == 0)
+	   	 ){
 		   	 	 matches.push(beer);
 	   	 }
 	   	 else {
@@ -259,8 +273,8 @@ ResultsView.prototype.findMatches = function (){
 				 for(x=0; x < nonDuplicatedArray.length; x++){
 				 
 				 	 if((beerProfile.hoppy == 0) && 
-			   	 	 (beerProfile.boozy == 0) && 
-			   	 	 (beerProfile.complex == 0)
+			   	 	  (beerProfile.boozy == 0) && 
+			   	 	  (beerProfile.complex == 0)
 			   	 ){
 					   	 orderedList.push(nonDuplicatedArray[x]);
 			   	 }
@@ -329,7 +343,7 @@ ResultsView.prototype.findMatches = function (){
 
 					 // tertiary matches
 					 
-				 	 if(((beerProfile.complex >= (parseInt(nonDuplicatedArray[x].complexity) - variability)) && 
+					 if(((beerProfile.complex >= (parseInt(nonDuplicatedArray[x].complexity) - variability)) && 
 					    (beerProfile.complex <= (parseInt(nonDuplicatedArray[x].complexity) + variability))) &&
 				 	 		(nonDuplicatedArray[x].hoppyness != beerProfile.hoppy) &&
 				 	 	  (nonDuplicatedArray[x].alcohol != beerProfile.boozy)
@@ -366,7 +380,10 @@ ResultsView.prototype.findMatches = function (){
 			 getPrimaryMatches();
 		 }
 		 
+		 
+		 // Begin filter sequence
 		 removeDuplicates(matches);
+		 
 		 
 		 function printMatches(){
 		 
