@@ -24,7 +24,7 @@ header {
 	height: 60px;
 	line-height: 60px;
 	width: 100%;
-	background: red;
+	background: #ee3423;
 	z-index: 99999;
 }
 	header .btn {
