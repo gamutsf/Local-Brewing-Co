@@ -1,6 +1,6 @@
 .results {
 	position: relative;
-	top: 0;
+	top: 60px;
 	width: 100%;
 	margin-bottom: 100px;
 }
@@ -14,9 +14,10 @@
 			float: left;
 			width: 33%;
 			height: 100%;
-			line-height: 80px;
+			/* line-height: 80px; */
 			text-align: center;
-			border-right: 1px solid #d7d7d7;
+			border-right: 1px solid darkgray;
+			background: lightgray;
 		}
 			.results ul li:last-child { border: none; }
 			.results ul li.active {
@@ -24,6 +25,19 @@
 				border-bottom: 1px solid #606060;
 				color: #FFF;
 			}
+			
+			.results ul li .filter-value {
+				margin-top: 20px;
+			}
+	
+	.results .shelf {
+		background: #383838;
+		width: 100%;
+		height: auto;
+		padding: 6px 0px;
+		min-height: 34px;
+		color: white;
+	}
 	
 	.results .slider {
 		background: #383738;
@@ -34,7 +48,9 @@
 		-webkit-box-pack: center;
 		justify-content: center;
 		align-items: center;
-		padding: 6px 0px;
+		position: absolute;
+		left: 0px;
+		z-index: 2;
 	}	
 	
 		.results .slider .range-end {
@@ -148,14 +164,21 @@
 					.results .list .beer-sum .levels .boozy-level { background: #606060; }
 					.results .list .beer-sum .levels .complex-level { background: #b0b0b0; } 	
 		
-		.results .list .num-results {
-			text-align: left;
-			background: #333;
-			color: #fff;
-			font-size: 12px;
-			padding: 12px 15px;
-			border-bottom: 1px solid #d7d7d7;
-			display: none;
+		.num-results {
+			position: absolute;
+			left: 15px;
+			margin-top: 8px;
+			font-size: 14px;
+			z-index: 0;
+		}
+		
+		.profile {
+			position: absolute;
+			right: 15px;
+			margin-top: 8px;
+			font-size: 14px;
+			z-index: 0;
+			color: #ee3423;
 		}
 				
 				

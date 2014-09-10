@@ -30,6 +30,22 @@
 </head>
 
 <body>
+
+	<section pos-view="overlay:hc" class="pos-invisible overlay"></section>
+
+	<header pos-view="header:" class="pos-visible">
+		<div
+			pos-action-1="(click) refreshview: overlay"
+			pos-action-1-params="section: account;"
+			class="left btn"
+		>X</div>
+		<div class="section-name title">Beer Finder</div>
+		<div 
+			pos-action-1="(click) refreshview: overlay"
+			pos-action-1-params="section: navigation;"
+			class="right btn"
+		>...</div>
+	</header>
 	
 	<!--
 	<section pos-view="beerfinder" class="pos-visible beer-finder"></section>

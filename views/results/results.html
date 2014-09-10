@@ -1,42 +1,53 @@
 <ul class="question-tabs">
 	<li 
-		pos-action-1="showview: slider/pos-transition-visible-quick"
-		pos-action-1-params="section: hoppy;"
-		pos-action-2="call: getProfile"
-		pos-action-2-params="section: hoppy;"
-		pos-action-3="removeclass: active/.question-tabs li"
-		pos-action-4="addclass: active/this-element"
+		pos-action-1="call: toggleSlider"
+		pos-action-1-params="section: hoppy; el: hoppyness;"
 		class="hoppyness tab"
-	>Hoppyness</li>
+	>
+		<div class="filter-value"></div>
+		<div class="filter-name">Hoppyness</div>
+	</li>
 	<li
-		pos-action-1="showview: slider/pos-transition-visible-quick"
-		pos-action-1-params="section: boozy;"
-		pos-action-2="call: getProfile"
-		pos-action-2-params="section: boozy;"
-		pos-action-3="removeclass: active/.question-tabs li"
-		pos-action-4="addclass: active/this-element"
+		pos-action-1="call: toggleSlider"
+		pos-action-1-params="section: boozy; el: alcohol;"
 		class="alcohol tab"
-	>Alcohol</li>
+	>
+		<div class="filter-value"></div>
+		<div class="filter-name">Alcohol</div>
+	</li>
 	<li
-		pos-action-1="showview: slider/pos-transition-visible-quick"
-		pos-action-1-params="section: complex;"
-		pos-action-2="call: getProfile"
-		pos-action-2-params="section: complex;"
-		pos-action-3="removeclass: active/.question-tabs li"
-		pos-action-4="addclass: active/this-element"
+		pos-action-1="call: toggleSlider"
+		pos-action-1-params="section: complex; el: complexity;"
 		class="complexity tab"
-	>Complexity</li>
+	>
+		<div class="filter-value"></div>
+		<div class="filter-name">Complexity</div>
+	</li>
 </ul>
-<div class="slider pos-invisible" pos-view="slider:">
-	<div class="range-end">Less</div>
-	<div class="selector">
-		<form>
-			<div class="progress-bar"></div>
-			<input type="range" name="level" id="input-level"  min="0" max="10" value="0" style="width: 100%">
-			<output for="input-level" onforminput="value = input-level.valueAsNumber;"></output>
-		</form>
+
+<div class="pos-visible shelf" pos-view="shelf:">
+	
+	<div pos-view="slider:" class="slider pos-invisible">
+		<div class="range-end">Less</div>
+		<div class="selector">
+			<form>
+				<div class="progress-bar"></div>
+				<input type="range" name="level" id="input-level"  min="0" max="10" value="0" style="width: 100%">
+				<output for="input-level" onforminput="value = input-level.valueAsNumber;"></output>
+			</form>
+		</div>
+		<div class="range-end">More</div>
 	</div>
-	<div class="range-end">More</div>
+	
+	<div pos-view="controls:">
+		<div class="num-results"></div>
+		<div
+			pos-action-1="(click) refreshview: overlay"
+			pos-action-1-params="section: profiles;" 
+			class="profile"
+		>Save this profile</div>
+	</div>
+	
 </div>
 
 <div class="list output">
