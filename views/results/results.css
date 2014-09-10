@@ -16,7 +16,8 @@
 			height: 100%;
 			/* line-height: 80px; */
 			text-align: center;
-			border-right: 1px solid #d7d7d7;
+			border-right: 1px solid darkgray;
+			background: lightgray;
 		}
 			.results ul li:last-child { border: none; }
 			.results ul li.active {

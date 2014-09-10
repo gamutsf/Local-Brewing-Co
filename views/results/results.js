@@ -415,7 +415,7 @@ ResultsView.prototype.findMatches = function (){
 				 		 params.name = name;
 				 
 				 gApplication.refreshView('single', params, 'nu-slide-in-from-right');
-				 gApplication.hideView('results');
+				 //gApplication.hideView('results');
 				 
 			 });
 		 }
