@@ -20,13 +20,13 @@
 		}
 			.results ul li:last-child { border: none; }
 			.results ul li.active {
-				background: #383838;
+				background: #383738;
 				border-bottom: 1px solid #606060;
 				color: #FFF;
 			}
 	
 	.results .slider {
-		background: #383838;
+		background: #383738;
 		width: 100%;
 		height: auto;
 		display: -webkit-flex;
