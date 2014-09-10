@@ -18,36 +18,13 @@ ResultsView.prototype.onDOMReady = function ()
 {
 	//console.log ("ResultsView.onDOMReady()");
 	
-	this.rangeOutput();
+	var self = this;
 	
-	/*
-	function toggleSlider(x, section){
-		if( $(x).hasClass('active') ){
-			$(x).removeClass('active');
-			gApplication.hideView('slider', 'pos-transition-visible-quick');
-		}
-		else {
-			$('.tab').removeClass('active');
-			$(x).addClass('active');
-			
-			var params = new Object();
-					params.section = section;
-			gApplication.showView('slider', null, 'pos-transition-visible-quick');
-		}
-	}
+	self.rangeOutput();
 	
-	$(document).on('click', '.hoppyness.tab', function(){
-		toggleSlider(this, 'hoppy');
-	});
-	
-	$(document).on('click', '.alcohol.tab', function(){
-		toggleSlider(this, 'boozy');
-	});
-	
-	$(document).on('click', '.complexity.tab', function(){
-		toggleSlider(this, 'complex');
-	});
-	*/
+	$('.tab.hoppyness .filter-value').text(beerProfile.hoppy);
+	$('.tab.alcohol .filter-value').text(beerProfile.boozy);
+	$('.tab.complexity .filter-value').text(beerProfile.complex);
 	
 }
 
@@ -96,6 +73,7 @@ ResultsView.prototype.rangeOutput = function (){
 	var el, newPoint, newPlace, offset;
 	
 	var section = this.params;
+	//console.log(section);
 	
 	// Select all range inputs, watch for change
 	$("input[type=range]").on('input change', function() {
@@ -133,14 +111,20 @@ ResultsView.prototype.rangeOutput = function (){
 	 	 if(section.section == "hoppy"){
 			 beerProfile.hoppy = parseInt(value);
 			 var curVal = beerProfile.hoppy;
+			 
+			 $('.tab.hoppyness .filter-value').text(curVal);
 		 }
 		 if(section.section == "boozy"){
 		 	 beerProfile.boozy = parseInt(value);
 		 	 var curVal = beerProfile.boozy;
+		 	 
+		 	 $('.tab.alcohol .filter-value').text(curVal);
 		 }
 		 if(section.section == "complex"){
 		 	 beerProfile.complex = parseInt(value);
 		 	 var curVal = beerProfile.complex;
+		 	 
+		 	 $('.tab.complexity .filter-value').text(curVal);
 		 }
 	 }
 	 else {
@@ -418,7 +402,7 @@ ResultsView.prototype.findMatches = function (){
 								
 				}
 				
-				$('.output.list').prepend('<div class="num-results">'+ output.length +' matches</div>');
+				$('.num-results').empty().prepend(output.length +' matches');
 				
 				setTimeout(function(){
 					$('.beer-sum').removeClass('noclick');
@@ -438,6 +422,30 @@ ResultsView.prototype.findMatches = function (){
 	   
 	 });
 	 
+};
+
+ResultsView.prototype.toggleSlider = function (){
+
+	//console.log(this.params);
+	
+	var x = this.params.el;
+	var section = this.params.section;
+
+	if( $('.'+ x).hasClass('active') ){
+		$('.'+ x).removeClass('active');
+		gApplication.hideView('slider', 'pos-transition-visible-quick');
+	}
+	else {
+		$('.tab').removeClass('active');
+		$('.'+ x).addClass('active');
+		
+		var params = new Object();
+				params.section = section;
+				
+		gApplication.refreshView('slider', null, 'pos-transition-visible-quick');
+		this.getProfile();
+	}
+
 };
 
 $(window).resize(function(){

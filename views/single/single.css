@@ -5,13 +5,12 @@
 	margin-bottom: 100px;
 	background: white;
 	height: 100vh;
+	z-index:99999;
 }
 	.single header {
-		padding: 15px;
+		/* padding: 15px; */
 		font-weight: 600;
 	}
-		.single header div { width: 50%; float: left; }
-			.single header div:last-child { text-align: right; }
 	.single .circle {
 		width: 250px;
 		height: auto;

@@ -18,6 +18,34 @@ section {
 	position: absolute;
 }
 
+header {
+	position: fixed;
+	top: 0;
+	height: 60px;
+	line-height: 60px;
+	width: 100%;
+	background: red;
+	z-index: 99999;
+}
+	header .btn {
+		width: 50px;
+		height: 100%;
+		border: 1px solid white;
+		top: 0px;
+		position: absolute;
+		text-align: center;
+	}
+		header .btn.left {			
+			left: 0px;
+		}
+		header .btn.right {
+			right: 0px;
+		}
+	header .section-name {
+		text-align: center;
+		color: white;
+	}
+
 footer {
 	position: fixed;
 	bottom: 0;
