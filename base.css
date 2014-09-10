@@ -1,5 +1,5 @@
 body {
-	font-family: Arial, Helvetica, "Lucida Grande", sans-serif; 
+	font-family: 'TradeGothic', Helvetica, Arial, "Lucida Grande", sans-serif; 
 	font-weight: 300;
 	margin: 0;
 	padding: 0;
@@ -484,4 +484,11 @@ footer {
 	100% {
 		transform: translate3d(0, 0, 0);
 	}
+}
+
+/* fonts */
+
+@font-face {
+  font-family: 'TradeGothic';
+  src: url('fonts/tradegothicltstd-bdcn20-webfont.ttf') format('truetype');
 }
