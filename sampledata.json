@@ -13,7 +13,7 @@
          "available":"false"
       },
       {  
-         "name":"GLEN PARK PALE ALE",
+         "name":"Glen Park Pale Ale",
          "abv":"6.2",
          "ibu":"40",
          "style":"A pale ale",
@@ -23,7 +23,7 @@
          "complexity":"3"
       },
       {  
-         "name":"O.B. PORTER",
+         "name":"O.B. Porter",
          "abv":"5.1",
          "ibu":"56",
          "style":"A west coast porter",
@@ -33,7 +33,7 @@
          "complexity":"6"
       },
       {  
-         "name":"THE GATE",
+         "name":"The Gate",
          "abv":"5.1",
          "ibu":"26",
          "style":"A golden ale",
@@ -43,7 +43,7 @@
          "complexity":"3"
       },
       {  
-         "name":"HETCH HETCHY WHEAT IPA",
+         "name":"Hetch Hetchy Wheat IPA",
          "abv":"6.1",
          "ibu":"70",
          "style":"A wheat india pale ale",
@@ -53,7 +53,7 @@
          "complexity":"8"
       },
       {  
-         "name":"SAN FRANCISCO WINTER",
+         "name":"San Francisco Winter",
          "abv":"5.7",
          "ibu":"28",
          "style":"A California Common Ale",
