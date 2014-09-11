@@ -37,11 +37,16 @@ header {
 	header .btn {
 		width: 50px;
 		height: 100%;
-		border: 1px solid white;
 		top: 0px;
 		position: absolute;
 		text-align: center;
 	}
+		header .btn.icon-dots, 
+		header .btn.icon-menu {
+			color: #fff;
+			font-size: 160%;
+		}
+		
 		header .btn.left {			
 			left: 0px;
 		}
@@ -81,6 +86,20 @@ footer {
 		margin-left: -31px;
 		z-index: 999999;
 	}
+	
+/* icons */
+
+[class^="icon-"]:before, [class*=" icon-"]:before {
+	font-family: 'local-icon';
+}
+ 
+.icon-dots:before { content: '\e800'; } 
+.icon-menu:before { content: '\e801'; } 
+.icon-share:before { content: '\e802'; } 
+.icon-complex:before { content: '\e803'; }
+.icon-boozy:before { content: '\e804'; }
+.icon-hoppy:before { content: '\e805'; }
+	
 	
 /* Neutrino global stock animations and transitions */
 
@@ -540,7 +559,7 @@ footer {
 }
 
 @font-face {
-  font-family: 'smartcom';
+  font-family: 'local-icon';
   src: url('fonts/local-icon.eot');
   src: url('fonts/local-icon.eot') format('embedded-opentype'),
        url('fonts/local-icon.woff') format('woff'),

@@ -393,10 +393,10 @@ ResultsView.prototype.findMatches = function (){
 											'<h2 class="name">'+ output[y].name +'</h2>'+
 											'<div class="description">'+ output[y].style +'</div>'+
 										'</div>'+
-										'<div class="levels">'+
-											'<div class="hoppy-level level">'+ output[y].hoppyness +'</div>'+
-											'<div class="boozy-level level">'+ output[y].alcohol +'</div>'+
-											'<div class="complex-level level">'+ output[y].complexity +'</div>'+
+										'<div class="levels pale-ale">'+
+											'<div class="icon-hoppy"><div class="hoppy-level level">'+ output[y].hoppyness +'</div></div>'+
+											'<div class="icon-boozy"><div class="boozy-level level">'+ output[y].alcohol +'</div></div>'+
+											'<div class="icon-complex"><div class="complex-level level">'+ output[y].complexity +'</div></div>'+
 										'</div>'+
 									'</div>');
 								
