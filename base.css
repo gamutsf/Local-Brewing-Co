@@ -1,54 +1,3 @@
-/* Fonts */
-
-@font-face {
-    font-family: 'Local Headline';
-    src: url('fonts/localheadline-bold-webfont.eot');
-    src: url('fonts/localheadline-bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/localheadline-bold-webfont.woff2') format('woff2'),
-         url('fonts/localheadline-bold-webfont.woff') format('woff'),
-         url('fonts/localheadline-bold-webfont.ttf') format('truetype'),
-         url('fonts/localheadline-bold-webfont.svg#local_headlinebold') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Trade Gothic Roman';
-    src: url('fonts/tradegothic-webfont.eot');
-    src: url('fonts/tradegothic-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/tradegothic-webfont.woff2') format('woff2'),
-         url('fonts/tradegothic-webfont.woff') format('woff'),
-         url('fonts/tradegothic-webfont.ttf') format('truetype'),
-         url('fonts/tradegothic-webfont.svg#tradegothicroman') format('svg');
-    font-weight: normal;
-    font-style: normal;
-
-}
-
-@font-face {
-    font-family: 'Trade Gothic Bold';
-    src: url('fonts/tradegothic-bold-webfont.eot');
-    src: url('fonts/tradegothic-bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/tradegothic-bold-webfont.woff2') format('woff2'),
-         url('fonts/tradegothic-bold-webfont.woff') format('woff'),
-         url('fonts/tradegothic-bold-webfont.ttf') format('truetype'),
-         url('fonts/tradegothic-bold-webfont.svg#tradegothicbold') format('svg');
-    font-weight: normal;
-    font-style: normal;
-
-}
-
-@font-face {
-  font-family: 'smartcom';
-  src: url('fonts/local-icon.eot');
-  src: url('fonts/local-icon.eot') format('embedded-opentype'),
-       url('fonts/local-icon.woff') format('woff'),
-       url('fonts/local-icon.ttf') format('truetype'),
-       url('fonts/local-icon.svg') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
 /* Elements */
 
 body {
@@ -547,4 +496,56 @@ footer {
 	100% {
 		transform: translate3d(0, 0, 0);
 	}
+}
+
+
+/* Fonts */
+
+@font-face {
+    font-family: 'Local Headline';
+    src: url('fonts/localheadline-bold-webfont.eot');
+    src: url('fonts/localheadline-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/localheadline-bold-webfont.woff2') format('woff2'),
+         url('fonts/localheadline-bold-webfont.woff') format('woff'),
+         url('fonts/localheadline-bold-webfont.ttf') format('truetype'),
+         url('fonts/localheadline-bold-webfont.svg#local_headlinebold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Trade Gothic Roman';
+    src: url('fonts/tradegothic-webfont.eot');
+    src: url('fonts/tradegothic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/tradegothic-webfont.woff2') format('woff2'),
+         url('fonts/tradegothic-webfont.woff') format('woff'),
+         url('fonts/tradegothic-webfont.ttf') format('truetype'),
+         url('fonts/tradegothic-webfont.svg#tradegothicroman') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Trade Gothic Bold';
+    src: url('fonts/tradegothic-bold-webfont.eot');
+    src: url('fonts/tradegothic-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/tradegothic-bold-webfont.woff2') format('woff2'),
+         url('fonts/tradegothic-bold-webfont.woff') format('woff'),
+         url('fonts/tradegothic-bold-webfont.ttf') format('truetype'),
+         url('fonts/tradegothic-bold-webfont.svg#tradegothicbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+  font-family: 'smartcom';
+  src: url('fonts/local-icon.eot');
+  src: url('fonts/local-icon.eot') format('embedded-opentype'),
+       url('fonts/local-icon.woff') format('woff'),
+       url('fonts/local-icon.ttf') format('truetype'),
+       url('fonts/local-icon.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
