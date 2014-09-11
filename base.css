@@ -38,6 +38,16 @@
 
 }
 
+@font-face {
+  font-family: 'smartcom';
+  src: url('fonts/local-icon.eot');
+  src: url('fonts/local-icon.eot') format('embedded-opentype'),
+       url('fonts/local-icon.woff') format('woff'),
+       url('fonts/local-icon.ttf') format('truetype'),
+       url('fonts/local-icon.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
 /* Elements */
 
