@@ -4,9 +4,102 @@
 	width: 100%;
 	background: rgba(0, 0, 0, 0.85);
 	z-index: 999999;
+	color: white;
+	display: table;
 }
 
 	.overlay header {
 		background: none;
 		color: white;
 	}
+		.overlay header .close {
+			font-size: 24px;
+		}
+	
+	.overlay .content {
+		display: table-cell;
+		vertical-align: middle;
+		top: 0px;
+	}
+		.overlay .content ul {
+			height: auto;
+			width: 80%;
+			display: -webkit-flex;
+			align-items: center;
+			justify-content: space-between;
+			margin: 0 auto;
+		}
+			.overlay .content ul li {
+				display: block;
+				float: left;
+				width: 33.3%;
+				height: 100%;
+				text-align: center;
+				text-transform: uppercase;
+				position: relative;
+				font-size: 14px;
+				font-weight: 600;
+				letter-spacing: -0.5px;
+				font-family: 'Trade Gothic Bold';
+			}
+				.overlay .content ul li:last-child { border-right: none; }
+				
+				.overlay .content ul li [class^="icon-"]:before, 
+				.overlay .content ul li [class*=" icon-"]:before {
+					position: absolute;
+					left: 0px;
+					width: 100%;
+					font-size: 75px;
+					-webkit-text-stroke: 0.1px #fff;
+					color: transparent;
+					/* text-shadow: 0px 1px 1px rgba(255, 255, 255, 1); */
+				}		
+				
+				.overlay .content ul li .filter-value {
+					margin-top: 9px;
+					line-height: 80px;
+					z-index: 1;
+					color: #FFF;
+					position: relative;
+					letter-spacing: -1px;
+					font-size: 21px;
+				}
+				
+				.overlay .content ul li .filter-name { 
+					margin-top: 10px; 
+				}
+				
+		.overlay .content h1 {
+			margin: 50px auto 20px;
+			text-align: center;
+			font-family: 'Trade Gothic Roman', Arial, Helvetica, sans-serif;
+			font-weight: 200;
+		}
+		
+		input {
+			background: none;
+			border: 0;
+			color: #FFF;
+			width: 100%;
+			padding: 15px;
+			border-top: 1px solid #FFF;
+			border-bottom: 1px solid #FFF;
+			margin-bottom: 20px;
+			font-size: 21px;
+			box-sizing: border-box;
+			outline: 0;
+		}
+		
+		button {
+			background: none;
+			border: 0;
+			outline: 0;
+			margin: 0 auto;
+			color: white;
+			font-size: 21px;
+			width: 100%;
+			text-align: center;
+			text-transform: uppercase;
+			font-family: 'Trade Gothic Roman', Arial, Helvetica, sans-serif;
+			font-weight: 200;
+		}

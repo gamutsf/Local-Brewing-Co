@@ -191,7 +191,7 @@ ResultsView.prototype.findMatches = function (){
 	   $.each(inData.beers, function(i, beer){
 	   
 	   	 var name = beer.name;
-	   	 var style = beer.style;
+	   	 var style = beer.short_description;
 	   	 var hoppyness = beer.hoppyness;
 	   	 var alcohol = beer.alcohol;
 	   	 var complexity = beer.complexity;
@@ -388,12 +388,12 @@ ResultsView.prototype.findMatches = function (){
 		 	 for(y=0; y < output.length; y++){
 		 
 				 $('.output.list')
-			   	.append('<div class="beer-sum noclick">'+
+			   	.append('<div class="beer-sum '+ output[y].style +' noclick">'+
 										'<div class="info">'+
 											'<h2 class="name">'+ output[y].name +'</h2>'+
-											'<div class="description">'+ output[y].style +'</div>'+
+											'<div class="description">'+ output[y].short_description +'</div>'+
 										'</div>'+
-										'<div class="levels pale-ale">'+
+										'<div class="levels">'+
 											'<div class="icon-hoppy"><div class="hoppy-level level">'+ output[y].hoppyness +'</div></div>'+
 											'<div class="icon-boozy"><div class="boozy-level level">'+ output[y].alcohol +'</div></div>'+
 											'<div class="icon-complex"><div class="complex-level level">'+ output[y].complexity +'</div></div>'+

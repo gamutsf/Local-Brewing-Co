@@ -1,7 +1,47 @@
 <header>
-	<div class="section-header title">$params.section;</div>
+	<div class="section-header title"></div>
 	<div 
 		pos-action-1="(click) hideview: overlay"
 		class="close btn right"
-	>X</div>
+	>&times;</div>
 </header>
+
+<pos-if true="'$params.section;' == 'save-profile'">
+
+	<div pos-view="saveprofile:" class="save-profile content">
+			
+		<ul class="icons">
+			<li 
+				class="hoppyness tab"
+			>
+				<div class="icon-hoppy">
+					<div class="filter-value">5</div>
+				</div>
+				<div class="filter-name">Hoppyness</div>
+			</li>
+			<li
+				class="alcohol tab"
+			>
+				<div class="icon-boozy">
+					<div class="filter-value">5</div>
+				</div>
+				<div class="filter-name">Alcohol</div>
+			</li>
+			<li
+				class="complexity tab"
+			>
+				<div class="icon-complex">
+					<div class="filter-value">5</div>
+				</div>
+				<div class="filter-name">Complexity</div>
+			</li>
+		</ul>
+		
+		<h1>Give this flavor profile a name:</h1>
+		<form>
+			<input type="text" placeholder="Name">
+			<button>Save</button>
+		</form>
+	</div>
+	
+</pos-if>

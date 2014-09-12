@@ -1,5 +1,10 @@
 /* Elements */
 
+html {
+	width: 100%;
+	height: 100%;
+}
+
 body {
 	font-family: 'Trade Gothic Roman', Arial, Helvetica, sans-serif; 
 	font-weight: 300;
@@ -7,6 +12,9 @@ body {
 	padding: 0;
 	-webkit-user-select: none;
 	color: #383738;
+	background: #fefefe url(img/bg.png) 0 0 repeat-y;
+	background-size: 320px auto;
+	height: 100%;
 	/* -webkit-font-smoothing: antialiased; */
 }
 
@@ -32,8 +40,10 @@ header {
 	height: 60px;
 	line-height: 60px;
 	width: 100%;
-	background: #ee3423;
+	background: #ee3423 url(img/header-bg.png) 0 0 no-repeat;
+	background-size: 320px auto;
 	z-index: 99999;
+	overflow: hidden;
 }
 	header .btn {
 		width: 50px;
@@ -42,6 +52,9 @@ header {
 		position: absolute;
 		text-align: center;
 	}
+		header .btn:active:before {
+			color: #383838;
+		}
 		header .btn.icon-dots, 
 		header .btn.icon-menu {
 			color: #fff;
@@ -63,6 +76,12 @@ header {
 		letter-spacing: 1px;
 		font-weight: 400;
 	}
+	
+.content {
+	position: relative;
+	top: 60px;
+	width: 100%;
+}
 
 footer {
 	position: fixed;

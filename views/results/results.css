@@ -2,21 +2,24 @@
 	position: relative;
 	top: 60px;
 	width: 100%;
-	margin-bottom: 100px;
+	/* margin-bottom: 100px; */
 }
 	.results ul {
-		height: 62px;
+		height: 76px;
 		width: 100%;
 		border-bottom: 1px solid #d7d7d7;
+		display: -webkit-flex;
+		align-items: center;
+		justify-content: space-between;
 	}
 		.results ul li {
 			display: block;
 			float: left;
-			width: 33%;
+			width: 33.3%;
 			height: 100%;
 			text-align: center;
 			border-right: 1px solid darkgray;
-			background: url(./img/filter-bg.png);
+			background: url(img/filter-bg.png) 0 0 repeat;
 			text-transform: uppercase;
 			position: relative;
 			font-size: 14px;
@@ -26,9 +29,9 @@
 		}
 			.results ul li:last-child { border-right: none; }
 			.results ul li.active {
-				background: url(./img/filter-bg-active.png);
+				background: url(img/filter-bg-active.png) 0 0 repeat;
 				border-bottom: 1px solid #606060;
-				text-shadow: 0px 1px 1px rgba(5, 5, 5, 1);
+				text-shadow: 0px -1px -1px rgba(5, 5, 5, 1);
 			}
 			
 			.results ul li [class^="icon-"]:before, 
@@ -36,31 +39,32 @@
 				position: absolute;
 				left: 0px;
 				width: 100%;
-				font-size: 30px;
-				text-shadow: 0px 1px 1px rgba(255, 255, 255, 1);
+				font-size: 36px;
+				/* text-shadow: 0px 1px 1px rgba(255, 255, 255, 1); */
 			}
 				.results ul li.active [class^="icon-"]:before, 
 				.results ul li.active [class*=" icon-"]:before {
 					-webkit-text-stroke: 0.1px #fff;
-				}
-				
-					
+					/* text-shadow: -1px -1px 0px rgba(5, 5, 5, 1); */
+				}			
 			
 			.results ul li .filter-value {
-				margin-top: 5px;
-				line-height: 35px;
+				margin-top: 9px;
+				line-height: 38px;
 				z-index: 1;
-				color: #fff;
+				color: #FFF;
 				position: relative;
+				letter-spacing: -1px;
+				font-size: 10px;
 			}
 			
 			.results ul li .filter-name { 
-				margin-top: 0px; 
+				margin-top: 5px; 
 				text-shadow: 0px 1px 1px rgba(255, 255, 255, 1);
 			}
 				.results ul li.active .filter-name { 
 					color: #fff; 
-					text-shadow: 0px 1px 1px rgba(5, 5, 5, 1);
+					text-shadow: 0px 1px 0px rgba(5, 5, 5, 1);
 				}
 	
 	.results .shelf {
@@ -98,6 +102,7 @@
 			width: 80%;
 			overflow: visible;
 			margin-top:0px;
+			margin-left: -6px;
 		}
 		.results .slider output {
 		  position: absolute;	 
@@ -119,6 +124,7 @@
 			line-height: 38px;
 			z-index: 3;
 			pointer-events: none;
+			letter-spacing: -1px;
 		}
 			form { 
 				position: relative; 
@@ -179,6 +185,9 @@
 			align-items: center;
 			justify-content: space-between;
 		}
+			.results .list .beer-sum:active {
+				background: rgba(0,0,0,0.1);
+			}
 		.results .list .beer-sum.noclick {
 			pointer-events: none;
 		}
@@ -197,8 +206,8 @@
 		
 			} 
 				.results .list .beer-sum .levels .level {
-					width: 25px;
-					height: 34px;
+					width: 31px;
+					height: 38px;
 					line-height: 34px;
 					font-size: 12px;
 					text-align: center;
@@ -213,7 +222,7 @@
 				
 				.results .list .beer-sum .levels [class^="icon-"], 
 				.results .list .beer-sum .levels [class*=" icon-"] {			
-					width: 25px;
+					width: 30px;
 					float: left;
 					text-align: center;
 					position: relative;
@@ -223,13 +232,17 @@
 						position: absolute;
 						left: 0px;
 						width: 100%;
-						font-size: 30px;
+						font-size: 32px;
 					}
 				
-					.results .list .beer-sum .levels.ipa { color: #42c777; }
-					.results .list .beer-sum .levels.pale-ale { color: #199999; }
-					.results .list .beer-sum .levels.stout { color: #482d19; } 
-					.results .list .beer-sum .levels.red-ale { color: #ee3423; } 	
+					.results .list .beer-sum.ale .levels { color: #333333; }
+					.results .list .beer-sum.wheat .levels { color: #d0a600; }
+					.results .list .beer-sum.india-pale-ale .levels,
+					.results .list .beer-sum.ipa .levels { color: #42c777; }
+					.results .list .beer-sum.pale-ale .levels { color: #199999; }
+					.results .list .beer-sum.red-ale .levels { color: #ee3423; }
+					.results .list .beer-sum.stout .levels { color: #482d19; } 
+					.results .list .beer-sum.porter .levels { color: #482d19; }  	
 		
 		.num-results {
 			position: absolute;
