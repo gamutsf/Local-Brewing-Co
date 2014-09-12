@@ -76,7 +76,7 @@
 			font-weight: 200;
 		}
 		
-		input {
+		input[type="text"] {
 			background: none;
 			border: 0;
 			color: #FFF;
