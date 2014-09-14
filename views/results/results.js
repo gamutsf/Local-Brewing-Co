@@ -149,7 +149,7 @@ ResultsView.prototype.rangeOutput = function (){
 	 
 	 $('.progress-bar').css({
 		 'width': (newPoint * 100) + "%"
-	 })
+	 });
 	 
 	 // Move bubble
 	 el
@@ -410,9 +410,15 @@ ResultsView.prototype.findMatches = function (){
 					
 				$('.beer-sum').click(function(){
 				 var name = $('.name', this).text();
+				 var hoppyness = $('.hoppy-level', this).text();
+				 var alcohol = $('.boozy-level', this).text();
+				 var complexity = $('.complex-level', this).text();
 				 
 				 var params = new Object();
 				 		 params.name = name;
+				 		 params.hoppyness = hoppyness;
+				 		 params.alcohol = alcohol;
+				 		 params.complexity = complexity;
 				 
 				 gApplication.refreshView('single', params, 'nu-slide-in-from-right');
 				 //gApplication.hideView('results');

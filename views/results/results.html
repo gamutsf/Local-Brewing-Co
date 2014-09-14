@@ -47,11 +47,17 @@
 	
 	<div pos-view="controls:">
 		<div class="num-results"></div>
-		<div
-			pos-action-1="(click) refreshview: overlay"
-			pos-action-1-params="section: save-profile;" 
-			class="profile"
-		>Save this profile</div>
+		<div pos-view="profile:" class="profile">
+			<pos-if true="'$params.profile;' == ''">
+				<div
+					pos-action-1="(click) refreshview: overlay/nu-slide-in-from-bottom"
+					pos-action-1-params="section: save-profile;" 
+				>Save this profile</div>
+			</pos-if>
+			<pos-if true="'$params.profile;' != ''">
+				<div style="color: white;">$params.profile;</div>
+			</pos-if>
+		</div>
 	</div>
 	
 </div>

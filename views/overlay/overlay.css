@@ -2,11 +2,18 @@
 	position: fixed;
 	height: 100%;
 	width: 100%;
-	background: rgba(0, 0, 0, 0.85);
+	background: rgba(0, 0, 0, 0.9);
 	z-index: 999999;
 	color: white;
-	display: table;
+	display: block;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
+
+	.overlay .content {
+		overflow: hidden;
+		box-sizing: border-box;
+	}
 
 	.overlay header {
 		background: none;
@@ -16,12 +23,11 @@
 			font-size: 24px;
 		}
 	
-	.overlay .content {
-		display: table-cell;
-		vertical-align: middle;
-		top: 0px;
+	.overlay .save-profile.content {
+		display: block;
+		top: 60px;
 	}
-		.overlay .content ul {
+		.overlay .save-profile.content ul {
 			height: auto;
 			width: 80%;
 			display: -webkit-flex;
@@ -29,7 +35,7 @@
 			justify-content: space-between;
 			margin: 0 auto;
 		}
-			.overlay .content ul li {
+			.overlay .save-profile.content ul li {
 				display: block;
 				float: left;
 				width: 33.3%;
@@ -42,20 +48,24 @@
 				letter-spacing: -0.5px;
 				font-family: 'Trade Gothic Bold';
 			}
-				.overlay .content ul li:last-child { border-right: none; }
+				.overlay .save-profile.content ul li:last-child { border-right: none; }
 				
-				.overlay .content ul li [class^="icon-"]:before, 
-				.overlay .content ul li [class*=" icon-"]:before {
+				.overlay .save-profile.content ul li [class^="icon-"]:before, 
+				.overlay .save-profile.content ul li [class*=" icon-"]:before {
 					position: absolute;
 					left: 0px;
 					width: 100%;
 					font-size: 75px;
 					-webkit-text-stroke: 0.1px #fff;
 					color: transparent;
+					/*
+					text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
+					color: rgba(0,0,0,0.9);
+					*/
 					/* text-shadow: 0px 1px 1px rgba(255, 255, 255, 1); */
 				}		
 				
-				.overlay .content ul li .filter-value {
+				.overlay .save-profile.content ul li .filter-value {
 					margin-top: 9px;
 					line-height: 80px;
 					z-index: 1;
@@ -65,18 +75,18 @@
 					font-size: 21px;
 				}
 				
-				.overlay .content ul li .filter-name { 
+				.overlay .save-profile.content ul li .filter-name { 
 					margin-top: 10px; 
 				}
 				
-		.overlay .content h1 {
+		.overlay .save-profile.content h1 {
 			margin: 50px auto 20px;
 			text-align: center;
 			font-family: 'Trade Gothic Roman', Arial, Helvetica, sans-serif;
 			font-weight: 200;
 		}
 		
-		input[type="text"] {
+		.overlay .save-profile input[type="text"] {
 			background: none;
 			border: 0;
 			color: #FFF;
@@ -90,7 +100,7 @@
 			outline: 0;
 		}
 		
-		button {
+		.overlay .save-profile button {
 			background: none;
 			border: 0;
 			outline: 0;
@@ -102,4 +112,143 @@
 			text-transform: uppercase;
 			font-family: 'Trade Gothic Roman', Arial, Helvetica, sans-serif;
 			font-weight: 200;
+		}
+		
+	.overlay .navigation.content {
+		display: block;
+		padding: 0px 30px 30px;
+	}
+		.overlay .navigation.content h1 {
+			font-size: 28px;
+			margin-bottom: 18px;			
+			font-weight: 400;
+			text-transform: uppercase;
+			margin-bottom: 30px;
+		}
+		.overlay .navigation.content .block {
+			margin: 0px auto 30px;
+		}
+			.overlay .navigation.content .block li {
+				font-size: 18px;
+				margin-bottom: 30px;
+				font-weight: 400;
+			}
+				.overlay .navigation.content .block li:active {
+					color: #ee3423;
+				}
+				
+	.overlay .account.content {
+		display: block;
+		padding: 0px 30px 30px;
+	}
+		.overlay .account.content .user-data {
+			clear: both;
+			display: block;
+			position: relative;
+			height: 50px;
+			margin-bottom: 70px;
+		}
+			.overlay .account.content .user-data .avatar {
+				width: 50px;
+				height: 50px;
+				background: #FFF;
+				border-radius: 50%;
+				float: left;
+				margin-right: 10px;
+			}
+			
+			.overlay .account.content .user-data .username {
+				line-height: 50px;
+			}
+		
+		.overlay .account.content h1 {
+			font-size: 21px;
+			margin-bottom: 18px;
+			font-family: 'Trade Gothic Bold', Arial, Helvetica, sans-serif;
+			font-weight: 400;
+			text-transform: uppercase;
+			margin-bottom: 30px;
+		}
+		.overlay .account.content .block {
+			margin: 0px auto 40px;
+		}
+			.overlay .account.content .block li {
+				font-size: 18px;
+				margin-bottom: 30px;
+				font-weight: 400;
+			}
+				.overlay .account.content .block li:active {
+					color: #ee3423;
+				}
+				
+				.overlay .account.content .list .beer-sum { 
+					clear: left;
+					font-weight: 400;
+					letter-spacing: -0.5px;
+					-webkit-font-smoothing: antialiased;
+					box-sizing: border-box;
+					display: -webkit-flex;
+					align-items: center;
+					justify-content: space-between;
+					margin-bottom: 10px;
+				}
+					.overlay .account.content .list .beer-sum .info { width: 70%; }
+					.overlay .account.content .list .beer-sum h2 {
+						font-family: inherit;
+						font-weight: 400;
+						font-size: 18px;
+					}
+						.overlay .account.content .list .beer-sum .levels .level {
+							width: 31px;
+							height: 38px;
+							line-height: 34px;
+							font-size: 12px;
+							text-align: center;
+							border-radius: 100%;
+							color: #fff;
+							font-weight: normal;
+							display: block;
+							float: left;
+							position: relative;
+							z-index: 1;
+						}
+						
+						.overlay .account.content .list .beer-sum .levels [class^="icon-"], 
+						.overlay .account.content .list .beer-sum .levels [class*=" icon-"] {			
+							width: 30px;
+							float: left;
+							text-align: center;
+							position: relative;
+						}
+							.overlay .account.content .list .beer-sum .levels [class^="icon-"]:before, 
+							.overlay .account.content .list .beer-sum .levels [class*=" icon-"]:before {
+								position: absolute;
+								left: 0px;
+								width: 100%;
+								font-size: 32px;
+								-webkit-text-stroke: 1px #fff;
+								/* text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF; */
+								color: transparent;
+							}
+							
+							.overlay .account.content .list .beer-sum .levels {
+								/* color: transparent; */
+							}
+				
+		.overlay .account .manage {
+			text-align: center;
+			margin-bottom: 40px;
+			margin-top: -10px;
+			color: gray;
+			font-size: 14px;
+		}
+		
+		.overlay .account .log-out {
+			text-align: center;
+			margin-bottom: 0px;
+			margin-top: -10px;
+			color: gray;
+			text-transform: uppercase;
+			font-size: 14px;
+			font-family: 'Trade Gothic Bold', Arial, Helvetica, sans-serif;
 		}

@@ -10,6 +10,7 @@
 				<div class="back btn left"
 				pos-action-1="hideview: single/nu-slide-out-to-right"
 				pos-action-2="showview: results">Back</div>
+				<div class="share btn right">share</div>
 				<div class="fave btn right">fave</div>
 			</header>
 			
@@ -23,9 +24,105 @@
 				<div class="abv">$beer.abv;% <span>abv</span></div>
 			</div>
 			
-			<p class="long-desc">
-			$beer.full_description;
-			</p>
+			<div class="details">
+			
+				<div class="graph">
+					<div class="overlays">
+						<div class="user-profile">
+							<!-- 0,182 157,10 261,50 315,182
+							<svg width="100%" style="position: absolute; width:100%; height:100%; opacity: 0.6;">
+								
+								<polygon points="0,182 157,10 261,50 315,182" style="fill:lime;" />
+							</svg>
+							-->
+							<canvas id="profileGraph" style="position:absolute; width:100%; height:100%; opacity: 0.5;"></canvas>
+						</div>
+						<div class="beer-profile">
+							<canvas id="beerGraph" style="position:absolute; width:100%; height:100%; opacity: 0.5;"></canvas>
+						</div>
+					</div>
+					<table width="100%" cellpadding="0" cellspacing="0">
+						<tr>
+							<td style="border-left: 0px;"></td>
+							<td></td>
+							<td></td>
+							<td style="border-right: 0px;"></td>
+						</tr>
+						<tr>
+							<td style="border-left: 0px;"></td>
+							<td></td>
+							<td></td>
+							<td style="border-right: 0px;"></td>
+						</tr>
+						<tr>
+							<td style="border-left: 0px;"></td>
+							<td></td>
+							<td></td>
+							<td style="border-right: 0px;"></td>
+						</tr>
+						<tr>
+							<td style="border-left: 0px;"></td>
+							<td></td>
+							<td></td>
+							<td style="border-right: 0px;"></td>
+						</tr>
+						<tr>
+							<td style="border-left: 0px;"></td>
+							<td></td>
+							<td></td>
+							<td style="border-right: 0px;"></td>
+						</tr>
+						<tr>
+							<td style="border-left: 0px;"></td>
+							<td></td>
+							<td></td>
+							<td style="border-right: 0px;"></td>
+						</tr>
+						<tr>
+							<td style="border-left: 0px;"></td>
+							<td></td>
+							<td></td>
+							<td style="border-right: 0px;"></td>
+						</tr>
+						<tr>
+							<td style="border-left: 0px;"></td>
+							<td></td>
+							<td></td>
+							<td style="border-right: 0px;"></td>
+						</tr>
+						<tr>
+							<td style="border-left: 0px;"></td>
+							<td></td>
+							<td></td>
+							<td style="border-right: 0px;"></td>
+						</tr>
+					</table>
+					
+					<ul class="numbering">
+						<li>10</li>
+						<li>9</li>
+						<li>8</li>
+						<li>7</li>
+						<li>6</li>
+						<li>5</li>
+						<li>4</li>
+						<li>3</li>
+						<li>2</li>
+						<li>1</li>
+					</ul>
+					
+				</div>
+				
+				<div class="legend">
+					<div class="beer-profile">Flavor Profile of this beer</div>
+					<div class="user-profile">Your Flavor Profile</div>
+				</div>
+			
+				<p class="long-desc">
+				$beer.full_description;
+				</p>
+			
+			</div>
 		
   	</pos-if>
 	

@@ -44,7 +44,8 @@
 			}
 				.results ul li.active [class^="icon-"]:before, 
 				.results ul li.active [class*=" icon-"]:before {
-					-webkit-text-stroke: 0.1px #fff;
+					/* -webkit-text-stroke: 0.1px #fff; */
+					text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
 					/* text-shadow: -1px -1px 0px rgba(5, 5, 5, 1); */
 				}			
 			

@@ -25,6 +25,9 @@
 			beerProfile.boozy = 0;
 			beerProfile.complex = 0;
 			
+	/* Test user account related stuff */
+	
+	var user = new Object();
 			
 	/* Libs */
 	
@@ -70,13 +73,13 @@
 
 	<header pos-view="header:" class="pos-visible">
 		<div
-			pos-action-1="(click) refreshview: overlay"
+			pos-action-1="(click) refreshview: overlay/nu-slide-in-from-bottom"
 			pos-action-1-params="section: account;"
 			class="left btn icon-menu"
 		></div>
 		<div class="section-name title">Beer Finder</div>
 		<div 
-			pos-action-1="(click) refreshview: overlay"
+			pos-action-1="(click) refreshview: overlay/nu-slide-in-from-bottom"
 			pos-action-1-params="section: navigation;"
 			class="right btn icon-dots"
 		></div>
