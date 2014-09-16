@@ -33,6 +33,16 @@ OverlayView.prototype.onDOMReady = function ()
 		$('.complexity .filter-value').html(beerProfile.complex);
 		
 		// Need server-side save call here
+		$('form').submit(function(e){
+			e.preventDefault();
+			var profileName = $('input', this).val();
+			alert('Added profile: '+ profileName);
+			
+			var params = new Object();
+					params.profile = profileName;
+			gApplication.refreshView('profile', params);
+			gApplication.hideView('overlay');
+		});
 	}
 	
 }
@@ -75,5 +85,44 @@ OverlayView.prototype.updateProfile = function (name)
 	var params = new Object();
 			params.profile = name;
 	gApplication.refreshView('profile', params);
+		
+}
+
+OverlayView.prototype.removeProfile = function (e)
+{
+	e.preventDefault();
+	
+	if (confirm('Are you sure you want to remove this profile?')) {
+	    // Save it!
+	    console.log('removing profile: '+ this.params.name + ' ('+ this.params.id +')');
+	    $('.beer-profiles li[data-id="'+ this.params.id +'"]').addClass('nu-slide-out-to-left');
+	    
+	    $('.beer-profiles li[data-id="'+ this.params.id +'"]').one('webkitAnimationEnd', function() {
+				$(this).remove();
+			});
+	} else {
+	    // Do nothing!
+	    console.log('cancelling removal');
+	}
+		
+}
+
+OverlayView.prototype.removeFavorite = function (e)
+{
+	e.preventDefault();
+	
+	if (confirm('Are you sure you want to remove this favorite?')) {
+	    // Save it!
+	    console.log('removing favorite: '+ this.params.name + ' ('+ this.params.id +')');
+	    
+	    $('.favorite-beers li[data-id="'+ this.params.id +'"]').addClass('nu-slide-out-to-left');
+	    
+	    $('.favorite-beers li[data-id="'+ this.params.id +'"]').one('webkitAnimationEnd', function() {
+				$(this).remove();
+			});
+	} else {
+	    // Do nothing!
+	    console.log('cancelling removal');
+	}
 		
 }

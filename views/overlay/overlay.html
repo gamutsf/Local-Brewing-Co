@@ -105,19 +105,37 @@
 			>
 			  <pos-list key="profiles" name="profile">
 		
-					<li 
-						pos-action-1="(click) call: loadProfile"
-						pos-action-1-params="id: $profile.id;;"
-						pos-action-2="(click) hideview: overlay"
-						pos-action-3="(click) hideview: slider/pos-transition-visible-quick"
-						pos-action-4="(click) removeclass: active/.question-tabs li"
-					>$profile.name;</li>
+					<li data-id="$profile.id;">
+						<span 
+							class="item"
+							pos-action-1="(click) call: loadProfile"
+							pos-action-1-params="id: $profile.id;;"
+							pos-action-2="(click) hideview: overlay"
+							pos-action-3="(click) hideview: slider/pos-transition-visible-quick"
+							pos-action-4="(click) removeclass: active/.question-tabs li"
+						>$profile.name;</span> 
+						<span 
+							class="remove-item pos-invisible" 
+							pos-action-1="(click) call: removeProfile" 
+							pos-action-1-params="id: $profile.id;; name: $profile.name;;"
+						>REMOVE</span>
+					</li>
 				
 				</pos-list>			
 			</pos-json>
+			
+			<div 
+				class="manage"
+				pos-action-1="(click) toggleclass: pos-invisible/.beer-profiles .remove-item"
+				pos-action-2="(click) toggleclass: nu-slide-in-from-right/.beer-profiles .remove-item"
+				pos-action-3="(click) toggleclass: pos-invisible/.beer-profiles .manage span"
+			>
+				<span>Manage your profiles</span>
+				<span class="pos-invisible">Done</span>
+			</div>
 
 		</ul>		
-		<div class="manage">Manage your profiles</div>
+		
 		
 		<h1>Your Favorite Beers</h1>
 		<ul class="block favorite-beers list">
@@ -129,27 +147,45 @@
 			>
 			  <pos-list key="favorites" name="favorite">
 		
-					<li
-						pos-action-1="(click) hideview: overlay"
-						pos-action-2="(click) refreshview: single/nu-slide-in-from-right"
-						pos-action-2-params="name: $favorite.name;; hoppyness: $favorite.hoppyness;; alcohol: $favorite.alcohol;; complexity: $favorite.complexity;;" 
-						class="beer-sum"
-					> 
-						<div class="info">
-							<h2 class="name">$favorite.name;</h2>
+					<li data-id="$favorite.id;">
+						<div 
+							class="beer-sum"
+							pos-action-1="(click) hideview: overlay"
+							pos-action-2="(click) refreshview: single/nu-slide-in-from-right"
+							pos-action-2-params="name: $favorite.name;; hoppyness: $favorite.hoppyness;; alcohol: $favorite.alcohol;; complexity: $favorite.complexity;;"
+						> 
+							<div class="info">
+								<h2 class="name">$favorite.name;</h2>
+							</div>
+							<div class="levels">
+								<div class="icon-hoppy"><div class="hoppy-level level">$favorite.hoppyness;</div></div>
+								<div class="icon-boozy"><div class="boozy-level level">$favorite.alcohol;</div></div>
+								<div class="icon-complex"><div class="complex-level level">$favorite.complexity;</div></div>
+							</div>
 						</div>
-						<div class="levels">
-							<div class="icon-hoppy"><div class="hoppy-level level">$favorite.hoppyness;</div></div>
-							<div class="icon-boozy"><div class="boozy-level level">$favorite.alcohol;</div></div>
-							<div class="icon-complex"><div class="complex-level level">$favorite.complexity;</div></div>
-						</div>
+						
+						<span 
+							class="remove-item pos-invisible"
+							pos-action-1="(click) call: removeFavorite" 
+							pos-action-1-params="id: $favorite.id;; name: $favorite.name;;"
+						>REMOVE</span>
 					</li>
 				
 				</pos-list>			
 			</pos-json>
+			
+			<div 
+				class="manage"
+				pos-action-1="(click) toggleclass: pos-invisible/.favorite-beers .remove-item"
+				pos-action-2="(click) toggleclass: nu-slide-in-from-right/.favorite-beers .remove-item"
+				pos-action-3="(click) toggleclass: pos-invisible/.favorite-beers .levels"
+				pos-action-3="(click) toggleclass: pos-invisible/.favorite-beers .manage span"
+			>
+				<span>Manage your profiles</span>
+				<span class="pos-invisible">Done</span>
+			</div>
 		
 		</ul>		
-		<div class="manage">Manage your beers</div>
 		
 		<div class="log-out">Log Out</div>
 	

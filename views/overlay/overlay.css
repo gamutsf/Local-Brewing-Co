@@ -167,19 +167,29 @@
 			font-family: 'Trade Gothic Bold', Arial, Helvetica, sans-serif;
 			font-weight: 400;
 			text-transform: uppercase;
-			margin-bottom: 30px;
+			margin-bottom: 16px;
 		}
 		.overlay .account.content .block {
-			margin: 0px auto 40px;
+			margin: 0px auto 30px;
 		}
 			.overlay .account.content .block li {
 				font-size: 18px;
-				margin-bottom: 30px;
+				margin-bottom: 5px;
 				font-weight: 400;
+				position: relative;
+				-webkit-font-smoothing: antialiased;
 			}
-				.overlay .account.content .block li:active {
-					color: #ee3423;
+				.overlay .account.content .block li .item {
+					position: relative;
+					padding: 12px 0px 12px;
+					width: 100%;
+					display: block;
 				}
+					.overlay .account.content .block li .item:active {
+						color: #ee3423;
+					}
+				
+				.overlay .account.content .list {}
 				
 				.overlay .account.content .list .beer-sum { 
 					clear: left;
@@ -191,7 +201,15 @@
 					align-items: center;
 					justify-content: space-between;
 					margin-bottom: 10px;
+					position: relative;
+					padding: 12px 0px 12px;
+					width: 100%;
+					display: block;
 				}
+					.overlay .account.content .list .beer-sum:active {
+						color: #ee3423;
+					}
+
 					.overlay .account.content .list .beer-sum .info { width: 70%; }
 					.overlay .account.content .list .beer-sum h2 {
 						font-family: inherit;
@@ -233,14 +251,32 @@
 							
 							.overlay .account.content .list .beer-sum .levels {
 								/* color: transparent; */
+								position: absolute;
+								right: 0px;
+								top: 5px;
 							}
+							
+		.overlay .account.content .block .remove-item {
+			position: absolute;
+			right: 0px;
+			top: 4px;
+			color: #EE3423;
+			font-size: 12px;
+			z-index: 99;
+			padding: 12px 0px 12px 12px;
+		}
+		
+		.overlay .account.content .list .remove-item {}
 				
 		.overlay .account .manage {
 			text-align: center;
-			margin-bottom: 40px;
+			margin-bottom: 30px;
 			margin-top: -10px;
 			color: gray;
 			font-size: 14px;
+			padding: 10px 40px;
+			margin-top: 10px;
+			box-sizing: border-box;
 		}
 		
 		.overlay .account .log-out {

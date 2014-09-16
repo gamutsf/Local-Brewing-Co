@@ -22,6 +22,15 @@ ResultsView.prototype.onDOMReady = function ()
 	
 	self.rangeOutput();
 	
+	/*
+	if(beerProfile.hoppy == 0){
+		var hoppyness = 'All';
+	}
+	else {
+		var hoppyness = beerProfile.hoppy;
+	}
+	*/
+	
 	$('.tab.hoppyness .filter-value').text(beerProfile.hoppy);
 	$('.tab.alcohol .filter-value').text(beerProfile.boozy);
 	$('.tab.complexity .filter-value').text(beerProfile.complex);
