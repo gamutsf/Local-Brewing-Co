@@ -43,27 +43,37 @@ OverlayView.prototype.loadProfile = function ()
 	var profileID = this.params.id;
 	console.log(profileID);
 	
-	if(parseInt(profileID) == 27){
-		beerProfile.hoppy = 4;
-		beerProfile.boozy = 2;
-		beerProfile.complex = 7;
-		
-		this.updateProfile();
+	if(gApplication.cache.cache.userprofiles){
+	
+		for(x=0; x< gApplication.cache.cache.userprofiles.length; x++){
+			
+			if( parseInt(gApplication.cache.cache.userprofiles[x].id) == parseInt(profileID) ){
+			
+				beerProfile.hoppy = parseInt(gApplication.cache.cache.userprofiles[x].hoppyness);
+				beerProfile.boozy = parseInt(gApplication.cache.cache.userprofiles[x].alcohol);
+				beerProfile.complex = parseInt(gApplication.cache.cache.userprofiles[x].complexity);
+				
+				this.updateProfile(gApplication.cache.cache.userprofiles[x].name);
+			}
+		}
+	
 	}
 
 }
 
-OverlayView.prototype.updateProfile = function ()
+OverlayView.prototype.updateProfile = function (name)
 {
 
 	$('.tab.hoppyness .filter-value').text(beerProfile.hoppy);
 	$('.tab.alcohol .filter-value').text(beerProfile.boozy);
 	$('.tab.complexity .filter-value').text(beerProfile.complex);
 	
-	$("input[type=range]").trigger('change');
+	//$("input[type=range]").trigger('change');
+	
+	Application.prototype.findMatches.call(this);
 	
 	var params = new Object();
-			params.profile = this.params.name;
+			params.profile = name;
 	gApplication.refreshView('profile', params);
 		
 }

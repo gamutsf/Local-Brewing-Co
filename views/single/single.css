@@ -14,6 +14,19 @@
 		background: none;
 		position: relative;
 	}
+		.single header .btn.left {
+			font-size: 16px;
+			font-family: 'Trade Gothic Bold';
+			font-weight: 400;
+			padding-left: 8px;
+		}
+		.single header .btn.right {
+			font-size: 24px;
+			color: #acacac;
+		}
+			.single header .btn.right:active {
+				color: #383738;
+			}
 	.single .circle {
 		width: 80%;
 		height: auto;
@@ -21,7 +34,7 @@
 		border-radius: 100%;
 		/*background: #383738;*/
 		color: #383738;
-		margin: 20px auto 30px;
+		margin: 0px auto 30px;
 		padding-top: 0px;
 		box-sizing: border-box;
 	}
@@ -41,33 +54,57 @@
 			letter-spacing: 0px;
 			font-family: 'Trade Gothic Roman';
 		}
+		
+	.single .linebreak {
+		margin-top: 0px;
+		width: 100%;
+		margin: 0 auto;
+		display: block;
+		padding: 0px 20px;
+		box-sizing: border-box;
+	}
 			
 	.single .data { 
-		width: 60%; 
+		width: 80%; 
 		margin: 0 auto;
 		position: relative;
-		height: 50px;
+		height: auto;
 		clear: both;
+		display: table;
+		padding: 6px 0px 10px;
 	}
 		.single .data div { 
 			width: 50%; 
-			float: left; 
-			font-size: 36px; 
-			font-weight: 600;
-			margin-bottom: 15px;
+			float: none;
+			display: table-cell;
+			vertical-align: middle; 
 		}
-			.single .data .ibu { text-align: left; }
-			.single .data .abv { text-align: right; }
+			.single .data .ibu { 
+				text-align: center;
+				padding-right: 0px;
+				box-sizing: border-box; 
+			}
+			.single .data .abv { 
+				text-align: center;
+				padding-left: 0px;
+				box-sizing: border-box;  
+			}
 			.single .data span { 
-				font-size: 18px; 
+				font-size: 26px; 
 				text-transform: uppercase;
 				vertical-align: middle;
+				font-family: 'Trade Gothic Bold';
+				font-weight: 400;
 			}
+				.single .data span.small { 
+					font-size: 18px; 
+				}
 			
 	.single .details {
 		background: #333332;
 		color: white;
 		padding: 25px;
+		padding-top: 0px;
 		box-sizing: border-box;
 	}
 			
@@ -77,13 +114,58 @@
 			font-size: 16px;
 			font-weight: normal;
 			line-height: 1.4;
-			padding-bottom: 60px;
-			margin-bottom: 100px;
+			padding-bottom: 20px;
+			margin-bottom: 80px;
 		}
+		
+		.single ul.icons {
+			height: auto;
+			width: 94%;
+			display: -webkit-flex;
+			align-items: center;
+			justify-content: space-between;
+			margin: 0 auto;
+			padding: 0;
+			margin-bottom: 10px;
+		}
+			.single ul.icons li {
+				display: block;
+				float: left;
+				width: 33.3%;
+				height: 100%;
+				text-align: center;
+				text-transform: uppercase;
+				position: relative;
+				font-size: 12px;
+				font-weight: 600;
+				letter-spacing: -0.5px;
+				font-family: 'Trade Gothic Bold';
+			}
+				.single ul.icons li:last-child { border-right: none; }
+				
+				.single ul.icons li [class^="icon-"]:before, 
+				.single ul.icons li [class*=" icon-"]:before {
+					position: absolute;
+					left: 0px;
+					width: 100%;
+					font-size: 36px;
+					color: #5c5c5b;
+				}		
+				
+				.single ul.icons li .filter-value {
+					margin-top: 9px;
+					line-height: 40px;
+					z-index: 1;
+					color: #FFF;
+					position: relative;
+					letter-spacing: -1px;
+					font-size: 12px;
+					min-height: 40px;
+				}
 		
 		.single .graph {
 			position: relative;
-			width: 90%;
+			width: 94%;
 			margin: 0 auto;
 		}
 		
@@ -105,7 +187,7 @@
 			margin:0 auto; 
 			border-left:0px;
 			border-right:0px;
-			margin-bottom: 30px;
+			margin-bottom: 12px;
 			margin-top: 10px;
 		}
 			.single table tr {
@@ -114,8 +196,27 @@
 				.single table tr td {
 					border: 1px solid #666;
 				}
+				
+	  .single .legend {
+		  display: table;
+			width: 80%;
+			margin: 0 auto;
+			margin-bottom: 30px;
+	  }
+	  	.single .legend div {
+			  display: table-cell;
+				width: 50%;
+				font-size: 10px;
+				text-align: center;
+		  }
+		  	.single .legend div.beer-profile {
+				  color: #EE3423 ;
+			  }
+			  .single .legend div.user-profile {
+				  color: #999;
+			  }
 	
 	
 @media (max-width: 480px) {
-	.single .data, .single .long-desc { width: 80%; }
+	/* .single .data, .single .long-desc { width: 80%; } */
 }

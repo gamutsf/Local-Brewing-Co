@@ -10,8 +10,8 @@
 				<div class="back btn left"
 				pos-action-1="hideview: single/nu-slide-out-to-right"
 				pos-action-2="showview: results">Back</div>
-				<div class="share btn right">share</div>
-				<div class="fave btn right">fave</div>
+				<div class="share btn right icon-share"></div>
+				<div class="fave btn right">&#9733;</div>
 			</header>
 			
 			<div class="circle">
@@ -19,26 +19,52 @@
 				<h3>$beer.short_description;</h3>
 			</div>
 			
+			<svg class="linebreak" width="100%" height="10px">
+				<line x1="7" x2="100%" y1="4" y2="4" stroke="#acacac" stroke-width="4" stroke-linecap="round" stroke-dasharray="1, 10" style="stroke: #acacac;"></line>
+			</svg>
+			
 			<div class="data">
-				<div class="ibu">$beer.ibu; <span>ibu</span></div>
-				<div class="abv">$beer.abv;% <span>abv</span></div>
+				<div class="ibu">$beer.ibu; <span class="small">ibu</span></div>
+				<div class="abv">$beer.abv;% <span class="small">abv</span></div>
 			</div>
 			
 			<div class="details">
 			
+				<ul class="icons">
+					<li 
+						class="hoppyness"
+					>
+						<div class="icon-hoppy">
+							<div class="filter-value">$beer.hoppyness;</div>
+						</div>
+					</li>
+					<li
+						class="alcohol"
+					>
+						<div class="icon-boozy">
+							<div class="filter-value">$beer.alcohol;</div>
+						</div>
+					</li>
+					<li
+						class="complexity"
+					>
+						<div class="icon-complex">
+							<div class="filter-value">$beer.complexity;</div>
+						</div>
+					</li>
+				</ul>
+			
 				<div class="graph">
 					<div class="overlays">
 						<div class="user-profile">
-							<!-- 0,182 157,10 261,50 315,182
-							<svg width="100%" style="position: absolute; width:100%; height:100%; opacity: 0.6;">
-								
-								<polygon points="0,182 157,10 261,50 315,182" style="fill:lime;" />
-							</svg>
-							-->
-							<canvas id="profileGraph" style="position:absolute; width:100%; height:100%; opacity: 0.5;"></canvas>
+
+							<svg id="profileGraph" preserveAspectRatio="none" width="100%" viewBox="0 0 315 182" style="position: absolute; width:100%; height:100%; opacity: 0.5;"></svg>
+
 						</div>
 						<div class="beer-profile">
-							<canvas id="beerGraph" style="position:absolute; width:100%; height:100%; opacity: 0.5;"></canvas>
+						
+							<svg id="beerGraph" preserveAspectRatio="none" width="100%" viewBox="0 0 315 182" style="position: absolute; width:100%; height:100%; opacity: 0.5;"></svg>
+						
 						</div>
 					</div>
 					<table width="100%" cellpadding="0" cellspacing="0">
@@ -114,8 +140,8 @@
 				</div>
 				
 				<div class="legend">
-					<div class="beer-profile">Flavor Profile of this beer</div>
-					<div class="user-profile">Your Flavor Profile</div>
+					<div class="beer-profile">• Flavor Profile of this beer</div>
+					<div class="user-profile">• Your Flavor Profile</div>
 				</div>
 			
 				<p class="long-desc">

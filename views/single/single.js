@@ -30,23 +30,23 @@ SingleView.prototype.onDOMReady = function ()
 	function convertValues(input){		
 		switch (input) {
 	    case 1:
-        return 150;
+        return 181;
 	    case 2:
-        return 133;
+        return 160;
       case 3:
-        return 116;
+        return 140;
       case 4:
-        return 100;
+        return 120;
       case 5:
-        return 83;
+        return 100;
       case 6:
-        return 66;
+        return 80;
       case 7:
-        return 50;
+        return 60;
       case 8:
-        return 33;
+        return 40;
       case 9:
-        return 17;
+        return 20;
       case 10:
         return 0;
 		}
@@ -55,17 +55,10 @@ SingleView.prototype.onDOMReady = function ()
 	
 	// Beer Profile Graph
 	function makeBeerGraph(a,b,c){
-	
-		var beerGraph = document.getElementById('beerGraph').getContext('2d');
-		beerGraph.fillStyle = '#ff0c00';
-		beerGraph.beginPath();
-		beerGraph.moveTo(0, 150); // x0, y182 is bottom left
-		beerGraph.lineTo(50, convertValues(parseInt(a))); // x50 is hoppyness (a)
-		beerGraph.lineTo(150, convertValues(parseInt(b))); // x150 is alcohol (b)
-		beerGraph.lineTo(250, convertValues(parseInt(c))); // x250 is complexity (c)
-		beerGraph.lineTo(300, 150);
-		beerGraph.closePath();
-		beerGraph.fill();
+		
+		if((a && b && c) > 0){
+			$('svg#beerGraph').html('<polygon points="0,182 52,'+ convertValues(parseInt(a)) +' 157,'+ convertValues(parseInt(b)) +' 262,'+ convertValues(parseInt(c)) +' 315,182" style="fill:#ff0c00; width:100%;" />');
+		}
 		
 	}
 	
@@ -79,16 +72,13 @@ SingleView.prototype.onDOMReady = function ()
 	// User Profile Graph
 	function makeProfileGraph(a,b,c){
 	
-		var beerGraph = document.getElementById('profileGraph').getContext('2d');
-		beerGraph.fillStyle = '#CCC';
-		beerGraph.beginPath();
-		beerGraph.moveTo(0, 150); // x0, y182 is bottom left
-		beerGraph.lineTo(50, convertValues(parseInt(a))); // x50 is hoppyness (a)
-		beerGraph.lineTo(150, convertValues(parseInt(b))); // x150 is alcohol (b)
-		beerGraph.lineTo(250, convertValues(parseInt(c))); // x250 is complexity (c)
-		beerGraph.lineTo(300, 150);
-		beerGraph.closePath();
-		beerGraph.fill();
+		// x157 = hoppyness
+		// x262 = alcohol
+		// x315 = complexity
+		
+		if((a && b && c) > 0){
+			$('svg#profileGraph').html('<polygon points="0,182 52,'+ convertValues(parseInt(a)) +' 157,'+ convertValues(parseInt(b)) +' 262,'+ convertValues(parseInt(c)) +' 315,182" style="fill:#CCCCCC; width:100%;" />');
+		}
 		
 	}
 	

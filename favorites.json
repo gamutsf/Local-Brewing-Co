@@ -1,0 +1,47 @@
+[  
+   {  
+    	 "id":39,
+       "name":"City Pale",
+       "style":"pale-ale",
+       "short_description":"A wet-hop pale ale",
+       "full_description":"City Pale is a crowd favorite, and this version has an extra-special something. We brewed this with fresh hops from Hopland. The combination of hops and malt create a slightly sweet flavor balanced by crisp citrus notes.",
+       "abv":"4.2",
+       "ibu":"47",
+       "hoppyness":"2",
+       "alcohol":"3",
+       "complexity":"5",
+       "ontap":false,
+       "packaged":false,
+       "image":"40"
+    },
+    {  
+       "id":37,
+       "name":"Gold Rush",
+       "style":"ale",
+       "short_description":"A belgian golden ale",
+       "full_description":"Fans of Belgian beers will appreciate the slight banana aroma and fruity esters of Gold Rush. These aromas blend well with German pilsner malt, yielding an easy-drinking Belgian Golden Ale. Gold Rush won\u2019t make any of us rich, but you might just say, \u201cEureka!\u201d when you taste it.",
+       "abv":"6.9",
+       "ibu":"33",
+       "hoppyness":"4",
+       "alcohol":"4",
+       "complexity":"4",
+       "ontap":false,
+       "packaged":false,
+       "image":"38"
+    },
+    {  
+       "id":35,
+       "name":"Bridge E.S.B.",
+       "style":"esb",
+       "short_description":"An extra special bitter - Silver certificate at the 2010 National Homebrew competition",
+       "full_description":"This is a classic English-style ESB with a nod to the west coast. Its medium body is dominated by U.K. malts and Kent Goldings hops, accented by Willamette hops. The dark-copper color and malt aroma are reminiscent of the local favorites in England\u2019s countryside pubs.",
+       "abv":"5.2",
+       "ibu":"39",
+       "hoppyness":"5",
+       "alcohol":"5",
+       "complexity":"1",
+       "ontap":false,
+       "packaged":false,
+       "image":"36"
+    }
+]

@@ -17,6 +17,13 @@
 	"viewClassName" : "positron.View",
 	"windowClassName" : "positron.Window",
 	
+	"displayClass" :
+	{
+		"fullsize": "width > 1100",
+		"tablet" : "width < 1100 and width > 500",
+		"handheld": "width < 500"
+	},
+
 	"crossDomainStrategy" :
 	{
 		"safari" : "jsonp",
@@ -28,8 +35,14 @@
 	"attributeOrder" :
 	[
 		"pos-view",
-		"pos-action"
+		"pos-action",
+		"pos-localise"
 	],
+
+	"localisation" :
+	{
+		"enabled" : false
+	},
 
 	"analytics" :
 	{
@@ -42,8 +55,11 @@
 	"actions" :
 	{
 		"addclass" : "positron.action.AddClassAction",
+		"addtolist" : "positron.action.AddToListAction",
+		"addtomap" : "positron.action.AddToMapAction",
 		"ajaxform" : "positron.action.AjaxFormAction",
-		"ajaxurl" : "positron.action.AjaxURLAction",
+		"ajaxget" : "positron.action.AjaxAction",
+		"ajaxpost" : "positron.action.AjaxAction",
 		"alert" : "positron.action.AlertAction",
 		"call" : "positron.action.CallAction",
 		"dispatchform" : "positron.action.DispatchFormAction",
@@ -53,6 +69,8 @@
 		"log" : "positron.action.LogAction",
 		"refreshview" : "positron.action.RefreshViewAction",
 		"removeclass" : "positron.action.RemoveClassAction",
+		"removefromlist" : "positron.action.RemoveFromListAction",
+		"removefrommap" : "positron.action.RemoveFromMapAction",
 		"runview" : "positron.action.RunViewAction",
 		"selectclass" : "positron.action.SelectClassAction",
 		"sendwebsocket" : "positron.action.SendWebSocketAction",
@@ -72,13 +90,14 @@
 	"attributes" :
 	{
 		"pos-action" : "positron.attribute.ActionAttribute",
+		"pos-localise" : "positron.attribute.LocaliseAttribute",
 		"pos-view" : "positron.attribute.ViewAttribute"
 	},
 	
 	"events" :
 	{
-		"pos-ajaxformerror" : "positron.event.ErrorEvent",
-		"pos-ajaxformsuccess" : "positron.event.AjaxFormSuccessEvent",
+		"pos-ajax" : "positron.event.AjaxEvent",
+		"pos-ajaxformsuccess" : "positron.event.AjaxEvent",
 		"pos-formdispatch" : "positron.event.FormDispatchEvent",
 		"change" : "positron.event.ChangeEvent",
 		"click" : "positron.event.ClickEvent",

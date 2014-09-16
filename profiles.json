@@ -1,0 +1,23 @@
+[  
+   {  
+      "id":27,
+      "name":"Light and summery",
+      "hoppyness":"8",
+      "alcohol":"3",
+      "complexity":"5"
+   },
+   {  
+      "id":32,
+      "name":"Winter warmer",
+      "hoppyness":"2",
+      "alcohol":"2",
+      "complexity":"6"
+   },
+   {  
+      "id":33,
+      "name":"Favorite 3",
+      "hoppyness":"7",
+      "alcohol":"4",
+      "complexity":"3"
+   }
+]

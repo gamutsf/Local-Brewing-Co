@@ -183,7 +183,7 @@ input {
 .nu-transition-invisible
 {
 	animation-name: nu-fade-out;
-	animation-duration: 400ms;
+	animation-duration: 200ms;
 	animation-timing-function: linear;
 }
 
@@ -203,7 +203,7 @@ input {
 .nu-slide-in
 {
 	animation-name: nu-slide-in;
-	animation-duration: 400ms;
+	animation-duration: 200ms;
 	animation-timing-function: linear;
 }
 

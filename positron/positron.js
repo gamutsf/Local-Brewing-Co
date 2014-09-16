@@ -126,7 +126,7 @@ positron.AsyncListHelper.prototype.onIteration = function ()
 /**
 *
 * @license
-* Copyright © 2011, 2012 Subatomic Systems, Inc.	All rights reserved.
+* Copyright ï¿½ 2011, 2012 Subatomic Systems, Inc.	All rights reserved.
 *
 **/
 
@@ -392,13 +392,11 @@ function GoogleAnalytics_fire (inEvent)
 /**
 *
 * @license
-* Copyright Â© 2013 Jason Proctor. All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor. All rights reserved.
 *
 **/
 
 // positron.Cache.js
-
-positron.provide ("positron.Cache");
 
 /**
  * @constructor
@@ -423,7 +421,6 @@ if (gApplication.isLogging (gApplication.kLogCache)) console.log ("Cache()");
     },
     60000
   );
-  
 };
 
 positron.Cache.prototype.get = function (inKey)
@@ -448,7 +445,8 @@ positron.Cache.prototype.put = function (inKey, inValue, inLifeTime)
     inLifeTime = 30000;
   }
 
-  if (gApplication.isLogging (gApplication.kLogCache)) console.log ("Cache.put() with key " + inKey + " and lifetime " + inLifeTime);
+  if (gApplication.isLogging (gApplication.kLogCache))
+  	console.log ("Cache.put() with key " + inKey + " and lifetime " + inLifeTime);
   
   this.lifeTimes [inKey] = inLifeTime;
   this.accessTimes [inKey] = new Date ().getTime ();
@@ -483,7 +481,8 @@ positron.Cache.prototype.garbageCollect = function ()
   
   if (collected > 0)
   {
-    if (gApplication.isLogging (gApplication.kLogCache)) console.log ("Cache garbage collected " + collected + " entries");
+    if (gApplication.isLogging (gApplication.kLogCache))
+    	console.log ("Cache garbage collected " + collected + " entries");
   }
 };
 
@@ -1686,12 +1685,6 @@ positron.Util.ajax = function (inRequest)
 		{
 			if (inRequest.type == "POST")
 			{
-				var	length = data && data.length ? data.length : 0;
-
-				request.setRequestHeader ("Content-type", "application/x-www-form-urlencoded");
-				request.setRequestHeader ("Content-length", length);
-				request.setRequestHeader ("Connection", "close");
-	
 				request.send (data);
 			}
 			else
@@ -1713,6 +1706,117 @@ positron.Util.ajax = function (inRequest)
 positron.Util.capitalise = function (inString)
 {
 	return inString.charAt (0).toUpperCase () + inString.substring (1);
+}
+
+positron.Util.clone = function (inObject)
+{
+	var	copy = inObject;
+	
+	if (inObject)
+	{
+		if (typeof inObject == "object")
+		{
+			if (Array.isArray (inObject))
+			{
+				copy = new Array ();
+				
+				for (var i = 0; i < inObject.length; i++)
+				{
+					copy [i] = positron.Util.clone (inObject [i]);
+				}
+			}
+			else
+			{
+				copy = new Object ();
+				
+				for (var key in inObject)
+				{
+					copy [key] = positron.Util.clone (inObject [key]);
+				}
+			}
+		}
+	}
+	
+	return copy;
+}
+
+// returns whatever the last nonzero compare was
+// or -1 for type mismatches, etc
+positron.Util.compare = function (inOne, inTwo)
+{
+	var	result = 0;
+	
+	if (typeof inOne == typeof inTwo)
+	{
+		if (typeof inOne == "object")
+		{
+			// could be null, watch out
+			if (inOne == null && inTwo == null)
+			{
+				result = 0;
+			}
+			else
+			{
+				if (Array.isArray (inOne))
+				{
+					if (inOne.length == inTwo.length)
+					{
+						for (var i = 0; i < inOne.length && result == 0; i++)
+						{
+							result = positron.Util.compare (inOne [i], inTwo [i]);
+						}
+					}
+					else
+					{
+						result = -1;
+					}
+				}
+				else
+				{
+					copy = new Object ();
+					
+					var	keys = new Object ();
+					
+					for (var key in inOne)
+					{
+						result = positron.Util.compare (inOne [key], inTwo [key]);
+						
+						if (result == 0)
+						{
+							keys [key] = true;
+						}
+						else
+						{
+							break;
+						}
+					}
+					
+					if (result == 0)
+					{
+						// ensure we don't have extra keys in inTwo
+						for (var key in inTwo)
+						{
+							if (! keys [key])
+							{
+								result = -1;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			result = inOne === inTwo ? 0 : -1;
+		}
+	}
+	else
+	{
+		result = -1;
+	}
+	
+	return result;
 }
 
 positron.Util.convertClassNameToFileName = function (inClassName)
@@ -1958,64 +2062,6 @@ positron.Util.evaluateExpression = function (inExpression)
 	return success;
 }
 
-positron.Util.isNumericTerm = function (inTerm)
-{
-	var	numeric = inTerm.length > 0;
-	var	hadE = false;
-	var	hadPlusMinus = false;
-	var	hadDecimal = false;
-	
-	for (var i = 0; i < inTerm.length; i++)
-	{
-		var	ch = inTerm.charAt (i);
-		
-		if (ch >= "0" && ch <= "9")
-		{
-			// ok
-		}
-		else
-		if (ch == ".")
-		{
-			if (hadDecimal)
-			{
-				numeric = false;
-				break;
-			}
-
-			hadDecimal = true;			
-		}
-		else
-		if (ch == "E" || ch == "e")
-		{
-			if (hadE)
-			{
-				numeric = false;
-				break;
-			}
-
-			hadE = true;
-		}
-		else
-		if (ch == "+" || ch == "-")
-		{
-			if (hadPlusMinus)
-			{
-				numeric = false;
-				break;
-			}
-
-			hadPlusMinus = true;
-		}
-		else
-		{
-			numeric = false;
-			break;
-		}
-	}
-	
-	return numeric;
-}
-
 positron.Util.get2DDistance = function (inX1, inY1, inX2, inY2)
 {
 	return Math.sqrt (Math.pow ((inX1 - inX2), 2) + Math.pow ((inY1 - inY2), 2))
@@ -2094,13 +2140,14 @@ positron.Util.getEventX = function (inEvent)
 	}
 	else
 	{
-		if (typeof (inEvent.offsetX) == "number")
+		if (inEvent.pageX || inEvent.pageY)
 		{
-			x = inEvent.offsetX;
+			x = inEvent.pageX;
 		}
 		else
+		if (inEvent.clientX || inEvent.clientY)
 		{
-			x = inEvent.layerX;
+			x = inEvent.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
 		}
 	}
 
@@ -2117,13 +2164,14 @@ positron.Util.getEventY = function (inEvent)
 	}
 	else
 	{
-		if (typeof (inEvent.offsetY) == "number")
+		if (inEvent.pageX || inEvent.pageY)
 		{
-			y = inEvent.offsetY;
+			y = inEvent.pageY;
 		}
 		else
+		if (inEvent.clientX || inEvent.clientY)
 		{
-			y = inEvent.layerY;
+			y = inEvent.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 		}
 	}
 	
@@ -2328,6 +2376,64 @@ positron.Util.isJSONPRequest = function (inRequest)
 	return jsonp;	
 }
 
+positron.Util.isNumericTerm = function (inTerm)
+{
+	var	numeric = inTerm.length > 0;
+	var	hadE = false;
+	var	hadPlusMinus = false;
+	var	hadDecimal = false;
+	
+	for (var i = 0; i < inTerm.length; i++)
+	{
+		var	ch = inTerm.charAt (i);
+		
+		if (ch >= "0" && ch <= "9")
+		{
+			// ok
+		}
+		else
+		if (ch == ".")
+		{
+			if (hadDecimal)
+			{
+				numeric = false;
+				break;
+			}
+
+			hadDecimal = true;			
+		}
+		else
+		if (ch == "E" || ch == "e")
+		{
+			if (hadE)
+			{
+				numeric = false;
+				break;
+			}
+
+			hadE = true;
+		}
+		else
+		if (ch == "+" || ch == "-")
+		{
+			if (hadPlusMinus)
+			{
+				numeric = false;
+				break;
+			}
+
+			hadPlusMinus = true;
+		}
+		else
+		{
+			numeric = false;
+			break;
+		}
+	}
+	
+	return numeric;
+}
+
 positron.Util.jsonpSequence = 0;
 
 positron.Util.jsonp = function (inRequest)
@@ -2513,7 +2619,7 @@ positron.Util.merge = function (inObject, outObject)
 		var	value = inObject [key];
 		var	valueType = typeof (value);
 		
-		if (valueType == "string" || valueType == "number")
+		if (valueType == "string" || valueType == "number" || valueType == "boolean")
 		{
 			var	outValue = outObject [key];
 			
@@ -2655,6 +2761,8 @@ positron.Util.parseInt = function (inString, inDefault)
 
 positron.Util.parseParams = function (inParamString)
 {
+	// console.log ("parseParams(" + inParamString + ")");
+	
 	var	params = new Object ();
 	
 	var	inKey = true;
@@ -2882,6 +2990,11 @@ positron.Util.parseTokens = function (inString)
 	}
 
 	return elements;
+}
+
+positron.Util.replaceAll = function (inString, inReplace, inWith)
+{
+	return inString.split (inReplace).join (inWith);
 }
 
 positron.Util.parseValueAndUnits = function (inString, inDefaultValue, inDefaultUnits)
@@ -3141,7 +3254,8 @@ positron.View = function positron_View ()
 positron.View.prototype.addCancellableAction =
 function View_addCancellableAction (inAction)
 {
-	console.log ("View(" + this.key + ").addCancellableAction(" + inAction.toString () + ")");
+	if (gApplication.isLogging (gApplication.kLogViews))
+		console.log ("View(" + this.key + ").addCancellableAction(" + inAction.toString () + ")");
 	
 	this.cancellableActions.push (inAction);
 }
@@ -3149,7 +3263,8 @@ function View_addCancellableAction (inAction)
 positron.View.prototype.addDeferredAction =
 function View_addDeferredAction (inAction)
 {
-	console.log ("View(" + this.key + ").addDeferredAction(" + inAction.toString () + ")");
+	if (gApplication.isLogging (gApplication.kLogViews))
+		console.log ("View(" + this.key + ").addDeferredAction(" + inAction.toString () + ")");
 	
 	this.deferredActions.push (inAction);
 }
@@ -3684,7 +3799,8 @@ function View_registerPrivateDeferredActions ()
 		
 		try
 		{
-			console.log ("View(" + this.key + ") registering deferred action (" + action.toString () + ")");
+			if (gApplication.isLogging (gApplication.kLogViews))
+				console.log ("View(" + this.key + ") registering deferred action (" + action.toString () + ")");
 
 			if (action.trigger)
 			{
@@ -3937,7 +4053,9 @@ positron.ActionFactory = function ()
 }
 
 // note this now passes back an action which is *created* but not *registered*
-positron.ActionFactory.createAction = function (inElement, inActionAttributeName, inParamAttributeName)
+positron.ActionFactory.createAction =
+function ActionFactory_createAction
+	(inElement, inContext, inActionAttributeName, inParamAttributeName, inParamKeyAttributeName, inParamAliasAttributeName)
 {
 	var	action = null;
 	
@@ -3958,6 +4076,26 @@ positron.ActionFactory.createAction = function (inElement, inActionAttributeName
 			// as some actions definitely do NOT want the implicit ones
 			// inserted by default triggers, etc
 			actionSpec.explicitParams = this.parseParams (inElement, inParamAttributeName);
+			
+			// also keep track of parameter keys
+			// which are substituted by key at walk time
+			actionSpec.paramKeys = this.parseParams (inElement, inParamKeyAttributeName);
+
+			for (var paramKey in actionSpec.paramKeys)
+			{
+				var	param = actionSpec.paramKeys [paramKey];
+				var	value = gApplication.getContextReference (param, inContext);
+				
+				if (value)
+				{
+					actionSpec.params [paramKey] = value;
+					actionSpec.explicitParams [paramKey] = value;
+				}
+			}
+			
+			// also keep track of parameter keys
+			// which are substituted at action time, not walk time
+			actionSpec.paramAliases = this.parseParams (inElement, inParamAliasAttributeName);
 			
 			action.configure (actionSpec);
 		}
@@ -4163,6 +4301,9 @@ positron.action.Action.prototype.configure = function (inActionSpec)
 	// should rename these?
 	this.params = inActionSpec.params;
 	this.explicitParams = inActionSpec.explicitParams;
+
+	this.paramKeys = inActionSpec.paramKeys;
+	this.paramAliases = inActionSpec.paramAliases;
 	
 	this.preventDefault = inActionSpec.preventDefault;
 	this.stopPropagation = inActionSpec.stopPropagation;
@@ -4297,6 +4438,38 @@ positron.action.Action.prototype.fire = function (inEvent)
 		{
 			if (gApplication.isLogging (gApplication.kLogTrigger)) console.log ("stop propagation on event");
 			inEvent.stopPropagation ();
+		}
+	}
+
+	// delay this until the params are updated by any eventlet
+	for (var aliasKey in this.paramAliases)
+	{
+		var	paramAliasValue = this.paramAliases [aliasKey];
+
+		if (paramAliasValue && paramAliasValue.length)
+		{
+			// strip any extraneous "params." at the start, which is forgiveable
+			paramAliasValue = paramAliasValue.replace (/^params\./, "");
+
+			// can only reference off params in param keys
+			var	object = this.params;
+	
+			var	aliasValueElements = paramAliasValue.split (".");
+			
+			for (var i = 0; (i < aliasValueElements.length) && object; i++)
+			{
+				object = object [aliasValueElements [i]];
+			}
+			
+			if (object)
+			{
+				this.params [aliasKey] = object;
+				this.explicitParams [aliasKey] = object;
+			}
+			else
+			{
+				console.error ("failed to traverse alias at element " + aliasValueElements [i]);
+			}
 		}
 	}
 };
@@ -4715,6 +4888,181 @@ positron.action.AddClassAction.prototype.fire = function (inEvent)
 *
 **/
 
+positron.provide ("positron.action.AddToListAction");
+
+positron.action.AddToListAction = function ()
+{
+	positron.action.Action.call (this);
+}
+positron.inherits (positron.action.AddToListAction, positron.action.Action);
+
+positron.action.AddToListAction.prototype.fire = function (inEvent, inContext)
+{
+	positron.action.Action.prototype.fire.call (this, inEvent);
+	
+	if (this.actionArgs.length > 0 && this.actionArgs [0].length > 0)
+	{
+		var	listKey = this.actionArgs [0];
+
+		var	list = gApplication.getContextReference (listKey, gApplication.context);
+		
+		if (list && Array.isArray (list))
+		{
+			var	compareObject = null;
+			
+			// check to see whether we have explicit keys to compare
+			for (var i = 1; i < this.actionArgs.length; i++)
+			{
+				var	compareKey = this.actionArgs [i];
+				
+				if (compareKey.length)
+				{
+					var	compareValue = this.explicitParams [compareKey];
+					
+					if (compareValue)
+					{
+						if (compareObject == null)
+						{
+							compareObject = new Object ();
+						}
+
+						compareObject [compareKey] = compareValue;
+					}
+					else
+					{
+						console.error ("AddToListAction: found empty compare value for key " + compareKey);
+					}
+				}
+				else
+				{
+					console.error ("AddToListAction: found empty compare key at index " + i);
+				}
+			}
+			
+			if (compareObject == null)
+			{
+				compareObject = this.explicitParams;
+			}
+			
+			var	found = false;
+			
+			for (var i = 0; i < list.length; i++)
+			{
+				var	listEntry = list [i];
+				
+				found = true;
+				
+				for (var paramKey in compareObject)
+				{
+					if (positron.Util.compare (listEntry [paramKey], compareObject [paramKey]) != 0)
+					{
+						found = false;
+						break;
+					}
+				}
+				
+				// now we have proper key support
+				// update when found
+				if (found)
+				{
+					list [i] = positron.Util.clone (this.explicitParams);
+
+					this.element.dispatchEvent
+						(positron.DOM.createEvent (gApplication.getEventPrefix () + "addedtolist"));
+
+					break;
+				}
+			}
+			
+			if (!found)
+			{
+				list.push (positron.Util.clone (this.explicitParams));
+
+				this.element.dispatchEvent
+					(positron.DOM.createEvent (gApplication.getEventPrefix () + "addedtolist"));
+			}
+		}
+		else
+		{
+			if (list)
+			{
+				console.error ("AddToListAction finds non-list context entry with key " + listKey);
+			}
+			else
+			{
+				list = new Array ();
+				list.push (positron.Util.clone (this.explicitParams));
+
+				gApplication.context.put (listKey, list);
+
+				this.element.dispatchEvent
+					(positron.DOM.createEvent (gApplication.getEventPrefix () + "addedtolist"));
+			}
+		}
+	}
+	else
+	{
+		console.error ("AddToListAction with no list key in arguments");
+	}
+};
+
+/**
+*
+* @license
+* Copyright Â© 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
+positron.provide ("positron.action.AddToMapAction");
+
+positron.action.AddToMapAction = function ()
+{
+	positron.action.Action.call (this);
+}
+positron.inherits (positron.action.AddToMapAction, positron.action.Action);
+
+positron.action.AddToMapAction.prototype.fire = function (inEvent, inContext)
+{
+	positron.action.Action.prototype.fire.call (this, inEvent);
+	
+	if (this.actionArgs.length > 1 && this.actionArgs [0].length > 0 && this.actionArgs [1].length > 0)
+	{
+		var	key = this.actionArgs [0];
+		var	mapKey = this.actionArgs [1];
+
+		if (this.explicitParams [key])
+		{
+			var	map = gApplication.getContextReference (mapKey, gApplication.context);
+			
+			if (!map)
+			{
+				map = new Object ();
+				gApplication.context.put (mapKey, map);
+			}
+
+			map [this.explicitParams [key]] = positron.Util.clone (this.explicitParams);
+
+			this.element.dispatchEvent
+				(positron.DOM.createEvent (gApplication.getEventPrefix () + "addedtomap"));
+		}
+		else
+		{
+			console.error ("AddToMapAction with bad key parameter " + key);
+		}
+	}
+	else
+	{
+		console.error ("AddToMapAction with no map key and/or key in arguments");
+	}
+};
+
+/**
+*
+* @license
+* Copyright Â© 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
 positron.provide ("positron.action.AjaxFormAction");
 
 // submit the form as an Ajax request
@@ -4872,23 +5220,24 @@ positron.action.AjaxFormAction.prototype.fire = function (inEvent)
 *
 **/
 
-positron.provide ("positron.action.AjaxURLAction");
+positron.provide ("positron.action.AjaxAction");
 
-positron.action.AjaxURLAction = function ()
+positron.action.AjaxAction = function ()
 {
 	positron.action.Action.call (this);
 }
-positron.inherits (positron.action.AjaxURLAction, positron.action.Action);
+positron.inherits (positron.action.AjaxAction, positron.action.Action);
 
-positron.action.AjaxURLAction.prototype.fire = function (inEvent)
+positron.action.AjaxAction.prototype.fire = function (inEvent)
 {
 	positron.action.Action.prototype.fire.call (this, inEvent);
 
+	var	self = this;
 	var	url = this.actionArgString;
 	
 	if (url == null || url.length == 0)
 	{
-		console.error ("AjaxURLAction with no URL in arguments");
+		console.error ("AjaxAction with no URL in arguments");
 	}
 	else
 	{
@@ -4898,14 +5247,36 @@ positron.action.AjaxURLAction.prototype.fire = function (inEvent)
 			data: this.explicitParams,
 			dataType: "json",
 			async: true,
-			type: "GET",
+			type: this.actionName == "ajaxget" ? "GET" : "POST",
 			success: function (inData, inTextStatus, inXHR)
 			{
+				var	event = positron.DOM.createEvent
+				(
+					gApplication.getEventPrefix () + "ajax",
+					{
+						data: inData
+					}
+				);
+				
+				self.element.dispatchEvent (event);
 			},
 			error: function (inXHR, inTextStatus, inError)
 			{
-				console.error ("load of " + url + " failed");
-				console.error (inError);
+				if (gApplication && gApplication.isLogging (gApplication.kLogLoader))
+				{
+					console.error ("load of " + url + " failed");
+					console.error (inError.message);
+				}
+
+				var	event = positron.DOM.createEvent
+				(
+					gApplication.getEventPrefix () + "error",
+					{
+						error: inError
+					}
+				);
+				
+				self.element.dispatchEvent (event);
 			}
 		});
 	}
@@ -4930,7 +5301,7 @@ positron.action.AlertAction.prototype.fire = function (inEvent)
 {
 	positron.action.Action.prototype.fire.call (this, inEvent);
 	
-	alert (this.actionArgs [0]);
+	alert (this.actionArgString);
 };
 
 
@@ -5468,6 +5839,122 @@ positron.action.RemoveClassAction.prototype.fire = function (inEvent)
 	}
 };
 
+
+/**
+*
+* @license
+* Copyright Â© 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
+positron.provide ("positron.action.RemoveFromListAction");
+
+positron.action.RemoveFromListAction = function ()
+{
+	positron.action.Action.call (this);
+}
+positron.inherits (positron.action.RemoveFromListAction, positron.action.Action);
+
+positron.action.RemoveFromListAction.prototype.fire = function (inEvent, inContext)
+{
+	positron.action.Action.prototype.fire.call (this, inEvent);
+	
+	if (this.actionArgs.length > 0 && this.actionArgs [0].length > 0)
+	{
+		var	listKey = this.actionArgs [0];
+
+		var	list = gApplication.getContextReference (listKey, gApplication.context);
+		
+		if (list && Array.isArray (list))
+		{
+			for (var i = 0; i < list.length; i++)
+			{
+				var	listEntry = list [i];
+				
+				var	found = true;
+				
+				for (var paramKey in this.explicitParams)
+				{
+					if (listEntry [paramKey] != this.explicitParams [paramKey])
+					{
+						found = false;
+						break;
+					}
+				}
+				
+				if (found)
+				{
+					list.splice (i, 1);
+
+					this.element.dispatchEvent
+						(positron.DOM.createEvent (gApplication.getEventPrefix () + "removedfromlist"));
+
+					// assume the list doesn't have dupes
+					break;
+				}
+			}
+		}
+		else
+		{
+			console.error ("RemoveFromMapAction can't find list with key " + mapKey);
+		}
+	}
+	else
+	{
+		console.error ("RemoveFromListAction with no list key in arguments");
+	}
+};
+
+/**
+*
+* @license
+* Copyright Â© 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
+positron.provide ("positron.action.RemoveFromMapAction");
+
+positron.action.RemoveFromMapAction = function ()
+{
+	positron.action.Action.call (this);
+}
+positron.inherits (positron.action.RemoveFromMapAction, positron.action.Action);
+
+positron.action.RemoveFromMapAction.prototype.fire = function (inEvent, inContext)
+{
+	positron.action.Action.prototype.fire.call (this, inEvent);
+	
+	if (this.actionArgs.length > 1 && this.actionArgs [0].length > 0 && this.actionArgs [1].length > 0)
+	{
+		var	key = this.actionArgs [0];
+		var	mapKey = this.actionArgs [1];
+		
+		var	map = gApplication.getContextReference (mapKey, gApplication.context);
+		
+		if (map)
+		{
+			if (this.explicitParams [key])
+			{
+				delete map [this.explicitParams [key]];
+
+				this.element.dispatchEvent
+					(positron.DOM.createEvent (gApplication.getEventPrefix () + "removedfrommap"));
+			}
+			else
+			{
+				console.error ("RemoveFromMapAction with bad key parameter " + key);
+			}
+		}
+		else
+		{
+			console.error ("RemoveFromMapAction can't find map with key " + mapKey);
+		}
+	}
+	else
+	{
+		console.error ("RemoveFromMapAction with no map key and/or key in arguments");
+	}
+};
 
 /**
 *
@@ -6177,7 +6664,7 @@ positron.attribute.Attribute = function ()
 // take context as an argument
 // return an indication of whether to do nothing, add to context, remove subtree, etc
 
-positron.attribute.Attribute.prototype.process = function (inElement, inAttributeName, inAttributeNumber)
+positron.attribute.Attribute.prototype.process = function (inElement, inContext, inAttributeName, inAttributeNumber)
 {
 	console.error ("Attribute.process() called (abstract)");
 };
@@ -6197,7 +6684,8 @@ positron.attribute.ActionAttribute = function ()
 }
 positron.inherits (positron.attribute.ActionAttribute, positron.attribute.Attribute);
 
-positron.attribute.ActionAttribute.prototype.process = function (inElement, inAttributeName, inAttributeNumber, inContext)
+positron.attribute.ActionAttribute.prototype.process =
+function (inElement, inContext, inAttributeName, inAttributeNumber)
 {
 	var	context = null;
 	var	prefix = gApplication.getAttributePrefix ();
@@ -6217,6 +6705,7 @@ positron.attribute.ActionAttribute.prototype.process = function (inElement, inAt
 	
 	if (actionString && actionString.length)
 	{
+		// params are evaluated as values at walk time
 		var	paramAttributeName = prefix + "action-";
 		
 		if (inAttributeNumber >= 0)
@@ -6226,7 +6715,28 @@ positron.attribute.ActionAttribute.prototype.process = function (inElement, inAt
 
 		paramAttributeName += "params";
 
-		var	action = positron.ActionFactory.createAction (inElement, actionAttributeName, paramAttributeName);
+		// param keys are evaluated as keys at walk time
+		var	paramKeyAttributeName = prefix + "action-";
+		
+		if (inAttributeNumber >= 0)
+		{
+			paramKeyAttributeName += inAttributeNumber + "-";
+		}
+
+		paramKeyAttributeName += "param-keys";
+
+		// param aliases are evaluated as keys at fire time
+		var	paramAliasAttributeName = prefix + "action-";
+		
+		if (inAttributeNumber >= 0)
+		{
+			paramAliasAttributeName += inAttributeNumber + "-";
+		}
+
+		paramAliasAttributeName += "param-aliases";
+
+		var	action = positron.ActionFactory.createAction
+			(inElement, inContext, actionAttributeName, paramAttributeName, paramKeyAttributeName, paramAliasAttributeName);
 		
 		if (action)
 		{
@@ -6247,6 +6757,74 @@ positron.attribute.ActionAttribute.prototype.process = function (inElement, inAt
 *
 **/
 
+positron.provide ("positron.attribute.LocaliseAttribute");
+
+positron.attribute.LocaliseAttribute =
+function LocaliseAttribute ()
+{
+	positron.attribute.Attribute.call (this);
+}
+positron.inherits (positron.attribute.LocaliseAttribute, positron.attribute.Attribute);
+
+positron.attribute.LocaliseAttribute.prototype.process =
+function LocaliseAttribute_process (inElement, inContext, inAttributeName, inAttributeNumber)
+{
+	var	string = null;
+	
+	var	stringKey = inElement.getAttribute (inAttributeName);
+	
+	if (stringKey && stringKey.length)
+	{
+		if (stringKey.length > 8 && stringKey.substr (0, 8) == "strings.")
+		{
+			// developer thoughtfully included the "strings." prefix...
+		}
+		else
+		{
+			stringKey = "strings." + stringKey;
+		}
+		
+		string = gApplication.getContextReference (stringKey, inContext);
+	
+		if (string && string.length)
+		{
+			var	newContext = inContext;
+			
+			// ok now we see if there are any context key remappings
+			var	localisationParamString = positron.DOM.getPrefixedAttribute (inElement, "localise-params");
+			
+			if (localisationParamString)
+			{
+				var	localisationParams = positron.Util.parseParams (localisationParamString);
+				
+				newContext = gApplication.makeContext (inContext);
+				
+				for (var key in localisationParams)
+				{
+					newContext.put (key, localisationParams [key]);
+				}
+			}
+			
+			inElement.innerText = gApplication.expandText (string, newContext, false);
+		}
+		else
+		{
+			console.error ("could not find localisation string with key " + stringKey);
+		}
+	}
+	else
+	{
+		// huh? the treewalker guarantees we don't get called unless the attribute is here
+		console.error ("LocaliseAttribute with empty attribute");
+	}
+}
+/**
+*
+* @license
+* Copyright Â© 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
 positron.provide ("positron.attribute.ViewAttribute");
 
 positron.attribute.ViewAttribute = function ()
@@ -6255,7 +6833,7 @@ positron.attribute.ViewAttribute = function ()
 }
 positron.inherits (positron.attribute.ViewAttribute, positron.attribute.Attribute);
 
-positron.attribute.ViewAttribute.prototype.process = function (inElement, inAttributeName, inAttributeNumber)
+positron.attribute.ViewAttribute.prototype.process = function (inElement, inContext, inAttributeName, inAttributeNumber)
 {
 	var	viewAttribute = inElement.getAttribute (inAttributeName);
 
@@ -6339,14 +6917,23 @@ positron.attribute.ViewAttribute.prototype.process = function (inElement, inAttr
 
 	var view = null;
 	
-	if (loadFlags.indexOf ("j") >= 0)
-	{
-		view = gApplication.getViewlet (viewName, loadFlags);
-	}
+	var	className = positron.DOM.getPrefixedAttribute (inElement, "view-class");
 	
-	if (view == null)
+	if (className && className.length)
 	{
-		view = positron.Util.instantiate (gApplication.getConfigEntry ("viewClassName"));
+		view = positron.Util.instantiate (className);
+	}
+	else
+	{
+		if (loadFlags.indexOf ("j") >= 0)
+		{
+			view = gApplication.getViewlet (viewName, loadFlags);
+		}
+		
+		if (view == null)
+		{
+			view = positron.Util.instantiate (gApplication.getConfigEntry ("viewClassName"));
+		}
 	}
 	
 	var	viewKey = viewName;
@@ -6360,12 +6947,31 @@ positron.attribute.ViewAttribute.prototype.process = function (inElement, inAttr
 	
 	view.configure (viewKey, inElement, gApplication.getPage ());
 	
-	// have to do this after configure()
+	// have to do parameter stuff after configure()
+
 	var	viewParamsAttribute = positron.DOM.getPrefixedAttribute (inElement, "view-params");
 	
 	if (viewParamsAttribute && viewParamsAttribute.length)
 	{
 		view.setParams (positron.Util.parseParams (viewParamsAttribute));
+	}
+
+	var	viewParamKeysAttribute = positron.DOM.getPrefixedAttribute (inElement, "view-param-keys");
+	
+	if (viewParamKeysAttribute && viewParamKeysAttribute.length)
+	{
+		var	paramKeys = positron.Util.parseParams (viewParamsAttribute);
+		
+		for (var paramKey in paramKeys)
+		{
+			var	param = paramKeys [paramKey];
+			var	value = gApplication.getContextReference (param, inContext);
+			
+			if (value)
+			{
+				view.setParam (paramKey, value);
+			}
+		}
 	}
 
 	positron.DOM.setData (inElement, "view", view);
@@ -6399,15 +7005,15 @@ positron.event.Event.prototype.process = function (inAction)
 
 positron.provide ("positron.event.Event");
 
-positron.event.AjaxFormSuccessEvent = function ()
+positron.event.AjaxEvent = function ()
 {
 	positron.event.Event.call (this);
 }
-positron.inherits (positron.event.AjaxFormSuccessEvent, positron.event.Event);
+positron.inherits (positron.event.AjaxEvent, positron.event.Event);
 
-positron.event.AjaxFormSuccessEvent.prototype.process = function (inAction)
+positron.event.AjaxEvent.prototype.process = function (inAction)
 {
-	// console.log ("AjaxFormSuccessEvent.process()");
+	// console.log ("AjaxEvent.process()");
 
 	inAction.params.data = inAction.event.detail.data;
 };
@@ -6656,7 +7262,7 @@ positron.event.UserProximityEvent.prototype.process = function (inAction)
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -6707,7 +7313,7 @@ positron.DelegateHashMap.prototype.remove = function (inKey)
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -6851,7 +7457,7 @@ positron.tag.Tag.prototype.getNameDot = function (inElement)
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor. All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor. All rights reserved.
 *
 **/
 
@@ -6906,7 +7512,7 @@ positron.tag.AjaxTag.prototype.process = function (inElement, inContext, inTreeW
 	
 	if (cacheKey && cacheKey.length)
 	{
-		var	cacheEntry = gApplication.mCache.get (cacheKey);
+		var	cacheEntry = gApplication.cache.get (cacheKey);
 	
 		if (cacheEntry)
 		{
@@ -7017,13 +7623,13 @@ positron.tag.AjaxTag.prototype.cacheResponse = function (inElement, inData)
 			cacheLifeTime = 15 * 60 * 1000;
 		}
 		
-		gApplication.mCache.put (cacheKey, inData, cacheLifeTime);
+		gApplication.cache.put (cacheKey, inData, cacheLifeTime);
 	}
 };
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7079,11 +7685,34 @@ positron.tag.ActionTag.prototype.process = function (inElement, inContext, inTre
 				paramAttributeName = "action-params";
 			}
 
-			var	action = positron.ActionFactory.createAction (inElement, actionAttributeName, paramAttributeName);
+			var	paramKeyAttributeName = null;
+			
+			if (i >= 0)
+			{
+				paramKeyAttributeName = "action-" + i + "-param-keys";
+			}
+			else
+			{
+				paramKeyAttributeName = "action-param-keys";
+			}
+
+			var	paramAliasAttributeName = null;
+			
+			if (i >= 0)
+			{
+				paramAliasAttributeName = "action-" + i + "-param-aliases";
+			}
+			else
+			{
+				paramAliasAttributeName = "action-param-aliases";
+			}
+
+			var	action = positron.ActionFactory.createAction (inElement, inContext,
+				actionAttributeName, paramAttributeName, paramKeyAttributeName, paramAliasAttributeName);
 			
 			if (action)
 			{
-				action.fire ();
+				action.fire (null, inContext);
 			}
 		}
 		else
@@ -7108,7 +7737,7 @@ positron.tag.ActionTag.prototype.process = function (inElement, inContext, inTre
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7189,7 +7818,7 @@ positron.tag.ChangeCaseTag.prototype.process = function (inElement, inContext, i
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7219,7 +7848,7 @@ positron.tag.CommentTag.prototype.process = function (inElement, inContext, inTr
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7268,7 +7897,7 @@ positron.tag.ConditionTag.prototype.process = function (inElement, inContext, in
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7382,7 +8011,7 @@ positron.tag.DelayTag.prototype.process = function (inElement, inContext, inTree
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7423,7 +8052,7 @@ positron.tag.DistanceTag.prototype.process = function (inElement, inContext, inT
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7456,7 +8085,7 @@ positron.tag.GetTag.prototype.process = function (inElement, inContext, inTreeWa
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7608,7 +8237,7 @@ positron.tag.IndexedDBQueryTag.prototype.process = function (inElement, inContex
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7664,7 +8293,7 @@ positron.tag.IsolatorTag.prototype.onWalkComplete = function (inTreeWalker)
 /**
 *
 * @license
-* Copyright © 2014 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2014 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7716,7 +8345,7 @@ positron.tag.JoinTag.prototype.process = function (inElement, inContext, inTreeW
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -7756,7 +8385,7 @@ positron.tag.JSONTag.prototype.onContentReceived = function (inElement, inContex
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8024,7 +8653,7 @@ positron.tag.ListTag.prototype.getElements = function (inElement, inContext, inT
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8147,7 +8776,7 @@ positron.tag.LocationTag.prototype.process = function (inElement, inContext, inT
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8210,7 +8839,7 @@ positron.tag.LogTag.prototype.process = function (inElement, inContext, inTreeWa
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8399,7 +9028,7 @@ positron.tag.MoveTag.prototype.onWalkComplete = function (inTreeWalker)
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8476,7 +9105,7 @@ positron.tag.NumberFormatTag.prototype.process = function (inElement, inContext,
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8506,11 +9135,32 @@ positron.tag.NumbersTag.prototype.process = function (inElement, inContext, inTr
 	var	stop = positron.DOM.getIntAttributeValueWithDefault (inElement, "stop", 10);
 	var	step = positron.DOM.getIntAttributeValueWithDefault (inElement, "step", 1);
 	
+	if (step == 0)
+	{
+		step = 1;
+	}
+	else
+	if (step < 0)
+	{
+		step *= -1;
+	}
+	
 	var	numbers = new Array ();
 	
-	for (var i = start; i <= stop; i += step)
+	if (start < stop)
 	{
-		numbers.push (i);
+		for (var i = start; i <= stop; i += step)
+		{
+			numbers.push (i);
+		}
+	}
+	else
+	if (start > stop)
+	{
+		for (var i = start; i >= stop; i -= step)
+		{
+			numbers.push (i);
+		}
 	}
 	
   return this.walkChildren (inElement, inContext, inTreeWalker, numbers);
@@ -8519,7 +9169,7 @@ positron.tag.NumbersTag.prototype.process = function (inElement, inContext, inTr
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8551,7 +9201,7 @@ positron.tag.PrefixedPropertyTag.prototype.process = function (inElement, inCont
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8642,7 +9292,7 @@ function SelectOptionTag_onWalkComplete (inTreeWalker)
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8761,7 +9411,7 @@ positron.tag.SetTag.prototype.process = function (inElement, inContext, inTreeWa
 /**
 *
 * @license
-* Copyright © 2014 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2014 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8920,7 +9570,7 @@ positron.tag.SQLQueryTag.prototype.process = function (inElement, inContext, inT
 /**
 *
 * @license
-* Copyright © 2014 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2014 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -8943,7 +9593,7 @@ positron.tag.ThrowTag.prototype.process = function (inElement, inContext, inTree
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -9100,7 +9750,7 @@ positron.tag.WebSocketTag.prototype.process = function (inElement, inContext, in
 	
 	var	self = this;
 	
-	console.log ("WebSocketTag opening WebSocket to " + url);
+	// console.log ("WebSocketTag opening WebSocket to " + url);
 
 	// keep track of who walks, it's a shitshow down there
 	var	walked = false;
@@ -9332,6 +9982,12 @@ positron.trigger.CircleTrigger.prototype.cancel = function (inAction)
 		clearInterval (this.interval);
 		this.interval = null;
 	}
+}
+
+// we only start firing once the treewalk finishes
+positron.trigger.CircleTrigger.prototype.isDeferred = function ()
+{
+	return true;
 }
 
 positron.trigger.CircleTrigger.prototype.register = function (inAction)
@@ -9839,13 +10495,29 @@ positron.trigger.LocationTrigger = function ()
 }
 positron.inherits (positron.trigger.LocationTrigger, positron.trigger.Trigger);
 
+positron.trigger.LocationTrigger.prototype.cancel = function ()
+{
+	if (this.watch)
+	{
+		clearWatch (this.watch);
+		this.watch = null;
+	}
+}
+
+positron.trigger.LocationTrigger.prototype.isDeferred = function ()
+{
+	return true;
+}
+
 positron.trigger.LocationTrigger.prototype.register = function (inAction)
 {
 	console.log ("LocationTrigger.register()");
 
 	if (navigator.geolocation)
 	{
-		var	watch = navigator.geolocation.watchPosition
+		var	self = this;
+		
+		this.watch = navigator.geolocation.watchPosition
 		(
 			function (inPosition)
 			{
@@ -9856,10 +10528,10 @@ positron.trigger.LocationTrigger.prototype.register = function (inAction)
 				}
 				else
 				{
-					if (watch)
+					if (self.watch)
 					{
-						clearWatch (watch);
-						watch = null;
+						clearWatch (self.watch);
+						self.watch = null;
 					}
 				}
 			},
@@ -9872,10 +10544,10 @@ positron.trigger.LocationTrigger.prototype.register = function (inAction)
 				}
 				else
 				{
-					if (watch)
+					if (self.watch)
 					{
-						clearWatch (watch);
-						watch = null;
+						clearWatch (self.watch);
+						self.watch = null;
 					}
 				}
 			}
@@ -9886,6 +10558,11 @@ positron.trigger.LocationTrigger.prototype.register = function (inAction)
 		console.error ("browser does not support geolocation API");
 	}
 };
+
+positron.trigger.LocationTrigger.prototype.requiresCancel = function ()
+{
+	return true;
+}
 
 /**
 *
@@ -10151,7 +10828,7 @@ positron.trigger.NowTrigger.prototype.register = function (inAction, inContext)
 {
 	if (gApplication.isLogging (gApplication.kLogTrigger)) console.log ("NowTrigger.register/fire(" + inAction.toString () + ")");
 	
-	return inAction.fire ();
+	return inAction.fire (null, inContext);
 };
 
 /**
@@ -10243,9 +10920,38 @@ positron.trigger.WebSocketMessageTrigger.prototype.register = function (inAction
 		{
 			this.webSocket.onmessage = function (inMessage)
 			{
-				// console.log ("received message on websocket: " + webSocketName);
-
-				inAction.params.message = JSON.parse (inMessage.data);
+				if (gApplication.isLogging (gApplication.kLogTrigger))
+				{
+					console.log ("received message on websocket: " + webSocketName);
+					console.log (inMessage.data);
+				}
+				
+				var	data = inMessage.data;
+				
+				// wanted to use instanceof here for more resolution
+				// but strings are not guaranteed to be strings, seems like
+				// #fail
+				if (typeof (data) == "string")
+				{
+					try
+					{
+						inAction.params.message = JSON.parse (inMessage.data);
+						
+						// JSON parsing worked
+						inAction.params.type = "json";
+					}
+					catch (inError)
+					{
+						inAction.params.message = inMessage.data;
+						inAction.params.type = "string";
+					}
+				}
+				else
+				{
+					inAction.params.message = inMessage.data;
+					inAction.params.type = "arraybuffer";
+				}
+				
 				inAction.fire ();
 			}
 		}
@@ -10268,7 +10974,7 @@ positron.trigger.WebSocketMessageTrigger.prototype.requiresCancel = function ()
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -10393,7 +11099,7 @@ positron.TreeWalker.prototype.walkChildren = function (inNode, inContext)
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -10516,6 +11222,11 @@ function RefreshTreeWalker_findNextNode (inNode)
 		if (positron.DOM.getPrefixedAttribute (inNode, "view"))
 		{
 			// views are responsible for walking their subtrees
+		}
+		else
+		if (positron.DOM.getPrefixedAttribute (inNode, "localise"))
+		{
+			// localisation is responsible for walking its subtree
 		}
 		else
 		if (inNode.hasChildNodes ())
@@ -10672,6 +11383,11 @@ function RefreshTreeWalker_onWalkComplete (inTreeWalker)
 
 // TREEWALKER IMPLEMENTATION
 
+// REMEMBER here that findNextNode() special-cases some kinds of element
+// that need to do their own subwalk
+// SO this.nextNode may be inside the element (normal situation)
+// OR this element's sibling, etc (if something on this element does its own subwalk)
+// so don't read this thinking that the next node is always one of this element's children
 positron.RefreshTreeWalker.prototype.onElement =
 function RefreshTreeWalker_onElement (inElement, inContext)
 {
@@ -10755,15 +11471,21 @@ function RefreshTreeWalker_onElement (inElement, inContext)
 			}
 		}
 		else
+		if (positron.DOM.getPrefixedAttribute (inElement, "localise"))
+		{
+			// do nothing here, as the localiser replaced the element's innerHTML
+			done = true;
+		}
+		else
 		{
 			if (context != inContext)
 			{
+				// the subtreewalker will call us back when done
+				done = false;
+
 				// if an attribute changed context, then we need to run a subwalk
 				this.subTreeWalker = this.makeSubTreeWalker (this);
 				this.subTreeWalker.startWalkChildren (inElement, context);
-					
-				// the subtreewalker will call us back when done
-				done = false;
 			}
 		}
 	}
@@ -10789,7 +11511,7 @@ function RefreshTreeWalker_onTextNode (inNode, inContext)
 	
 	try
 	{
-		expandedText = gApplication.expandText (inNode.nodeValue, inContext);
+		expandedText = gApplication.expandText (inNode.nodeValue, inContext, false);
 	}
 	catch (inError)
 	{
@@ -10810,7 +11532,7 @@ function RefreshTreeWalker_onTextNode (inNode, inContext)
 
 		var	span = document.createElement ("span");
 		span.innerHTML = expandedText;
-		
+
 		inNode.parentNode.replaceChild (span, inNode);
 		
 		this.subTreeWalker = this.makeSubTreeWalker (this);
@@ -10883,7 +11605,8 @@ function RefreshTreeWalker_runAttributelets (inElement, inContext)
 					try
 					{
 						// each successive attribute can add to context
-						var	tempContext = attributelet.process (inElement, attributeSpec.name, attributeSpec.number, context);
+						var	tempContext = attributelet.process
+							(inElement, context, attributeSpec.name, attributeSpec.number);
 						
 						if (tempContext != null)
 						{
@@ -10918,7 +11641,7 @@ function RefreshTreeWalker_walkAttributes (inElement, inContext)
     {
       var attribute = inElement.attributes.item (i);
       
-      var expandedValue = gApplication.expandText (attribute.value, inContext);
+      var expandedValue = gApplication.expandText (attribute.value, inContext, true);
       
       if (expandedValue != attribute.value)
       {
@@ -10931,7 +11654,7 @@ function RefreshTreeWalker_walkAttributes (inElement, inContext)
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -10974,7 +11697,7 @@ positron.BeforeVisibleTreeWalker.prototype.onElement = function (inElement)
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -11017,7 +11740,7 @@ positron.BeforeInvisibleTreeWalker.prototype.onElement = function (inElement)
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -11060,7 +11783,7 @@ positron.InvisibleTreeWalker.prototype.onElement = function (inElement)
 /**
 *
 * @license
-* Copyright © 2013 Jason Proctor.  All rights reserved.
+* Copyright ï¿½ 2013 Jason Proctor.  All rights reserved.
 *
 **/
 
@@ -11136,12 +11859,6 @@ function positron_CreateApplication ()
 		try
 		{
 			gApplication = new Application ();
-			
-			// ensure we have the correct type
-			if (typeof (gApplication.start) != "function")
-			{
-				gApplication = null;
-			}
 		}
 		catch (inError)
 		{
@@ -11233,7 +11950,7 @@ function positron_Application ()
 	
 	// now we have config, make body invisible the proper way
 	// this ensures that showWindow() can use the regular view.show()
-	body.style.display = "block";
+	body.style.display = "";
 	positron.DOM.addPrefixedClass (body, "invisible");
 
 	this.pages = new Object ();
@@ -11249,8 +11966,20 @@ function positron_Application ()
 	this.setupRequest ();
 	this.setupLogging ();
 	this.setupBrowserFlags ();
+	this.setupDisplayClass ();
 	this.setupAnalytics ();
 	this.setupWindow ();
+	
+	if (this.config.localisation.enabled)
+	{
+if (gApplication.isLogging (gApplication.kLogApplication)) console.log ("localisation enabled");
+
+		this.loadLocalisationStrings ();
+	}
+	else
+	{
+if (gApplication.isLogging (gApplication.kLogApplication)) console.log ("localisation disabled");
+	}
 	
 	// plugins may also merge config into this.config
 	this.installPlugins ();
@@ -11504,7 +12233,7 @@ function Application_getViewlet (inViewName, inLoadFlags)
 positron.Application.prototype.addWebSocket = 
 function Application_addWebSocket (inName, inWebSocket)
 {
-	console.log ("adding web socket: " + inName);
+	// console.log ("adding web socket: " + inName);
 	
 	this.removeWebSocket (inName);
 	this.webSockets [inName] = inWebSocket;
@@ -11523,14 +12252,14 @@ function Application_removeWebSocket (inName)
 	
 	if (webSocket)
 	{
-		console.log ("removing web socket: " + inName);
+		// console.log ("removing web socket: " + inName);
 	
 		// if it's connecting or open, close it
 		if (webSocket.readyState == 0 || webSocket.readyState == 1)
 		{
 			try
 			{
-				console.log ("closing web socket: " + inName);
+				// console.log ("closing web socket: " + inName);
 				webSocket.close ();
 			}
 			catch (inError)
@@ -11607,10 +12336,121 @@ function Application_getConfigEntryWithDefault (inConfigKey, inDefaultValue)
 	return value;
 }
 
+// escape awkward characters
+positron.Application.prototype.escapeText = 
+function Application_escapeText (inText)
+{
+	var	escapedText = "";
+	var	entity = null;
+	var	numericEntity = false;
+	
+	for (var i = 0; i < inText.length; i++)
+	{
+		var	ch = inText.charAt (i);
+		
+		if (entity && entity.length)
+		{
+			if (ch == "&")
+			{
+				escapedText += entity;
+				entity = "&";
+				numericEntity = false;
+			}
+			else
+			if (ch == "#")
+			{
+				if (entity.length == 1)
+				{
+					numericEntity = true;
+					entity += ch;
+				}
+				else
+				{
+					escapedText += entity;
+					escapedText += ch;
+					
+					entity = null;
+				}
+			}
+			else
+			if (ch == ';')
+			{
+				escapedText += entity;
+				escapedText += ch;
+				entity = null;
+				numericEntity = false;
+			}
+			else
+			if (ch >= "0" && ch <= "9")
+			{
+				if (numericEntity)
+				{
+					entity += ch;
+				}
+				else
+				{
+					if (entity)
+					{
+						escapedText += entity;
+						entity = null;
+					}
+					
+					escapedText += ch;
+				}
+			}
+			else
+			if ((ch >= "a" && ch <= "z") || (ch >= "A" && ch <= "Z"))
+			{
+				entity += ch;
+			}
+			else
+			{
+				escapedText += entity;
+				entity = null;
+				numericEntity = false;
+			}
+		}
+		else
+		{
+			if (ch == "&")
+			{
+				entity = ch;
+			}
+			else
+			if (ch == "'")
+			{
+				escapedText += "&#39;";
+			}
+			else
+			if (ch == "\"")
+			{
+				escapedText += "&quot;";
+			}
+			else
+			if (ch == ":")
+			{
+				escapedText += "&#58;";
+			}
+			else
+			if (ch == ";")
+			{
+				escapedText += "&#59;";
+			}
+			else
+			{
+				escapedText += ch;
+			}
+		}
+	}
+	
+	return escapedText;
+}
+
 // expand context references in text
 // Positron syntax is $something.or.other;
+// optionally escaping it (for the purposes of parameters in attributes, etc)
 positron.Application.prototype.expandText = 
-function Application_expandText (inText, inContext)
+function Application_expandText (inText, inContext, inEscapeText)
 {
 	var	inEntity = false;
 	var	result = "";
@@ -11653,7 +12493,14 @@ function Application_expandText (inText, inContext)
 					{
 						if (typeof (value) == "string")
 						{
-							result += value;
+							if (inEscapeText)
+							{
+								result += this.escapeText (value);
+							}
+							else
+							{
+								result += value;
+							}
 						}
 						else
 						if (typeof (value) == "number")
@@ -12353,6 +13200,32 @@ function Application_loadConfig (inPath)
 	}
 }
 
+positron.Application.prototype.loadLocalisationStrings = 
+function Application_loadLocalisationStrings ()
+{
+	if (gApplication.isLogging (gApplication.kLogApplication)) console.log ("Application.loadLocalisationStrings()");
+
+	var	strings = null;
+	var	language = this.browser.language;
+	
+	if (language && language.length)
+	{
+		var	path = "localisation/strings-" + language + ".json";
+		strings = positron.Util.getJSON (path);
+	}
+	
+	if (!strings)
+	{
+		var	path = "localisation/strings.json";
+		strings = positron.Util.getJSON (path);
+	}
+
+	if (strings)
+	{
+		gApplication.context.put ("strings", strings);
+	}
+}
+
 // returns page object
 positron.Application.prototype.loadPage = 
 function Application_loadPage (inPageKey)
@@ -12779,6 +13652,91 @@ if (gApplication.isLogging (gApplication.kLogApplication)) console.log ("default
 
 };
 
+positron.Application.prototype.setupDisplayClass = 
+function Application_setupDisplayClass ()
+{
+	this.displayClass = null;
+		
+	if (this.config.displayClass)
+	{
+		for (var key in this.config.displayClass)
+		{
+			var	criteria = this.config.displayClass [key];
+			
+			if (criteria && criteria.length)
+			{
+				criteria = positron.Util.replaceAll
+					(criteria, "width", new String (document.documentElement.clientWidth));
+
+				criteria = positron.Util.replaceAll
+					(criteria, "height", new String (document.documentElement.clientHeight));
+
+				criteria = positron.Util.replaceAll
+					(criteria, "pixelratio", new String (window.devicePixelRatio));
+
+				var	orientation = null;
+				
+				if (window.orientation)
+				{
+					orientation = window.orientation;
+				}
+				else
+				if (window.matchMedia)
+				{
+					if (window.matchMedia ("(orientation: portrait)").matches)
+					{
+						orientation = "portrait";
+					}
+					else
+					if (window.matchMedia ("(orientation: landscape)").matches)
+					{
+						orientation = "landscape";
+					}
+					else
+					{
+						orientation = "unknown";
+					}
+				}
+
+				criteria = positron.Util.replaceAll (criteria, "orientation", orientation);
+				
+				var matches = positron.Util.evaluateExpressionChain (criteria);
+				
+				if (matches)
+				{
+					if (gApplication.isLogging (gApplication.kLogApplication)) console.log ("matched display class " + key);
+					this.displayClass = key;
+					break;
+				}
+			}
+		}
+		
+		if (this.displayClass)
+		{
+			for (var key in this.config.displayClass)
+			{
+				if (key == this.displayClass)
+				{
+					document.body.classList.add (key);
+				}
+				else
+				{
+					document.body.classList.remove (key);
+				}
+			}
+		}
+		else
+		{
+			console.error ("no matching display class found");
+		}
+		
+		var	bound = this.setupDisplayClass.bind (this);
+		
+		window.onresize = bound;
+		window.addEventListener ("orientationchange", bound);
+	}
+}
+
 // must be called *after* setupRequest()
 positron.Application.prototype.setupLogging = 
 function Application_setupLogging ()
@@ -12810,6 +13768,9 @@ function Application_setupLogging ()
 
 	this.kLogAction = 0x40;
 	this.logKeywords ["action"] = this.kLogAction;
+
+	this.kLogCache = 0x80;
+	this.logKeywords ["cache"] = this.kLogCache;
 
 	// see if we have any parameters for turning on logging
 	var logging = this.request.params [gApplication.getURLParameterPrefix () + "log"];
