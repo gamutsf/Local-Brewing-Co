@@ -55,9 +55,15 @@ SingleView.prototype.onDOMReady = function ()
 	
 	// Beer Profile Graph
 	function makeBeerGraph(a,b,c){
+	
+		console.log('makeBeerGraph()');
+		console.log(a);
+		console.log(b);
+		console.log(c);
 		
 		if((a && b && c) > 0){
-			$('svg#beerGraph').html('<polygon points="0,182 52,'+ convertValues(parseInt(a)) +' 157,'+ convertValues(parseInt(b)) +' 262,'+ convertValues(parseInt(c)) +' 315,182" style="fill:#ff0c00; width:100%;" />');
+			var beerGraph = document.getElementById('beerPoly');
+					beerGraph.setAttribute('points', '0,182 52,'+ convertValues(parseInt(a)) +' 157,'+ convertValues(parseInt(b)) +' 262,'+ convertValues(parseInt(c)) +' 315,182');
 		}
 		
 	}
@@ -72,12 +78,18 @@ SingleView.prototype.onDOMReady = function ()
 	// User Profile Graph
 	function makeProfileGraph(a,b,c){
 	
+		console.log('makeProfileGraph()');
+		console.log(a);
+		console.log(b);
+		console.log(c);
+	
 		// x157 = hoppyness
 		// x262 = alcohol
 		// x315 = complexity
 		
 		if((a && b && c) > 0){
-			$('svg#profileGraph').html('<polygon points="0,182 52,'+ convertValues(parseInt(a)) +' 157,'+ convertValues(parseInt(b)) +' 262,'+ convertValues(parseInt(c)) +' 315,182" style="fill:#CCCCCC; width:100%;" />');
+			var profileGraph = document.getElementById('profilePoly');
+					profileGraph.setAttribute('points', '0,182 52,'+ convertValues(parseInt(a)) +' 157,'+ convertValues(parseInt(b)) +' 262,'+ convertValues(parseInt(c)) +' 315,182');
 		}
 		
 	}
@@ -89,3 +101,19 @@ SingleView.prototype.onDOMReady = function ()
 	);
 }
 
+SingleView.prototype.close = function ()
+{
+	setTimeout(function(){
+		$('.beer-sum').removeClass('noclick');
+	}, 401);
+}
+
+SingleView.prototype.share = function ()
+{
+	alert('Share: '+ this.params.name);
+}
+
+SingleView.prototype.fave = function ()
+{
+	alert(this.params.name + ' has been added to your favorites!');
+}

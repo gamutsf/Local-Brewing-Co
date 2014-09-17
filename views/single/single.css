@@ -6,7 +6,7 @@
 	background-size: 320px auto;
 	height: 100%;
 	z-index:9;
-	overflow: scroll;
+	transform: translate3d(0,0,0);
 }
 	.single header {
 		/* padding: 15px; */
@@ -60,7 +60,7 @@
 		width: 100%;
 		margin: 0 auto;
 		display: block;
-		padding: 0px 20px;
+		/* padding: 0px 20px; */
 		box-sizing: border-box;
 	}
 			
@@ -127,6 +127,7 @@
 			margin: 0 auto;
 			padding: 0;
 			margin-bottom: 10px;
+			padding-top: 10px;
 		}
 			.single ul.icons li {
 				display: block;
@@ -150,11 +151,13 @@
 					width: 100%;
 					font-size: 36px;
 					color: #5c5c5b;
+					top: 0px;
+					line-height: 36px;
 				}		
 				
 				.single ul.icons li .filter-value {
-					margin-top: 9px;
-					line-height: 40px;
+					margin-top: 0px;
+					line-height: 36px;
 					z-index: 1;
 					color: #FFF;
 					position: relative;

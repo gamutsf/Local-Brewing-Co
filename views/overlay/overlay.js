@@ -20,7 +20,7 @@ OverlayView.prototype.onDOMReady = function ()
 	
 	// Prevent overlay from moving while open
 	document.querySelector('.results').addEventListener('touchmove', function (e) { 
-		e.preventDefault(); 
+		preventDefault();
 	});
 	
 	var params = this.params;
@@ -125,4 +125,10 @@ OverlayView.prototype.removeFavorite = function (e)
 	    console.log('cancelling removal');
 	}
 		
+}
+
+OverlayView.prototype.close = function ()
+{
+	// Prevent overlay from moving while open
+	document.querySelector('.results').removeEventListener('touchmove', preventDefault, false);
 }

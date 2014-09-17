@@ -3,7 +3,7 @@
 <html>
 <head>
 <title>Local Brewing Co.</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
 <!-- styles -->
 
@@ -16,9 +16,13 @@
 <script src="positron/prefixfree.min.js" type="text/javascript"></script>
 <script src="positron/prefixfree.dynamic-dom.min.js" type="text/javascript"></script>
 <script src="positron/positron.js" type="text/javascript"></script>
+<script src="js/viewport-units-buggyfill.js" type="text/javascript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script type="text/javascript">
+
+	window.viewportUnitsBuggyfill.init();
+	window.preventDefault = function(e) { e.preventDefault(); };
 
 	var beerProfile = new Object();
 			beerProfile.hoppy = 0;
