@@ -55,36 +55,7 @@ Application.prototype.findMatches = function (){
 		   	 // Logic here	 
 		   	 // First, find matches
 		   	 
-		   	 if((beerProfile.hoppy == 0) && 
-		   	 	  (beerProfile.boozy == 0) && 
-		   	 	  (beerProfile.complex == 0)
-		   	 ){
-			   	 	 matches.push(beer);
-		   	 }
-		   	 else {
-		   	 
-			   	 if( (beerProfile.hoppy >= (hoppyness - variability)) && 
-			   	 		 (beerProfile.hoppy <= (hoppyness + variability)) 
-			   	 ){
-			   	 	 //console.log('hoppy secondary match: '+ name);
-			   	 	 matches.push(beer);
-			   	 }
-			   	 
-			   	 if( (beerProfile.boozy >= (alcohol - variability)) && 
-			   	 		 (beerProfile.boozy <= (alcohol + variability)) 
-			   	 ){
-			   	 	 //console.log('alcohol secondary match: '+ name);
-			   	 	 matches.push(beer);
-			   	 }
-			   	 
-			   	 if( (beerProfile.complex >= (complexity - variability)) && 
-			   	 		 (beerProfile.complex <= (complexity + variability)) 
-			   	 ){
-			   	 	 //console.log('complexity secondary match: '+ name);
-			   	 	 matches.push(beer);
-			   	 }
-		   	 
-		   	 }
+		   	 matches.push(beer);
 								
 			 });
 			 
@@ -229,7 +200,7 @@ Application.prototype.findMatches = function (){
 			 
 			 	 //console.log(orderedList);
 			 
-			 	 var output = [];
+			 	 output = [];
 			 	 var arrResult = {};
 				 for (i = 0, n = orderedList.length; i < n; i++) {
 					    var item = orderedList[i];

@@ -67,9 +67,12 @@
 	<!--
 	<pos-json
 		url="sampledata.json"
-		name="beers"
+		cachekey="beerlist"
 	>
-	  <pos-list key="beers.beers" name="beer">
+		<filter
+			beerskey="json.beers"
+		>
+	  <pos-list key="filter" name="beer">
 
 			<div class="beer-sum" 
 				pos-action-1="toggleview: single"
@@ -88,6 +91,7 @@
 		</pos-list>
 	
 		<div class="num-results">$beers.beers.length; matches</div>
+		</filter>
 	
 	</pos-json>
 	-->

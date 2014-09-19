@@ -15,7 +15,7 @@
 		position: relative;
 	}
 		.single header .btn.left {
-			font-size: 16px;
+			font-size: 18px;
 			font-family: 'Trade Gothic Bold';
 			font-weight: 400;
 			padding-left: 8px;
@@ -37,6 +37,7 @@
 		margin: 0px auto 30px;
 		padding-top: 0px;
 		box-sizing: border-box;
+		-webkit-backface-visibility: hidden;
 	}
 		.single .circle h1 {
 			font-size: 42px;
@@ -62,6 +63,7 @@
 		display: block;
 		/* padding: 0px 20px; */
 		box-sizing: border-box;
+		-webkit-backface-visibility: hidden;
 	}
 			
 	.single .data { 
@@ -106,6 +108,7 @@
 		padding: 25px;
 		padding-top: 0px;
 		box-sizing: border-box;
+		-webkit-backface-visibility: hidden;
 	}
 			
 		.single .details .long-desc {
@@ -202,7 +205,7 @@
 				
 	  .single .legend {
 		  display: table;
-			width: 80%;
+			width: 90%;
 			margin: 0 auto;
 			margin-bottom: 30px;
 	  }

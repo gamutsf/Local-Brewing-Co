@@ -12,6 +12,44 @@ SingleView.prototype.onDOMReady = function ()
 	
 	//window.scrollTo(0, 0);
 	
+	var myScroll;
+	
+	myScroll = new IScroll('#wrapper', {
+		scrollX: true,
+		scrollY: false,
+		momentum: false,
+		snap: true
+	});
+	
+	console.log(output.length);
+	
+	var winWidth = $(window).width();
+	$('#scroller').css('width', '-webkit-calc('+ winWidth * output.length +'px)');
+	myScroll.refresh();
+	
+	$('.single-details').each(function(i){
+		$(this).attr({'id': i});
+	});
+	
+	
+	function adjustHeight(){
+		var height = $('.single-details').eq(myScroll.currentPage.pageX).outerHeight(true);
+		$('#wrapper').css('height', height);
+	}
+	
+	
+	$('.single-details').eq(myScroll.currentPage.pageX).addClass('active');
+	adjustHeight();
+	
+	myScroll.on('scrollEnd', function () {
+	
+		$('.single-details').removeClass('active');
+		$('.single-details').eq(myScroll.currentPage.pageX).addClass('active');
+		
+		adjustHeight();
+		
+	});
+	
 	/**************/
 	// Scrolling
 	/**************/
@@ -68,12 +106,6 @@ SingleView.prototype.onDOMReady = function ()
 		
 	}
 	
-	makeBeerGraph(
-		this.params.hoppyness, 
-		this.params.alcohol, 
-		this.params.complexity
-	);
-	
 	
 	// User Profile Graph
 	function makeProfileGraph(a,b,c){
@@ -93,6 +125,13 @@ SingleView.prototype.onDOMReady = function ()
 		}
 		
 	}
+	
+	
+	makeBeerGraph(
+		this.params.hoppyness, 
+		this.params.alcohol, 
+		this.params.complexity
+	);
 	
 	makeProfileGraph(
 		beerProfile.hoppy, 
