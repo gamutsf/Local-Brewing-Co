@@ -34,6 +34,10 @@ ul, li {
 	pointer-events: none;
 }
 
+.red {
+	color: #ee3423;
+}
+
 section {
 	position: absolute;
 }
@@ -140,25 +144,21 @@ footer {
 /* global */
 
 ::-webkit-input-placeholder {
-   color: white;
    font-family: 'Trade Gothic Roman', Arial, Helvetica, sans-serif; 
 	 font-weight: 300;
 }
 
 :-moz-placeholder { /* Firefox 18- */
-   color: white;
    font-family: 'Trade Gothic Roman', Arial, Helvetica, sans-serif; 
 	 font-weight: 300;  
 }
 
 ::-moz-placeholder {  /* Firefox 19+ */
-   color: white;
    font-family: 'Trade Gothic Roman', Arial, Helvetica, sans-serif; 
 	 font-weight: 300;  
 }
 
 :-ms-input-placeholder {  
-   color: white;
    font-family: 'Trade Gothic Roman', Arial, Helvetica, sans-serif; 
 	 font-weight: 300;  
 }

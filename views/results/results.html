@@ -34,15 +34,19 @@
 <div class="pos-visible shelf" pos-view="shelf:">
 	
 	<div pos-view="slider:" class="slider pos-invisible">
-		<div class="range-end">Less</div>
 		<div class="selector">
 			<form>
+				<div class="range-end less">Less</div>
+				<div class="range-end more">More</div>
 				<div class="progress-bar"></div>
 				<input type="range" name="level" id="input-level"  min="0" max="10" value="0" style="width: 100%">
 				<output for="input-level" onforminput="value = input-level.valueAsNumber;"></output>
 			</form>
 		</div>
-		<div class="range-end">More</div>
+		<div 
+			class="done-btn"
+			pos-action-1="(click) call: toggleSlider"
+		>Done</div>
 	</div>
 	
 	<div pos-view="controls:">

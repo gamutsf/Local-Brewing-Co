@@ -7,7 +7,17 @@
 	height: 100%;
 	z-index:9;
 	transform: translate3d(0,0,0);
+	-webkit-backface-visibility: hidden;
 }
+
+	.single-details {
+		width: 100vw; 
+		float: left; 
+		display: block;
+		height: -webkit-calc(100vh - 60px);
+	}
+		.single-details.active {}
+		
 	.single header {
 		/* padding: 15px; */
 		font-weight: 600;
@@ -118,7 +128,7 @@
 			font-weight: normal;
 			line-height: 1.4;
 			padding-bottom: 20px;
-			margin-bottom: 80px;
+			/* margin-bottom: 80px; */
 		}
 		
 		.single ul.icons {

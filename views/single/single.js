@@ -12,50 +12,58 @@ SingleView.prototype.onDOMReady = function ()
 	
 	//window.scrollTo(0, 0);
 	
-	var myScroll;
+	/*
+	This is for side scrolling functionality to
+	be added at a later revision...
+	**********
 	
-	myScroll = new IScroll('#wrapper', {
+	var horzScroll;
+	var winWidth = $(window).width();
+	$('#scroller').css('width', (winWidth * output.length) +'px');
+	
+	horzScroll = new IScroll('#wrapper', {
 		scrollX: true,
 		scrollY: false,
 		momentum: false,
 		snap: true
 	});
 	
-	console.log(output.length);
-	
-	var winWidth = $(window).width();
-	$('#scroller').css('width', '-webkit-calc('+ winWidth * output.length +'px)');
-	myScroll.refresh();
-	
 	$('.single-details').each(function(i){
 		$(this).attr({'id': i});
 	});
-	
+	*/
 	
 	function adjustHeight(){
-		var height = $('.single-details').eq(myScroll.currentPage.pageX).outerHeight(true);
+		//var height = $('.single-details').eq(horzScroll.currentPage.pageX).outerHeight(true);
+		
+		var height = $('.single-details').outerHeight(true);
 		$('#wrapper').css('height', height);
+		
+		//horzScroll.refresh();
 	}
 	
 	
-	$('.single-details').eq(myScroll.currentPage.pageX).addClass('active');
+	//$('.single-details').eq(horzScroll.currentPage.pageX).addClass('active');
+	
 	adjustHeight();
 	
-	myScroll.on('scrollEnd', function () {
+	/*
+	horzScroll.on('scrollEnd', function () {
 	
 		$('.single-details').removeClass('active');
-		$('.single-details').eq(myScroll.currentPage.pageX).addClass('active');
+		$('.single-details').eq(horzScroll.currentPage.pageX).addClass('active');
 		
 		adjustHeight();
 		
 	});
+	*/
 	
 	/**************/
 	// Scrolling
 	/**************/
   
   // Fix scrolling in details section
-  var scrollable = document.querySelector(".single");
+  var scrollable = document.querySelector(".single-details");
 	new ScrollFix(scrollable);
 	
 	// Prevent event page from moving while open
