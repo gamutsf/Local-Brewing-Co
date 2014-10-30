@@ -127,6 +127,9 @@
 			text-transform: uppercase;
 			margin-bottom: 30px;
 		}
+			.overlay .navigation.content h1 a {
+				color: #fff;
+			}
 		.overlay .navigation.content .block {
 			margin: 0px auto 30px;
 		}
@@ -135,6 +138,9 @@
 				margin-bottom: 30px;
 				font-weight: 400;
 			}
+				.overlay .navigation.content .block li a {
+					color: #fff;
+				}
 				.overlay .navigation.content .block li:active {
 					color: #ee3423;
 				}

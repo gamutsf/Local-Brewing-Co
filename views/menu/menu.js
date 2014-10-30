@@ -5,20 +5,20 @@
 *
 **/
 
-var	OverlayView = function ()
+var	MenuView = function ()
 {
-	//console.log ("OverlayView()");
+	//console.log ("MenuView()");
 	
 	positron.View.call (this);
 };
 
-positron.inherits (OverlayView, positron.View);
+positron.inherits (MenuView, positron.View);
 
-OverlayView.prototype.onDOMReady = function ()
+MenuView.prototype.onDOMReady = function ()
 {
-	//console.log ("OverlayView.onDOMReady()");
+	//console.log ("MenuView.onDOMReady()");
 	
-	// Prevent overlay from moving while open
+	// Prevent Menu from moving while open
 	document.querySelector('.results').addEventListener('touchmove', function (e) { 
 		preventDefault();
 	});
@@ -41,13 +41,13 @@ OverlayView.prototype.onDOMReady = function ()
 			var params = new Object();
 					params.profile = profileName;
 			gApplication.refreshView('profile', params);
-			gApplication.hideView('overlay');
+			gApplication.hideView('Menu');
 		});
 	}
 	
 }
 
-OverlayView.prototype.loadProfile = function ()
+MenuView.prototype.loadProfile = function ()
 {
 
 	var profileID = this.params.id;
@@ -71,7 +71,7 @@ OverlayView.prototype.loadProfile = function ()
 
 }
 
-OverlayView.prototype.updateProfile = function (name)
+MenuView.prototype.updateProfile = function (name)
 {
 
 	$('.tab.hoppyness .filter-value').text(beerProfile.hoppy);
@@ -88,7 +88,7 @@ OverlayView.prototype.updateProfile = function (name)
 		
 }
 
-OverlayView.prototype.removeProfile = function (e)
+MenuView.prototype.removeProfile = function (e)
 {
 	e.preventDefault();
 	
@@ -107,7 +107,7 @@ OverlayView.prototype.removeProfile = function (e)
 		
 }
 
-OverlayView.prototype.removeFavorite = function (e)
+MenuView.prototype.removeFavorite = function (e)
 {
 	e.preventDefault();
 	
@@ -127,8 +127,8 @@ OverlayView.prototype.removeFavorite = function (e)
 		
 }
 
-OverlayView.prototype.close = function ()
+MenuView.prototype.close = function ()
 {
-	// Prevent overlay from moving while open
+	// Prevent Menu from moving while open
 	document.querySelector('.results').removeEventListener('touchmove', preventDefault, false);
 }

@@ -24,6 +24,8 @@ h1, h2, h3, h4, h5, h6 {
 	font-family: 'Local Headline';
 }
 
+a { text-decoration: none; }
+
 ul, li { 
 	margin: 0; 
 	padding: 0;  
@@ -126,6 +128,232 @@ footer {
 		margin-left: -31px;
 		z-index: 999999;
 	}
+	
+	
+#home {
+	width: 100%;
+	height: auto;
+	text-align: center;
+}
+	#home .brew-together {
+		margin-top: 60px;
+		height: 416px;
+		width: 100%;
+		
+		background-image: url("./img/home-seeds.jpg");
+		background-position: center center;
+		background-size: cover;
+	}	
+		#home .brew-together img {
+			float: left;
+		}
+		#home .brew-together h1 {
+			color: #fff;
+			font-size: 38px;
+			font-weight: normal;
+			text-transform: uppercase;
+			margin-top: 30px;
+			text-shadow: 1px 2px 0px rgba(199, 60, 47, 1);
+			letter-spacing: 0.5px;
+			clear: both;
+			display: inline-block;
+		}
+			#home .brew-together h1 span {
+				font-size: 61px;
+			}
+	
+	#home .quick-links { 
+		height: 208px;
+		width: 100%;
+		
+		background-image: url("./img/home-quick-link-bg.png");
+		background-position: bottom right;
+		background-size: 67px 152px;
+		background-repeat: no-repeat;
+	}
+		#home .quick-links h4 {
+			width: 100%;
+			height: 40px;
+			line-height: 40px;
+			
+			color: #fff;
+			font-weight: normal;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			
+			background: rgba(30,30,30,0.8);
+		}
+		#home .quick-links ul li {
+			height: 50px;
+			line-height: 50px;
+			
+			font-family: 'Trade Gothic Bold';	
+			text-transform: uppercase;
+			font-weight: 600;
+			font-size: 21px;
+		}
+			#home .quick-links ul li a {
+				color: #373737;
+			}
+			
+			
+	#home .contact {
+		height: 480px;
+		width: 100%;
+		
+		background-image: url("./img/home-contact-bg.jpg");
+		background-position: center center;
+		background-size: cover;
+		
+		font-family: 'Local Headline';
+		color: #fff;
+	}
+		#home .contact .address {
+			width: 300px;
+			margin: auto;
+			padding: 65px 0 53px 0;
+			text-transform: uppercase;
+		}
+			#home .contact .address span:nth-child(1) { 
+				font-size: 74px; 
+				font-family: 'Trade Gothic Bold';
+				display: block;
+				float: left;
+			}
+			#home .contact .address span:nth-child(2) { 
+				font-size: 40px; 
+				float: left;
+				margin: 12px 0 0 10px;
+			}
+			#home .contact .address span:nth-child(3) { 
+				color: #ee3423; 
+				font-size: 20px;
+				float: left;
+				margin: 0 0 0 10px;
+			}
+		#home .contact .hours {
+			background: rgba(0,0,0,0.5);
+			height: 272px;
+			box-sizing: border-box;
+		}
+			#home .contact .hours h5 {
+				font-family: 'Trade Gothic Bold';
+				font-size: 16px;
+				letter-spacing: 1px;
+				text-transform: uppercase;
+				display: inline-block;
+				margin: 15px auto;
+			}
+				#home .contact .hours ul li {
+					font-size: 18px;
+					letter-spacing: 1px;
+					margin-bottom: 5px;
+					font-weight: 100;
+				}
+					#home .contact .hours ul li span {
+						text-transform: uppercase;
+					}
+		#home .contact .phone {
+			font-size: 35px;
+			margin-top: 15px;
+		}
+	
+	#home .map-area {
+		height: 185px;
+		width: 100%;
+		
+		background-image: url("./img/home-map-bg.jpg");
+		background-position: center center;
+		background-size: cover;
+	}
+		#home .map-area img {
+			width: 69px;
+			margin-top: -15px;
+		}
+			
+	#home .selector-snippet {
+		height: 480px;
+		width: 100%;
+		
+		background: #ee3423;
+		color: #fff;
+	}
+		#home .selector-snippet h3 {
+			font-size: 50px;
+			text-transform: uppercase;
+			margin: 20px auto 35px auto;
+			display: inline-block;
+		}
+			#home .selector-snippet h3 span {
+				display: block;
+				font-size: 35px;
+			}
+		#home .selector-snippet .preview {
+			width: 50%;
+			float: left;
+			text-align: left;
+		}
+			#home .selector-snippet .preview img {
+				width: 100%;
+				max-width: 160px;
+			}
+		#home .selector-snippet ul {
+			width: 50%;
+			text-align: left;
+			float: left;
+			box-sizing: border-box;
+		}
+			#home .selector-snippet ul li {
+				list-style: disc;
+				margin-bottom: 30px;
+				padding-right: 20px;
+			}
+		#home .selector-snippet .action {
+			width: 80%;
+			margin: 0 auto;
+		}
+		#home .selector-snippet .action a {
+			color: #fff;
+			text-transform: uppercase;
+			font-size: 25px;
+			font-family: 'Trade Gothic Bold';
+			letter-spacing: 1px;
+		}
+	
+	#home .statement {
+		height: 169px;
+		width: 100%;
+	}
+		#home .statement div {
+			width: 50%;
+			float: left;
+			color: #ee3423;
+			font-size: 17px;
+			font-family: 'Trade Gothic Bold';
+			text-transform: uppercase;
+			text-align: center;
+			height: 100%;
+			display: table-cell;
+			vertical-align: middle;
+		}
+
+			#home .statement div img {
+				width: 100%;
+				max-width: 111px;
+				margin-top: 17px;
+			}
+			#home .statement .handbrewed {
+				margin-top: 40px;
+				margin-right: 50px;
+			}
+			#home .statement p span {
+				font-size: 29px;
+				color: #383738;
+			}
+		
+		
+		
+		
 	
 /* icons */
 
@@ -636,3 +864,7 @@ input {
   font-weight: normal;
   font-style: normal;
 }
+
+.clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; visibility: hidden; } 
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; }

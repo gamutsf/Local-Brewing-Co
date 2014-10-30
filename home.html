@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Local Brewing Co.</title>
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0" />
+	
+	<!-- styles -->
+	
+	<link href="positron/positron.css" type="text/css" rel="stylesheet"></link>
+	<link href="base.css" type="text/css" rel="stylesheet"></link>
+	
+	
+	<!-- scripts -->
+	
+	<script src="positron/prefixfree.min.js" type="text/javascript"></script>
+	<script src="positron/prefixfree.dynamic-dom.min.js" type="text/javascript"></script>
+	<script src="positron/positron.js" type="text/javascript"></script>
+	<script src="js/viewport-units-buggyfill.js" type="text/javascript"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="js/iscroll.js"></script>
+	
+	<script type="text/javascript">
+	
+		window.viewportUnitsBuggyfill.init();
+		window.preventDefault = function(e) { e.preventDefault(); };
+	
+		var beerProfile = new Object();
+				beerProfile.hoppy = 0;
+				beerProfile.boozy = 0;
+				beerProfile.complex = 0;
+		
+		// Global matches array
+				
+		var output = [];
+				
+		/* Test user account related stuff */
+		
+		var user = new Object();
+		
+				
+		/* Libs */
+		
+		/**
+		 * ScrollFix v0.1
+		 * http://www.joelambert.co.uk
+		 *
+		 * Copyright 2011, Joe Lambert.
+		 * Free to use under the MIT license.
+		 * http://www.opensource.org/licenses/mit-license.php
+		 */
+		
+		var ScrollFix = function(elem) {
+			// Variables to track inputs
+			var startY, startTopScroll;
+			
+			elem = elem || document.querySelector(elem);
+			
+			// If there is no element, then do nothing	
+			if(!elem)
+				return;
+		
+			// Handle the start of interactions
+			elem.addEventListener('touchstart', function(event){
+				startY = event.touches[0].pageY;
+				startTopScroll = elem.scrollTop;
+				
+				if(startTopScroll <= 0)
+					elem.scrollTop = 1;
+		
+				if(startTopScroll + elem.offsetHeight >= elem.scrollHeight)
+					elem.scrollTop = elem.scrollHeight - elem.offsetHeight - 1;
+			}, false);
+		};
+		
+	</script>
+</head>
+<body id="home">
+	<section pos-view="menu" class="pos-invisible overlay"></section>
+	<header pos-view="header" class="pos-visible"></header>
+
+	<div class="brew-together">
+		<img src="img/home-top-logo.png" alt="home-top-logo" width="244" />
+		<h1>Let's brew this <span>together</span></h1>
+	</div>
+	
+	<div class="quick-links">
+		<h4>Quick Links</h4>
+		<ul>
+			<li><a href="on-tap.html">On tap</a></li>
+				<svg width="100%" height="10px" style="margin: 0 auto; width: 96%;">
+					<line x1="7" x2="100%" y1="4" y2="4" stroke="#5184AF" stroke-width="4" stroke-linecap="round" stroke-dasharray="1, 10" style="stroke: #373737;"></line>
+				</svg>
+			<li><a href="selector.html">Beer selector</a></li>
+				<svg width="100%" height="10px" style="margin: 0 auto; width: 96%;">
+					<line x1="7" x2="100%" y1="4" y2="4" stroke="#5184AF" stroke-width="4" stroke-linecap="round" stroke-dasharray="1, 10" style="stroke: #373737;"></line>
+				</svg>
+			<li><a href="map.html">Beer map</a></li>
+		</ul>
+	</div>
+	<div class="contact">
+		<p class="address clearfix">
+			<span>69</span> 
+			<span>Bluxome St.</span> 
+			<span>San Francisco, CA 94107</span>
+		</p>
+		<div class="hours">
+			<h5>Open daily</h5>
+			<ul>
+				<li><span>Monday</span> ........................ 3pm - 12pm</li>
+				<li><span>Tuesday</span> ....................... 3pm - 12pm</li>
+				<li><span>Wednesday</span> .................. 3pm - 12pm</li>
+				<li><span>Thursday</span> .................... 3pm - 12pm</li>
+				<li><span>Friday</span> .......................... 3pm - 12pm</li>
+				<li><span>Saturday</span> .................... 3pm - 12pm</li>
+			</ul>
+			<p class="phone">(415) 555-5555</p>
+		</div>	
+	</div>
+	<div class="map-area">
+		<img src="img/home-map-pin.png" alt="map pin" />
+	</div>
+	<div class="selector-snippet">
+		<h3>Find your <span>perfect brew</span></h3>
+		<div class="preview clearfix">
+			<img src="img/home-selector-img.png" alt="home-selector-img" />
+		</div>
+		<ul class="clearfix">
+			<li>Explore our beer list by Hoppyness, Alcohol Volume, and Complexity</li>
+			<li>Save a custom flavor profile to compare beers</li>
+			<li>Keep a list of your favorite beers</li>
+		</ul>
+		<div class="action clearfix">
+			<svg width="100%" height="10px">
+				<line x1="7" x2="100%" y1="2" y2="2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 8" style="stroke: #fff;"></line>
+			</svg>
+			<a href="selector.html">Try the beer finder</a>
+			<svg width="100%" height="10px">
+				<line x1="7" x2="100%" y1="2" y2="2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 8" style="stroke: #fff;"></line>
+			</svg>
+		</div>
+	</div>
+	<div class="statement">
+		<div><img src="img/home-footer-logo.png" width="111" alt="home-footer-logo" /></div>
+		<div>
+			<p class="handbrewed">Brewed by hand in<br>
+				san francisco, ca 
+				<span>since 2010</span>
+			</p>
+		</div>
+	</div>
+
+</body>
+</html>

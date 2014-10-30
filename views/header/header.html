@@ -1,0 +1,27 @@
+<!-- <div pos-action="(now) setlocalstorage" pos-action-params="positron: cool;"></div> -->
+<div
+	pos-action-1="(click) refreshview: menu"
+	pos-action-1-params="section: navigation;"
+	class="left btn icon-menu"
+></div>
+
+<div
+	pos-action-1="(click) showview: forms"
+	class="section-name title"
+>Home</div>
+
+<pos-localstorage key="positron">
+	<pos-if notempty="$localstorage.positron;">
+		<div
+			pos-action-1="(click) refreshview: menu"
+			pos-action-1-params="section: account;"
+			class="right btn icon-dots"
+		></div>
+	</pos-if>
+	<pos-if empty="$localstorage.positron;">
+		<div
+			pos-action-1="(click) toggleview: forms/nu-slide-in-from-right/nu-slide-out-to-right"
+			class="right btn icon-dots"
+		></div>
+	</pos-if>
+</pos-localstorage>
