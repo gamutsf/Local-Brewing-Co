@@ -6,6 +6,7 @@
 	z-index: 999999;
 	color: white;
 	display: block;
+	text-align: left;
 }
 
 	.overlay .content {
