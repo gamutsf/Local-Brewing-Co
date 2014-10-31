@@ -6,22 +6,23 @@
 ></div>
 
 <div
-	pos-action-1="(click) showview: forms"
 	class="section-name title"
->Home</div>
+>$params.title;</div>
 
-<pos-localstorage key="positron">
-	<pos-if notempty="$localstorage.positron;">
-		<div
-			pos-action-1="(click) refreshview: menu"
-			pos-action-1-params="section: account;"
-			class="right btn icon-dots"
-		></div>
-	</pos-if>
-	<pos-if empty="$localstorage.positron;">
-		<div
-			pos-action-1="(click) toggleview: forms/nu-slide-in-from-right/nu-slide-out-to-right"
-			class="right btn icon-dots"
-		></div>
-	</pos-if>
-</pos-localstorage>
+<pos-if true="'$params.page;' == 'selector'">
+	<pos-localstorage key="positron">
+		<pos-if notempty="$localstorage.positron;">
+			<div
+				pos-action-1="(click) refreshview: menu"
+				pos-action-1-params="section: account;"
+				class="right btn icon-dots"
+			></div>
+		</pos-if>
+		<pos-if empty="$localstorage.positron;">
+			<div
+				pos-action-1="(click) toggleview: forms/nu-slide-in-from-right/nu-slide-out-to-right"
+				class="right btn icon-dots"
+			></div>
+		</pos-if>
+	</pos-localstorage>
+</pos-if>
