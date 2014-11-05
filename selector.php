@@ -7,9 +7,9 @@
 	<!--
 	<section pos-view="beerfinder" class="pos-visible beer-finder"></section>
 	-->
-	<section pos-view="forms" class="single pos-invisible" pos-view-params="action: login;"></section>
+	<!-- <section pos-view="forms" class="single pos-invisible" pos-view-params="action: login;"></section> -->
 	<section pos-view="results" class="results pos-visible"></section>
-	<section pos-view="single" class="single pos-invisible"></section>
+	<!-- <section pos-view="single" class="single pos-invisible"></section> -->
 	
 	<!--
 	<footer>

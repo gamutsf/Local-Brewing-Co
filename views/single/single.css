@@ -14,7 +14,8 @@
 		width: 100vw; 
 		float: left; 
 		display: block;
-		height: -webkit-calc(100vh - 60px);
+		height: -webkit-calc(100% - 60px);
+		position: absolute;
 	}
 		.single-details.active {}
 		

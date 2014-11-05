@@ -18,9 +18,15 @@
 <script src="positron/positron.js" type="text/javascript"></script>
 <script src="js/viewport-units-buggyfill.js" type="text/javascript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script src="js/iscroll.js"></script>
 
 <script type="text/javascript">
+	
+	window.hideKeyboard = function() {
+    document.activeElement.blur();
+    document.getElementsByTagName('input').blur();
+	};
 
 	window.viewportUnitsBuggyfill.init();
 	window.preventDefault = function(e) { e.preventDefault(); };
@@ -79,3 +85,5 @@
 
 <body>
 	<section pos-view="menu" class="pos-invisible overlay"></section>
+	<section pos-view="forms" class="single pos-invisible" pos-view-params="action: login;"></section>
+	<section pos-view="single" class="single pos-invisible"></section>

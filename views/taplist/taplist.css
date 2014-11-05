@@ -176,6 +176,8 @@
 				float: left;
 				box-sizing: border-box;
 				color: whitesmoke;
+				font-family: 'Trade Gothic Bold';
+				text-transform: uppercase;
 			}
 				.tap-list .shelf .btn.btn-left {
 					margin-left: 2%;

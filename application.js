@@ -29,14 +29,13 @@ Application.prototype.findMatches = function (){
 	 }
 
 	 positron.Util.ajax({
-	   url: "sampledata.json",
+	   url: "http://localbrewingco.com/cms/json?type=beerlist&callback=",
 	   dataType: dataType,
 	   success: function(inData){
+		   console.log(inData);
 		   if(document.location.href.indexOf('localhost') < 0){
-		 	 	 var inData = $.parseJSON( inData );
+		 	 	 //var inData = $.parseJSON( inData );
 		 	 }
-		 
-		 	 //console.log(inData);
 		   
 		   $('.output.list').empty();
 		   

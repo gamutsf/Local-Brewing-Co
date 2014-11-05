@@ -3,6 +3,8 @@
 html {
 	width: 100%;
 	height: 100%;
+	background: #fefefe url(img/bg.png) 0 0 repeat-y;
+	background-size: 320px auto;
 }
 
 body {
@@ -15,6 +17,7 @@ body {
 	background: #fefefe url(img/bg.png) 0 0 repeat-y;
 	background-size: 320px auto;
 	height: 100%;
+	-webkit-text-size-adjust: none;
 	/* -webkit-font-smoothing: antialiased; */
 }
 
@@ -43,52 +46,6 @@ ul, li {
 section {
 	position: absolute;
 }
-
-header {
-	position: fixed;
-	top: 0;
-	height: 60px;
-	line-height: 60px;
-	width: 100%;
-	background: #ee3423 url(img/header-bg.png) 0 0 no-repeat;
-	background-size: 320px auto;
-	z-index: 99999;
-	overflow: hidden;
-}
-	header .btn {
-		width: 50px;
-		height: 100%;
-		top: 0px;
-		position: absolute;
-		text-align: center;
-	}
-		header .btn:active:before {
-			color: #383838;
-		}
-		header .btn.icon-dots, 
-		header .btn.icon-menu {
-			color: #fff;
-			font-size: 160%;
-		}
-		
-		header .btn.left {			
-			left: 0px;
-		}
-		header .btn.right {
-			right: 0px;
-		}
-			header .btn.right.share {
-				right: 50px;
-			}
-	header .section-name {
-		text-align: center;
-		color: white;
-		font-family: 'Local Headline';
-		text-transform: uppercase;
-		font-size: 24px;
-		letter-spacing: 1px;
-		font-weight: 400;
-	}
 	
 .content {
 	position: relative;
@@ -262,6 +219,9 @@ footer {
 		#home .contact .phone {
 			font-size: 35px;
 			margin-top: 15px;
+			color:inherit;
+			text-decoration:none;
+			display:block;
 		}
 	
 	#home .map-area {
@@ -370,23 +330,6 @@ footer {
 				color: #383738;
 				display: block;
 			}
-		
-		
-		
-		
-	
-/* icons */
-
-[class^="icon-"]:before, [class*=" icon-"]:before {
-	font-family: 'local-icon';
-}
- 
-.icon-dots:before { content: '\e800'; } 
-.icon-menu:before { content: '\e801'; } 
-.icon-share:before { content: '\e802'; } 
-.icon-complex:before { content: '\e803'; }
-.icon-boozy:before { content: '\e804'; }
-.icon-hoppy:before { content: '\e805'; }
 
 
 /* global */
@@ -884,6 +827,21 @@ input {
   font-weight: normal;
   font-style: normal;
 }
+
+/* icons */
+
+[class^="icon-"]:before, [class*=" icon-"]:before {
+	font-family: 'local-icon';
+}
+
+.icon-search:before { content: '\e800'; } /* '' */
+.icon-target:before { content: '\e801'; } /* '' */
+.icon-hoppy:before { content: '\e802'; } /* '' */
+.icon-boozy:before { content: '\e803'; } /* '' */
+.icon-complex:before { content: '\e804'; } /* '' */
+.icon-share:before { content: '\e805'; } /* '' */
+.icon-menu:before { content: '\e806'; } /* '' */
+.icon-dots:before { content: '\e807'; } /* '' */
 
 .clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; visibility: hidden; } 
 .clearfix:after { clear: both; }

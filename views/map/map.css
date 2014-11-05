@@ -1,0 +1,288 @@
+#map-container {
+	position: fixed;
+	width: 100%;
+	height: -webkit-calc(50% - 60px);
+	top: 60px;
+	background: black;
+}
+	#map {
+		width: 100%;
+		height: 100%;
+	}
+	.map-result {
+		position: relative;
+		top: 0px;
+		height: auto;
+		color: #383738;
+		z-index: 9999;
+		width: 100%;
+		text-align: center;
+		backface-visibility: hidden;
+		transform: translateY(0);
+		padding: 4px 0px;
+		font-size: 11px;
+		margin: 0;
+		border-bottom: 1px solid #d7d7d7;
+		background: rgba(0,0,0,0.1);
+	}
+
+#results {
+	position: fixed;
+	top: 50%;
+	height: 50%;
+	width: 100%;
+}
+
+#shelf {
+	background: #383838;
+	width: 100%;
+	height: auto; /* 47px */
+	padding: 6px 0px;
+	min-height: 34px;
+	color: white;
+	border-top: 1px solid #4c4c4c;
+	top: 0px;
+	position: relative;
+	display: table;
+}
+	#shelf > div {
+		display: table-cell;
+		vertical-align: middle;
+		text-align: center;
+	}
+		#shelf > .left,
+		#shelf > .right {
+			width: 60px;
+			font-size: 21px;
+		}
+		
+		#shelf > .center {
+			width: -webkit-calc(100% - 40px);
+		}
+		
+			#shelf > .left.search {
+				position: relative;
+			}
+				#shelf > .left search:after {
+					content: '';
+					border-right: 0px;
+				}
+				#shelf > .left search span {
+					position: relative;
+					display: block;
+					color: white;
+					float: left;
+				}
+					#shelf > .left.search span.search-close {
+						position: absolute;
+						right: 0px;
+						height: 47px;
+						top: -7px;
+						line-height: 44px;
+						z-index: 9999;
+						padding: 0px 18px;
+					}
+				#shelf > .left.search form {
+					display: block;
+					width: 100%;
+					border: 0;
+				}
+				#shelf > .left.search input[type="text"] {
+					display: none;
+					float: left;
+					height: 50px;
+					position: absolute;
+					width: 100%;
+					background: #383838;
+				}
+			#shelf > .left.search.active {
+				width: 100% !important;
+				height: 47px;
+				position: absolute;
+			}
+				#shelf > .left.search.active .icon-search {
+					position: absolute;
+					left: 3.5px;
+					height: 47px;
+					top: -7px;
+					line-height: 47px;
+					z-index: 9999;
+					padding: 0px 18px;
+				}
+			#shelf > .left.search.active input[type="text"] {
+				display: block;
+				height: 45px;
+				position: absolute;
+				width: 100%;
+				padding-left: 60px;
+				text-indent: 0px;
+				top: -7px;
+				border: 0;
+				color: white;
+				font-size: 16px;
+				padding-right: 60px;
+				box-sizing: border-box;
+			}
+				#shelf > .left.search.active input[type="text"]:focus {
+					outline: 0;
+				}
+		
+	#shelf .btn {
+		width: 50%;
+		text-align: center;
+		line-height: 33px;
+		font-size: 14px;
+		background: #000;
+		height: 33px;
+		float: left;
+		box-sizing: border-box;
+		color: whitesmoke;
+		font-family: 'Trade Gothic Bold';
+		text-transform: uppercase;
+	}
+		#shelf .btn.btn-left {
+			/* border-right: 1px solid #383838; */
+			border-bottom-left-radius: 4px;
+			border-top-left-radius: 4px;
+		}
+		#shelf .btn.btn-right {
+			/* border-left: 1px solid #383838; */
+			border-bottom-right-radius: 4px;
+			border-top-right-radius: 4px;
+		}
+	#shelf .btn.active {
+		background: gray;	
+	}
+
+	#results .tap-list {
+		position: relative;
+		top: 0px;
+		width: 100%;
+		height: -webkit-calc(100% - 47px);
+		overflow: scroll;
+		/* margin-bottom: 100px; */
+	}
+		#results .tap-list ul {
+			height: 76px;
+			width: 100%;
+			/* border-bottom: 1px solid #d7d7d7; */
+			display: -webkit-flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+			#results .tap-list ul li {
+				display: block;
+				float: left;
+				width: 33.3%;
+				height: 100%;
+				text-align: center;
+				border-right: 1px solid darkgray;
+				background: url(img/filter-bg.png) 0 0 repeat;
+				text-transform: uppercase;
+				position: relative;
+				font-size: 14px;
+				font-weight: 600;
+				letter-spacing: -0.5px;
+				font-family: 'Trade Gothic Bold';
+			}
+				#results .tap-list ul li .icon {
+					/* margin-top: 8px; */
+					width: 100%;
+					height: 100%;
+				}
+				#results .tap-list ul li:last-child { border-right: none; }
+				#results .tap-list ul li.active {
+					background: url(img/filter-bg-active.png) 0 0 repeat;
+					/* border-bottom: 1px solid #606060; */
+					text-shadow: 0px -1px -1px rgba(5, 5, 5, 1);
+				}
+				
+				#results .tap-list ul li [class^="icon-"]:before, 
+				#results .tap-list ul li [class*=" icon-"]:before {
+					position: absolute;
+					left: 0px;
+					width: 100%;
+					font-size: 36px;
+					/* text-shadow: 0px 1px 1px #FFF; */
+					height: 100%;
+					line-height: 56px;
+				}
+					#results .tap-list ul li.active [class^="icon-"]:before, 
+					#results .tap-list ul li.active [class*=" icon-"]:before {
+						/* -webkit-text-stroke: 0.1px #fff; */
+						text-shadow: -1px -1px 0 #FFF, 1px -1px 0 #FFF, -1px 1px 0 #FFF, 1px 1px 0 #FFF;
+						/* text-shadow: -1px -1px 0px rgba(5, 5, 5, 1); */
+					}			
+				
+				#results .tap-list ul li .filter-value {
+					line-height: 56px;
+					z-index: 1;
+					color: #FFF;
+					position: relative;
+					letter-spacing: -1px;
+					font-size: 10px;
+					height: 100%;
+				}
+				
+				#results .tap-list ul li .filter-name { 
+					position: absolute;
+					width: 100%;
+					text-align: center;
+					bottom: 8px; 
+					text-shadow: 0px 1px 1px rgba(255, 255, 255, 1);
+				}
+					#results .tap-list ul li.active .filter-name { 
+						color: #fff; 
+						text-shadow: 0px 1px 0px rgba(5, 5, 5, 1);
+					}
+		
+		#results .tap-list .list {}
+			#results .tap-list .list .beer-sum { 
+				clear: left;
+				border-bottom: 1px solid #d7d7d7;
+				padding: 12px 15px;
+				font-family: 'Trade Gothic Bold';
+				text-transform: capitalize;
+				font-weight: 400;
+				letter-spacing: -0.5px;
+				-webkit-font-smoothing: antialiased;
+				box-sizing: border-box;
+				display: -webkit-flex;
+				align-items: center;
+				justify-content: space-between;
+				outline: 0;
+				-webkit-tap-highlight-color: rgba(0,0,0,0);
+			}
+				#results .tap-list .list .beer-sum:active {
+					background: rgba(0,0,0,0.1);
+				}
+			#results .tap-list .list .beer-sum.noclick {
+				pointer-events: none;
+			}
+				#results .tap-list .list .beer-sum .info {
+					width: 100%;
+					padding-left: 15px;
+				}
+				#results .tap-list .list .beer-sum h2 {
+					font-family: inherit;
+					font-weight: 400;
+				}
+				#results .tap-list .list .beer-sum .description {
+					font-family: 'Trade Gothic Roman';
+					font-size: 13px;
+					text-transform: none;
+					letter-spacing: -0.25px;
+				}
+					#results .tap-list .list .beer-sum .description span.active {
+						color: #EE3423;
+					}
+				
+				#results .tap-list .list .order {
+					width: 20px;
+					background: #000;
+					border-radius: 50%;
+					color: #FFF;
+					padding: 2px;
+					text-align: center;
+					height: 20px;
+				} 	

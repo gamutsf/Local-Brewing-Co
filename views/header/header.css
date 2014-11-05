@@ -1,0 +1,45 @@
+header {
+	position: fixed;
+	top: 0;
+	height: 60px;
+	line-height: 60px;
+	width: 100%;
+	background: #ee3423 url(img/header-bg.png) 0 0 no-repeat;
+	background-size: 320px auto;
+	z-index: 99999;
+	overflow: hidden;
+}
+	header .btn {
+		width: 50px;
+		height: 100%;
+		top: 0px;
+		position: absolute;
+		text-align: center;
+	}
+		header .btn:active:before {
+			color: #383838;
+		}
+		header .btn.icon-dots, 
+		header .btn.icon-menu {
+			color: #fff;
+			font-size: 160%;
+		}
+		
+		header .btn.left {			
+			left: 0px;
+		}
+		header .btn.right {
+			right: 0px;
+		}
+			header .btn.right.share {
+				right: 50px;
+			}
+	header .section-name {
+		text-align: center;
+		color: white;
+		font-family: 'Local Headline';
+		text-transform: uppercase;
+		font-size: 24px;
+		letter-spacing: 1px;
+		font-weight: 400;
+	}

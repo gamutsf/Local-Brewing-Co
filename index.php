@@ -42,7 +42,7 @@
 					<li><span>Friday</span> .......................... 3pm - 12pm</li>
 					<li><span>Saturday</span> .................... 3pm - 12pm</li>
 				</ul>
-				<p class="phone">(415) 555-5555</p>
+				<a class="phone" href="tel: 415-555-5555">(415) 555-5555</a>
 			</div>	
 		</div>
 		
@@ -53,7 +53,7 @@
 		<div class="selector-snippet">
 			<h3>Find your <span>perfect brew</span></h3>
 			<div class="preview clearfix">
-				<img src="img/home-selector-img.png" alt="home-selector-img" />
+				<img src="img/roundy.png" alt="home-selector-img" />
 			</div>
 			<ul class="clearfix">
 				<li>Explore our beer list by Hoppyness, Alcohol Volume, and Complexity</li>
@@ -64,7 +64,7 @@
 				<svg width="100%" height="10px">
 					<line x1="7" x2="100%" y1="2" y2="2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 8" style="stroke: #fff;"></line>
 				</svg>
-				<a href="selector.html">Try the beer finder</a>
+				<a href="selector.php">Try the beer finder</a>
 				<svg width="100%" height="10px">
 					<line x1="7" x2="100%" y1="2" y2="2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 8" style="stroke: #fff;"></line>
 				</svg>
