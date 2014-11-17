@@ -21,21 +21,11 @@ Application.prototype.findMatches = function (){
 	 var orderedList = [];
 	 var variability = 1;
 	 
-	 if(document.location.href.indexOf('localhost') < 0){
-	 		var dataType = "jsonp";
-	 }
-	 else {
-		  var dataType = "json";
-	 }
-
-	 positron.Util.ajax({
-	   url: "http://localbrewingco.com/cms/json?type=beerlist&callback=",
-	   dataType: dataType,
+	 $.ajax({
+	   url: "http://localbrewingco.com/cms/json?type=beerlist",
+	   dataType: "jsonp",
 	   success: function(inData){
-		   console.log(inData);
-		   if(document.location.href.indexOf('localhost') < 0){
-		 	 	 //var inData = $.parseJSON( inData );
-		 	 }
+		   //console.log(inData);
 		   
 		   $('.output.list').empty();
 		   
@@ -257,3 +247,26 @@ Application.prototype.findMatches = function (){
 	 });
 	 
 };
+
+Application.prototype.refreshUserdata = function ()
+{
+	var current_user = localStorage.lbc_user;
+	
+	$.ajax({
+		url: "http://localbrewingco.com/cms/user/?userid="+ current_user,
+		dataType: "jsonp",
+		success: function(inData){
+		
+			var cacheKey = 'userdata';
+		  var cacheLifeTime = 15 * 60 * 1000;
+		  gApplication.cache.put(cacheKey, inData, cacheLifeTime);
+		  
+		}
+	});
+}
+
+Application.prototype.clearUserdata = function ()
+{
+	var current_user = null;
+	delete gApplication.cache.cache.userdata;
+}

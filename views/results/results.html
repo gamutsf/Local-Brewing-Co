@@ -1,17 +1,17 @@
 <ul class="question-tabs">
 	<li 
-		pos-action-1="call: toggleSlider"
-		pos-action-1-params="section: hoppy; el: hoppyness;"
+		p-action-1="call: toggleSlider"
+		p-action-1-params="section: hoppy; el: hoppyness;"
 		class="hoppyness tab"
 	>
 		<div class="icon icon-hoppy">
 			<div class="filter-value"></div>
 		</div>
-		<div class="filter-name">Hoppyness</div>
+		<div class="filter-name">Bitterness</div>
 	</li>
 	<li
-		pos-action-1="call: toggleSlider"
-		pos-action-1-params="section: boozy; el: alcohol;"
+		p-action-1="call: toggleSlider"
+		p-action-1-params="section: boozy; el: alcohol;"
 		class="alcohol tab"
 	>
 		<div class="icon icon-boozy">
@@ -20,8 +20,8 @@
 		<div class="filter-name">Alcohol</div>
 	</li>
 	<li
-		pos-action-1="call: toggleSlider"
-		pos-action-1-params="section: complex; el: complexity;"
+		p-action-1="call: toggleSlider"
+		p-action-1-params="section: complex; el: complexity;"
 		class="complexity tab"
 	>
 		<div class="icon icon-complex">
@@ -31,9 +31,9 @@
 	</li>
 </ul>
 
-<div class="pos-visible shelf" pos-view="shelf:">
+<div class="p-visible shelf" p-view="shelf:">
 	
-	<div pos-view="slider:" class="slider pos-invisible">
+	<div p-view="slider:" class="slider p-invisible">
 		<div class="selector">
 			<form>
 				<div class="range-end less">Less</div>
@@ -45,22 +45,36 @@
 		</div>
 		<div 
 			class="done-btn"
-			pos-action-1="(click) call: toggleSlider"
+			p-action-1="(click) call: toggleSlider"
 		>Done</div>
 	</div>
 	
-	<div pos-view="controls:">
+	<div p-view="controls:">
 		<div class="num-results"></div>
-		<div pos-view="profile:" class="profile">
-			<pos-if true="'$params.profile;' == ''">
-				<div
-					pos-action-1="(click) refreshview: menu"
-					pos-action-1-params="section: save-profile;" 
-				>Save this profile</div>
-			</pos-if>
-			<pos-if true="'$params.profile;' != ''">
+		<div p-view="profile:" class="profile">
+			<p-if true="'$params.profile;' == ''">
+				
+				<p-localstorage key="lbc_user">
+					<p-if notempty="$localstorage.lbc_user;">
+						<div
+							p-action-1="(click) refreshview: menu"
+							p-action-1-params="section: save-profile;" 
+						>Save this profile</div>
+					</p-if>
+					<p-if empty="$localstorage.lbc_user;">
+						<div
+							p-action-1="(click) refreshview: forms/nu-slide-in-from-right"
+							p-action-1-params="action: login;"
+							p-action-2="(click) refreshview: userlogin"
+							p-action-2-params="state: close;" 
+						>Save this profile</div>
+					</p-if>
+				</p-localstorage>
+
+			</p-if>
+			<p-if true="'$params.profile;' != ''">
 				<div style="color: white;">$params.profile;</div>
-			</pos-if>
+			</p-if>
 		</div>
 	</div>
 	
@@ -69,18 +83,18 @@
 <div class="list output">
 
 	<!--
-	<pos-json
+	<p-json
 		url="sampledata.json"
 		cachekey="beerlist"
 	>
 		<filter
 			beerskey="json.beers"
 		>
-	  <pos-list key="filter" name="beer">
+	  <p-list key="filter" name="beer">
 
 			<div class="beer-sum" 
-				pos-action-1="toggleview: single"
-				pos-action-2="toggleview: results">
+				p-action-1="toggleview: single"
+				p-action-2="toggleview: results">
 				<div class="info">
 					<h2 class="name">$beer.name;</h2>
 					<div class="description">$beer.style;</div>
@@ -92,12 +106,12 @@
 				</div>
 			</div>
 		
-		</pos-list>
+		</p-list>
 	
 		<div class="num-results">$beers.beers.length; matches</div>
 		</filter>
 	
-	</pos-json>
+	</p-json>
 	-->
 	
 </div>

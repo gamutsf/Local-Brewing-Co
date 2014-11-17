@@ -155,12 +155,114 @@ SingleView.prototype.close = function ()
 	}, 401);
 }
 
-SingleView.prototype.share = function ()
+SingleView.prototype.shareFacebook = function ()
 {
-	alert('Share: '+ this.params.name);
+	//alert('Facebook share: '+ this.params.name);
+	
+	var winWidth = 520;
+	var winHeight = 350;
+	var winTop = (screen.height / 2) - (winHeight / 2);
+	var winLeft = (screen.width / 2) - (winWidth / 2);
+	
+	var name = this.params.name;
+	
+	var title = 'Local Brewing Co.'+ name;
+  var descr = 'Check out "'+ name +'"';
+	window.open('http://www.facebook.com/sharer.php?u=http://localbrewingco.com&t='+ descr, 'Local Brewing Co', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
+	
+}
+
+SingleView.prototype.shareTwitter = function ()
+{
+	//alert('Twitter share: '+ this.params.name);
+	
+	var winWidth = 520;
+  var winHeight = 350;
+  var winTop = (screen.height / 2) - (winHeight / 2);
+  var winLeft = (screen.width / 2) - (winWidth / 2);
+	
+	var name = this.params.name;
+	
+	var twitterUrl = 'http://twitter.com/intent/tweet?text=Check out "'+ name +'" http://localbrewingco.com @localbrewingco';		
+	window.open(twitterUrl, 'Local Brewing Co', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
+	
 }
 
 SingleView.prototype.fave = function ()
 {
-	alert(this.params.name + ' has been added to your favorites!');
+	var id = this.params.id;
+	var name = this.params.name;
+	 
+	$.ajax({
+  	url: "http://localbrewingco.com/cms/wp-admin/admin-ajax.php",
+  	data: {
+	    action: 'addFavorite',
+	    beer_id: id,
+	    user_id: localStorage.lbc_user
+		},
+		dataType: "jsonp",
+		async: true,
+		success: function (inData, inTextStatus, inXHR)
+		{
+      //console.log(inData.status + ': '+ name);
+      
+      if(inData.status == "exists"){
+	      alert(name + ' is already a favorite.');
+	    }
+	    else if(inData.status == "added"){
+    		console.log(name + ' has been added to your favorites!');
+    	}
+    	else {
+	    	// Remove the active class
+	    	$('.fave[data-faveid="'+ id +'"]').removeClass('active');
+	    	console.log('Adding ' + name + ' did not work, removing...');
+    	}
+    	
+    	Application.prototype.refreshUserdata.call(this);
+		},
+		error: function (inXHR, inTextStatus, inThing)
+		{
+			console.log(inXHR + inTextStatus + inThing);
+		}
+  });
+}
+
+SingleView.prototype.unfave = function ()
+{
+	var id = this.params.id;
+	var name = this.params.name;
+	
+	$.ajax({
+  	url: "http://localbrewingco.com/cms/wp-admin/admin-ajax.php",
+  	data: {
+	    action: 'removeFavorite',
+	    beer_id: this.params.id,
+	    user_id: localStorage.lbc_user
+		},
+		dataType: "jsonp",
+		async: true,
+		success: function (inData, inTextStatus, inXHR)
+		{
+      console.log(inData.status + ': '+ name);
+		},
+		error: function (inXHR, inTextStatus, inThing)
+		{
+			console.log(inXHR + inTextStatus + inThing);
+		}
+  });
+}
+
+SingleView.prototype.refreshFaves = function ()
+{
+	positron.Util.ajax({
+		url: "http://localbrewingco.com/cms/user/?userid="+ localStorage.lbc_user,
+		dataType: "jsonp",
+		success: function(inData){
+		
+			var cacheKey = 'userdata';
+		  var cacheLifeTime = 15 * 60 * 1000;
+		  gApplication.cache.put(cacheKey, inData, cacheLifeTime);
+		  
+		}
+	});
 }

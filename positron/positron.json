@@ -1,11 +1,11 @@
 
 
 {
-	"attributePrefix" : "pos-",
-	"cssClassPrefix" : "pos-",
-	"eventPrefix" : "pos-",
-	"tagPrefix" : "pos-",
-	"urlParameterPrefix" : "pos-",
+	"attributePrefix" : "p-",
+	"cssClassPrefix" : "p-",
+	"eventPrefix" : "p-",
+	"tagPrefix" : "p-",
+	"urlParameterPrefix" : "p-",
 	"pageCSSPath" : "pages/$page;/$page;.css",
 	"pageHTMLPath" : "pages/$page;/$page;.html",
 	"pageJSPath" : "pages/$page;/$page;.js",
@@ -34,11 +34,22 @@
 	
 	"attributeOrder" :
 	[
-		"pos-view",
-		"pos-action",
-		"pos-localise"
+		"p-view",
+		"p-action",
+		"p-localise"
 	],
 
+	"deferredTriggers" :
+	{
+		"animationframe" : true,
+		"circle" : true,
+		"defer" : true,
+		"delay" : true,
+		"interval" : true,
+		"location" : true,
+		"websocketmessage" : true
+	},
+	
 	"localisation" :
 	{
 		"enabled" : false
@@ -62,6 +73,8 @@
 		"ajaxpost" : "positron.action.AjaxAction",
 		"alert" : "positron.action.AlertAction",
 		"call" : "positron.action.CallAction",
+		"clearlist" : "positron.action.ClearListAction",
+		"clearmap" : "positron.action.ClearMapAction",
 		"dispatchform" : "positron.action.DispatchFormAction",
 		"gotourl" : "positron.action.GotoURLAction",
 		"hideview" : "positron.action.HideViewAction",
@@ -72,6 +85,7 @@
 		"removefromlist" : "positron.action.RemoveFromListAction",
 		"removefrommap" : "positron.action.RemoveFromMapAction",
 		"runview" : "positron.action.RunViewAction",
+		"scroll" : "positron.action.ScrollAction",
 		"selectclass" : "positron.action.SelectClassAction",
 		"sendwebsocket" : "positron.action.SendWebSocketAction",
 		"setattribute" : "positron.action.SetAttributeAction",
@@ -89,16 +103,16 @@
 	
 	"attributes" :
 	{
-		"pos-action" : "positron.attribute.ActionAttribute",
-		"pos-localise" : "positron.attribute.LocaliseAttribute",
-		"pos-view" : "positron.attribute.ViewAttribute"
+		"p-action" : "positron.attribute.ActionAttribute",
+		"p-localise" : "positron.attribute.LocaliseAttribute",
+		"p-view" : "positron.attribute.ViewAttribute"
 	},
 	
 	"events" :
 	{
-		"pos-ajax" : "positron.event.AjaxEvent",
-		"pos-ajaxformsuccess" : "positron.event.AjaxEvent",
-		"pos-formdispatch" : "positron.event.FormDispatchEvent",
+		"p-ajax" : "positron.event.AjaxEvent",
+		"p-ajaxform" : "positron.event.AjaxEvent",
+		"p-dispatchform" : "positron.event.FormDispatchEvent",
 		"change" : "positron.event.ChangeEvent",
 		"click" : "positron.event.ClickEvent",
 		"devicemotion" : "positron.event.DeviceMotionEvent",
@@ -109,45 +123,46 @@
 	
 	"tags" :
 	{
-		"pos-audio" : "positron.tag.IsolatorTag",
-		"pos-action" : "positron.tag.ActionTag",
-		"pos-capitalcase" : "positron.tag.ChangeCaseTag",
-		"pos-changecase" : "positron.tag.ChangeCaseTag",
-		"pos-comment" : "positron.tag.CommentTag",
-		"pos-date" : "positron.tag.DateTag",
-		"pos-delay" : "positron.tag.DelayTag",
-		"pos-distance" : "positron.tag.DistanceTag",
-		"pos-get" : "positron.tag.GetTag",
-		"pos-localstorage" : "positron.tag.LocalStorageTag",
-		"pos-indexedquery" : "positron.tag.IndexedDBQueryTag",
-		"pos-if" : "positron.tag.IfTag",
-		"pos-img" : "positron.tag.IsolatorTag",
-		"pos-join" : "positron.tag.JoinTag",
-		"pos-json" : "positron.tag.JSONTag",
-		"pos-list" : "positron.tag.ListTag",
-		"pos-location" : "positron.tag.LocationTag",
-		"pos-log" : "positron.tag.LogTag",
-		"pos-lowercase" : "positron.tag.ChangeCaseTag",
-		"pos-map" : "positron.tag.MapTag",
-		"pos-move" : "positron.tag.MoveTag",
-		"pos-numberformat" : "positron.tag.NumberFormatTag",
-		"pos-numbers" : "positron.tag.NumbersTag",
-		"pos-option" : "positron.tag.IsolatorTag",
-		"pos-prefixedproperty" : "positron.tag.PrefixedPropertyTag",
-		"pos-sqlquery" : "positron.tag.SQLQueryTag",
-		"pos-replace" : "positron.tag.ReplaceTag",
-		"pos-select" : "positron.tag.IsolatorTag",
-		"pos-selectoption" : "positron.tag.SelectOptionTag",
-		"pos-split" : "positron.tag.SplitTag",
-		"pos-set" : "positron.tag.SetTag",
-		"pos-table" : "positron.tag.IsolatorTag",
-		"pos-throw" : "positron.tag.ThrowTag",
-		"pos-timeago" : "positron.tag.TimeAgoTag",
-		"pos-td" : "positron.tag.IsolatorTag",
-		"pos-tr" : "positron.tag.IsolatorTag",
-		"pos-uppercase" : "positron.tag.ChangeCaseTag",
-		"pos-video" : "positron.tag.IsolatorTag",
-		"pos-websocket" : "positron.tag.WebSocketTag"
+		"p-audio" : "positron.tag.IsolatorTag",
+		"p-action" : "positron.tag.ActionTag",
+		"p-capitalcase" : "positron.tag.ChangeCaseTag",
+		"p-changecase" : "positron.tag.ChangeCaseTag",
+		"p-comment" : "positron.tag.CommentTag",
+		"p-date" : "positron.tag.DateTag",
+		"p-delay" : "positron.tag.DelayTag",
+		"p-distance" : "positron.tag.DistanceTag",
+		"p-get" : "positron.tag.GetTag",
+		"p-localstorage" : "positron.tag.LocalStorageTag",
+		"p-indexedquery" : "positron.tag.IndexedDBQueryTag",
+		"p-if" : "positron.tag.IfTag",
+		"p-img" : "positron.tag.IsolatorTag",
+		"p-join" : "positron.tag.JoinTag",
+		"p-json" : "positron.tag.JSONTag",
+		"p-list" : "positron.tag.ListTag",
+		"p-location" : "positron.tag.LocationTag",
+		"p-log" : "positron.tag.LogTag",
+		"p-lowercase" : "positron.tag.ChangeCaseTag",
+		"p-map" : "positron.tag.MapTag",
+		"p-move" : "positron.tag.MoveTag",
+		"p-numberformat" : "positron.tag.NumberFormatTag",
+		"p-numbers" : "positron.tag.NumbersTag",
+		"p-option" : "positron.tag.IsolatorTag",
+		"p-prefixedproperty" : "positron.tag.PrefixedPropertyTag",
+		"p-queryselector" : "positron.tag.QuerySelectorTag",
+		"p-sqlquery" : "positron.tag.SQLQueryTag",
+		"p-replace" : "positron.tag.ReplaceTag",
+		"p-select" : "positron.tag.IsolatorTag",
+		"p-selectoption" : "positron.tag.SelectOptionTag",
+		"p-split" : "positron.tag.SplitTag",
+		"p-set" : "positron.tag.SetTag",
+		"p-table" : "positron.tag.IsolatorTag",
+		"p-throw" : "positron.tag.ThrowTag",
+		"p-timeago" : "positron.tag.TimeAgoTag",
+		"p-td" : "positron.tag.IsolatorTag",
+		"p-tr" : "positron.tag.IsolatorTag",
+		"p-uppercase" : "positron.tag.ChangeCaseTag",
+		"p-video" : "positron.tag.IsolatorTag",
+		"p-websocket" : "positron.tag.WebSocketTag"
 	},
 
 	"triggers" :
@@ -174,9 +189,17 @@
 		"touchend" : "positron.trigger.MouseUpTrigger",
 		"touchmove" : "positron.trigger.MouseMoveTrigger",
 		"touchstart" : "positron.trigger.MouseDownTrigger",
+		"refreshview" : "positron.trigger.RefreshViewTrigger",
+		"showview" : "positron.trigger.ShowViewTrigger",
 		"websocketmessage" : "positron.trigger.WebSocketMessageTrigger"
 	},
 
+	"views":
+	{
+		"mediaclient" : "positron.view.MediaClientView",
+		"mediaserver" : "positron.view.MediaServerView"
+	},
+	
 	"window-events" :
 	{
 		"devicemotion" : true,

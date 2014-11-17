@@ -151,6 +151,7 @@
 	.overlay .account.content {
 		display: block;
 		padding: 0px 30px 30px;
+		margin-top: -10px;
 	}
 		.overlay .account.content .user-data {
 			clear: both;
@@ -166,7 +167,12 @@
 				border-radius: 50%;
 				float: left;
 				margin-right: 10px;
+				overflow: hidden;
 			}
+				.overlay .account.content .user-data .avatar img {
+					width: 100%;
+					height: auto;
+				}
 			
 			.overlay .account.content .user-data .username {
 				line-height: 50px;
@@ -295,9 +301,11 @@
 		.overlay .account .log-out {
 			text-align: center;
 			margin-bottom: 0px;
-			margin-top: -10px;
+			margin-top: 0px;
 			color: gray;
 			text-transform: uppercase;
 			font-size: 14px;
 			font-family: 'Trade Gothic Bold', Arial, Helvetica, sans-serif;
+			padding: 14px;
+			border: 1px solid #808080;
 		}

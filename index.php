@@ -2,7 +2,7 @@
 	include('header.php');
 ?>
 
-<header pos-view="header" class="pos-visible" pos-view-params="title: Home;"></header>
+<header p-view="header" class="p-visible" p-view-params="title: Home;"></header>
 
 	<main id="home">
 	
@@ -18,7 +18,7 @@
 					<svg width="100%" height="10px" style="display: block;">
 						<line x1="7" x2="100%" y1="2" y2="2" stroke="#5184AF" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 8" style="stroke: #373737;"></line>
 					</svg>
-				<li><a href="selector.php">Beer selector</a></li>
+				<li><a href="curator.php">Beer curator</a></li>
 					<svg width="100%" height="10px" style="display: block;">
 						<line x1="7" x2="100%" y1="2" y2="2" stroke="#5184AF" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 8" style="stroke: #373737;"></line>
 					</svg>
@@ -28,9 +28,11 @@
 		
 		<div class="contact">
 			<p class="address clearfix">
-				<span>69</span> 
-				<span>Bluxome St.</span> 
-				<span>San Francisco, CA 94107</span>
+				<a href="http://maps.apple.com/?daddr=69+Bluxome+St+San+Francisco,+CA+94107">
+					<span>69</span> 
+					<span>Bluxome St.</span> 
+					<span>San Francisco, CA 94107</span>
+				</a>
 			</p>
 			<div class="hours">
 				<h5>Open daily</h5>
@@ -51,24 +53,26 @@
 		</div>
 		
 		<div class="selector-snippet">
-			<h3>Find your <span>perfect brew</span></h3>
-			<div class="preview clearfix">
-				<img src="img/roundy.png" alt="home-selector-img" />
-			</div>
-			<ul class="clearfix">
-				<li>Explore our beer list by Hoppyness, Alcohol Volume, and Complexity</li>
-				<li>Save a custom flavor profile to compare beers</li>
-				<li>Keep a list of your favorite beers</li>
-			</ul>
-			<div class="action clearfix">
-				<svg width="100%" height="10px">
-					<line x1="7" x2="100%" y1="2" y2="2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 8" style="stroke: #fff;"></line>
-				</svg>
-				<a href="selector.php">Try the beer finder</a>
-				<svg width="100%" height="10px">
-					<line x1="7" x2="100%" y1="2" y2="2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 8" style="stroke: #fff;"></line>
-				</svg>
-			</div>
+			<a href="./curator.php">
+				<h3>Find your <span>perfect brew</span></h3>
+				<div class="preview clearfix">
+					<img src="img/roundy.png" alt="home-selector-img" />
+				</div>
+				<ul class="clearfix">
+					<li>Explore our beer list by Bitterness, Alcohol Volume, and Complexity</li>
+					<li>Save a custom flavor profile to compare beers</li>
+					<li>Keep a list of your favorite beers</li>
+				</ul>
+				<div class="action clearfix">
+					<svg width="100%" height="10px">
+						<line x1="7" x2="100%" y1="2" y2="2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 8" style="stroke: #fff;"></line>
+					</svg>
+					<a href="./curator.php">Try the Beer Curator</a>
+					<svg width="100%" height="10px">
+						<line x1="7" x2="100%" y1="2" y2="2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 8" style="stroke: #fff;"></line>
+					</svg>
+				</div>
+			</a>
 		</div>
 		
 		<div class="statement">

@@ -1,7 +1,7 @@
-<!-- <div pos-action="(now) setlocalstorage" pos-action-params="positron: cool;"></div> -->
+<!-- <div p-action="(now) setlocalstorage" p-action-params="positron: cool;"></div> -->
 <div
-	pos-action-1="(click) refreshview: menu"
-	pos-action-1-params="section: navigation;"
+	p-action-1="(click) refreshview: menu"
+	p-action-1-params="section: navigation;"
 	class="left btn icon-menu"
 ></div>
 
@@ -9,20 +9,46 @@
 	class="section-name title"
 >$params.title;</div>
 
-<pos-if true="'$params.page;' == 'selector'">
-	<pos-localstorage key="positron">
-		<pos-if notempty="$localstorage.positron;">
+<!-- <p-if true="'$params.page;' == 'selector'"> -->
+	<p-localstorage key="lbc_user">
+		<p-if notempty="$localstorage.lbc_user;">
 			<div
-				pos-action-1="(click) refreshview: menu"
-				pos-action-1-params="section: account;"
-				class="right btn icon-dots"
-			></div>
-		</pos-if>
-		<pos-if empty="$localstorage.positron;">
-			<div
-				pos-action-1="(click) toggleview: forms/nu-slide-in-from-right/nu-slide-out-to-right"
-				class="right btn icon-dots"
-			></div>
-		</pos-if>
-	</pos-localstorage>
-</pos-if>
+				p-action-1="(click) refreshview: menu"
+				p-action-1-params="section: account;"
+				class="right btn"
+			>
+				<div class="avatar">
+					<p-json
+						url="http://localbrewingco.com/cms/user/?userid=$localstorage.lbc_user;"
+						name="user"
+						cachekey="userdata"
+					>
+					
+						<p-img src="$user.avatar;"></p-img>
+					
+					</p-json>
+				</div>
+			</div>
+		</p-if>
+		<p-if empty="$localstorage.lbc_user;">
+			<div p-view="userlogin:" p-view-params="state: login;">
+				<p-if true="'$params.state;' == 'login'">
+					<div
+						p-action-1="(click) toggleview: forms/nu-slide-in-from-right/nu-slide-out-to-right"
+						p-action-2="(click) refreshview: userlogin"
+						p-action-2-params="state: close;"
+						class="right btn" style="padding-right: 8px; color: white;"
+					>Log In</div>
+				</p-if>
+				<p-if false="'$params.state;' == 'login'">
+					<div
+						p-action-1="(click) hideview: forms/nu-slide-out-to-right"
+						p-action-2="(click) refreshview: userlogin"
+						p-action-2-params="state: login;"
+						class="right btn close" style="color: #FFF;font-size: 34px;line-height: 54px;"
+					>&times;</div>
+				</p-if>
+			</div>
+		</p-if>
+	</p-localstorage>
+<!-- </p-if> -->

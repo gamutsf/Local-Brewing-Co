@@ -1,19 +1,19 @@
 <header>
 	<div class="section-header title"></div>
 	<div 
-		pos-action-1="call: close"
-		pos-action-2="(click) hideview: menu"
+		p-action-1="call: close"
+		p-action-2="(click) hideview: menu"
 		class="close btn right"
 	>&times;</div>
 </header>
 
 <div class="scroller">
 
-	<pos-if true="'$params.section;' == 'save-profile'">
+	<p-if true="'$params.section;' == 'save-profile'">
 	
 		<!-- Save Profile -->
 	
-		<div pos-view="saveprofile:" class="save-profile content">
+		<div p-view="saveprofile:" class="save-profile content">
 				
 			<ul class="icons">
 				<li 
@@ -22,7 +22,7 @@
 					<div class="icon-hoppy">
 						<div class="filter-value"></div>
 					</div>
-					<div class="filter-name">Hoppyness</div>
+					<div class="filter-name">Bitterness</div>
 				</li>
 				<li
 					class="alcohol tab"
@@ -43,19 +43,21 @@
 			</ul>
 			
 			<h1>Give this flavor profile a name:</h1>
-			<form>
-				<input type="text" placeholder="Name">
-				<button>Save</button>
+			<form
+				p-action-1="(submit) call: addProfile"
+			>
+				<input type="text" id="profile_name" name="profile_name" placeholder="Name">
+				<button type="submit">Save</button>
 			</form>
 		</div>
 		
-	</pos-if>
+	</p-if>
 	
-	<pos-if true="'$params.section;' == 'navigation'">
+	<p-if true="'$params.section;' == 'navigation'">
 	
 		<!-- Navigation -->
 		
-		<div pos-view="navigation:" class="navigation content">
+		<div p-view="navigation:" class="navigation content">
 			
 			<h1><a href="./">HOME</a></h1>
 			<ul class="block">
@@ -66,141 +68,163 @@
 			
 			<h1>OUR BREWS</h1>
 			<ul class="block">
-				<li><a href="./selector.php">Beer Selector</a></li>
+				<li><a href="./curator.php">Beer Curator</a></li>
 				<li><a href="./taplist.php">On Tap</a></li>
 				<li><a href="./map.php">Beer Map</a></li>
-				<svg width="100%" height="10px" style="margin-top: 10px; width: 100%;">
-					<line x1="7" x2="100%" y1="4" y2="4" stroke="#5184AF" stroke-width="4" stroke-linecap="round" stroke-dasharray="1, 10" style="stroke: white;"></line>
-				</svg>
-			</ul>
-			
-			<ul class="block">
-				<li
-					pos-action-1="(click) refreshview: forms/nu-slide-in-from-right"
-					pos-action-1-params="action: login"
-					pos-action-2="(click) hideview: menu"
-				>Sign In</li>
-				<li
-					pos-action-1="(click) refreshview: forms/nu-slide-in-from-right"
-					pos-action-1-params="action: register"
-					pos-action-2="(click) hideview: menu"
-				>Create an account</li>
 			</ul>
 		
 		</div>
 	
-	</pos-if>
+	</p-if>
 	
-	<pos-if true="'$params.section;' == 'account'">
+	<p-if true="'$params.section;' == 'account'">
 	
 		<!-- Account -->
 		
-		<div pos-view="account:" class="account content">
+		<div p-view="account:" class="account content">
 		
 			<div class="user-data">
-				<div class="avatar"></div>
-				<div class="username">Shawn Scott</div>
+				
+				<p-localstorage key="lbc_user">
+					<p-if notempty="$localstorage.lbc_user;">
+				
+						<p-json
+							url="http://localbrewingco.com/cms/user/?userid=$localstorage.lbc_user;"
+							name="user"
+							cachekey="userdata"
+						>
+						
+							<div class="avatar">
+								<p-img src="$user.avatar;"></p-img>
+							</div>
+							
+							<div class="username">$user.username;</div>
+		
+						</p-json>
+						
+					</p-if>
+				</p-localstorage>
+	
 				<svg width="100%" height="10px" style="margin-top: 30px; width: 100%;">
 					<line x1="7" x2="100%" y1="4" y2="4" stroke="#5184AF" stroke-width="4" stroke-linecap="round" stroke-dasharray="1, 10" style="stroke: white;"></line>
 				</svg>
 			</div>
 			
+			
 			<h1>Your Beer Profiles</h1>
-			<ul class="block beer-profiles">
-			
-				<pos-json
-					url="profiles.json"
-					name="profiles"
-					cachekey="userprofiles"
-				>
-				  <pos-list key="profiles" name="profile">
-			
-						<li data-id="$profile.id;">
-							<span 
-								class="item"
-								pos-action-1="(click) call: loadProfile"
-								pos-action-1-params="id: $profile.id;;"
-								pos-action-2="(click) hideview: menu"
-								pos-action-3="(click) hideview: slider/pos-transition-visible-quick"
-								pos-action-4="(click) removeclass: active/.question-tabs li"
-							>$profile.name;</span> 
-							<span 
-								class="remove-item pos-invisible" 
-								pos-action-1="(click) call: removeProfile" 
-								pos-action-1-params="id: $profile.id;; name: $profile.name;;"
-							>REMOVE</span>
-						</li>
+			<div p-view="profiles:" class="">
+				<ul class="block beer-profiles">
 					
-					</pos-list>			
-				</pos-json>
-				
-				<div 
-					class="manage"
-					pos-action-1="(click) toggleclass: pos-invisible/.beer-profiles .remove-item"
-					pos-action-2="(click) toggleclass: nu-slide-in-from-right/.beer-profiles .remove-item"
-					pos-action-3="(click) toggleclass: pos-invisible/.beer-profiles .manage span"
-				>
-					<span>Manage your profiles</span>
-					<span class="pos-invisible">Done</span>
-				</div>
-	
-			</ul>		
-			
-			
-			<h1>Your Favorite Beers</h1>
-			<ul class="block favorite-beers list">
-			
-				<pos-json
-					url="favorites.json"
-					name="favorites"
-					cachekey="userfaves"
-				>
-				  <pos-list key="favorites" name="favorite">
-			
-						<li data-id="$favorite.id;">
+					<p-localstorage key="lbc_user">
+						<p-if notempty="$localstorage.lbc_user;">
+						
+							<p-json
+								url="http://localbrewingco.com/cms/user/?userid=$localstorage.lbc_user;"
+								name="user"
+								cachekey="userdata"
+							>
+							  <p-list key="user.profiles" name="profile">
+						
+									<li data-id="$profile.id;">
+										<span 
+											class="item"
+											p-action-1="(click) call: loadProfile"
+											p-action-1-params="id: $profile.id;;"
+											p-action-2="(click) hideview: menu"
+											p-action-3="(click) hideview: slider/p-transition-visible-quick"
+											p-action-4="(click) removeclass: active/.question-tabs li"
+										>$profile.name;</span> 
+										<span 
+											class="remove-item p-invisible" 
+											p-action-1="(click) call: removeProfile" 
+											p-action-1-params="id: $profile.id;; name: $profile.name;;"
+										>REMOVE</span>
+									</li>
+								
+								</p-list>			
+							</p-json>
+							
 							<div 
-								class="beer-sum"
-								pos-action-1="(click) hideview: menu"
-								pos-action-2="(click) refreshview: single/nu-slide-in-from-right"
-								pos-action-2-params="name: $favorite.name;; hoppyness: $favorite.hoppyness;; alcohol: $favorite.alcohol;; complexity: $favorite.complexity;;"
-							> 
-								<div class="info">
-									<h2 class="name">$favorite.name;</h2>
-								</div>
-								<div class="levels">
-									<div class="icon-hoppy"><div class="hoppy-level level">$favorite.hoppyness;</div></div>
-									<div class="icon-boozy"><div class="boozy-level level">$favorite.alcohol;</div></div>
-									<div class="icon-complex"><div class="complex-level level">$favorite.complexity;</div></div>
-								</div>
+								class="manage"
+								p-action-1="(click) toggleclass: p-invisible/.beer-profiles .remove-item"
+								p-action-2="(click) toggleclass: nu-slide-in-from-right/.beer-profiles .remove-item"
+								p-action-3="(click) toggleclass: p-invisible/.beer-profiles .manage span"
+							>
+								<span>Manage your profiles</span>
+								<span class="p-invisible">Done</span>
 							</div>
 							
-							<span 
-								class="remove-item pos-invisible"
-								pos-action-1="(click) call: removeFavorite" 
-								pos-action-1-params="id: $favorite.id;; name: $favorite.name;;"
-							>REMOVE</span>
-						</li>
-					
-					</pos-list>			
-				</pos-json>
+						</p-if>
+					</p-localstorage>
+		
+				</ul>		
+			</div>
+			
+			<h1>Your Favorite Beers</h1>
+			<div p-view="favorites:" class="">
+				<ul class="block favorite-beers list">
 				
-				<div 
-					class="manage"
-					pos-action-1="(click) toggleclass: pos-invisible/.favorite-beers .remove-item"
-					pos-action-2="(click) toggleclass: nu-slide-in-from-right/.favorite-beers .remove-item"
-					pos-action-3="(click) toggleclass: pos-invisible/.favorite-beers .levels"
-					pos-action-4="(click) toggleclass: pos-invisible/.favorite-beers .manage span"
-				>
-					<span>Manage your profiles</span>
-					<span class="pos-invisible">Done</span>
-				</div>
+					<p-localstorage key="lbc_user">
+						<p-if notempty="$localstorage.lbc_user;">
+						
+							<p-json
+								url="http://localbrewingco.com/cms/user/?userid=$localstorage.lbc_user;"
+								name="user"
+								cachekey="userdata"
+							>
+							  <p-list key="user.favorites" name="favorite">
+				
+									<li data-id="$favorite.id;">
+										<div 
+											class="beer-sum"
+											p-action-1="(click) hideview: menu"
+											p-action-2="(click) refreshview: single/nu-slide-in-from-right"
+											p-action-2-params="name: $favorite.name;; hoppyness: $favorite.bitterness;; alcohol: $favorite.alcohol;; complexity: $favorite.complexity;;"
+										> 
+											<div class="info">
+												<h2 class="name">$favorite.name;</h2>
+											</div>
+											<div class="levels">
+												<div class="icon-hoppy"><div class="hoppy-level level">$favorite.bitterness;</div></div>
+												<div class="icon-boozy"><div class="boozy-level level">$favorite.alcohol;</div></div>
+												<div class="icon-complex"><div class="complex-level level">$favorite.complexity;</div></div>
+											</div>
+										</div>
+										
+										<span 
+											class="remove-item p-invisible"
+											p-action-1="(click) call: removeFavorite" 
+											p-action-1-params="id: $favorite.id;; name: $favorite.name;;"
+										>REMOVE</span>
+									</li>
+						
+								</p-list>			
+							</p-json>
+					
+						</p-if>
+					</p-localstorage>
+					
+					<div 
+						class="manage"
+						p-action-1="(click) toggleclass: p-invisible/.favorite-beers .remove-item"
+						p-action-2="(click) toggleclass: nu-slide-in-from-right/.favorite-beers .remove-item"
+						p-action-3="(click) toggleclass: p-invisible/.favorite-beers .levels"
+						p-action-4="(click) toggleclass: p-invisible/.favorite-beers .manage span"
+					>
+						<span>Manage your favorites</span>
+						<span class="p-invisible">Done</span>
+					</div>
+				
+				</ul>
+			</div>		
 			
-			</ul>		
-			
-			<div class="log-out">Log Out</div>
+			<div 
+				class="log-out"
+				p-action-1="call: logout"
+			>Log Out</div>
 		
 		</div>
 	
-	</pos-if>
+	</p-if>
 
 </div>

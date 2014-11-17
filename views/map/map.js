@@ -224,7 +224,7 @@ MapView.prototype.onDOMReady = function ()
 				  	$('#beer-map .tap-list .list').empty();
 				  	
 				  	$('.map-result span').html(globals.zip);
-					  $('.map-result').removeClass('pos-invisible');
+					  $('.map-result').removeClass('p-invisible');
 					  
 					  order = 1;
 					  
@@ -257,7 +257,7 @@ MapView.prototype.onDOMReady = function ()
 		  	$('#beer-map .tap-list .list').empty();
 		  	
 		  	$('.map-result span').html(globals.beername);
-			  $('.map-result').removeClass('pos-invisible');
+			  $('.map-result').removeClass('p-invisible');
 			  
 			  order = 1;
 			  
@@ -285,7 +285,7 @@ MapView.prototype.onDOMReady = function ()
 			  $('#beer-map .tap-list .list').empty();
 			  
 			  $('.map-result span').html('All Locations');
-			  $('.map-result').removeClass('pos-invisible');
+			  $('.map-result').removeClass('p-invisible');
 			  
 			  order = 1;
 			  
@@ -329,8 +329,8 @@ MapView.prototype.onDOMReady = function ()
 			}
 		}		
 		
-		// Retail
-		else if(globals.account == "Retail"){
+		// In Stores
+		else if(globals.account == "In Stores"){
 			var retail = location.retail;
 			for(var b=0; b < retail.length; b++){
 				console.log(retail[b]);
@@ -589,6 +589,10 @@ MapView.prototype.onDOMReady = function ()
   	}
   	else {
   		globals.account = $(this).html();
+  		
+  		if(globals.account == "In Stores"){
+	  		globals.account = "retail";
+  		}
   	}
   	
   	order = 1;  	
@@ -606,7 +610,7 @@ MapView.prototype.onDOMReady = function ()
 		  	
 		  	$('#beer-map .tap-list .list').empty();
 		  	
-		  	$('.map-result').removeClass('pos-invisible');
+		  	$('.map-result').removeClass('p-invisible');
 			  
 			  order = 1;
 			  
@@ -630,7 +634,7 @@ MapView.prototype.onDOMReady = function ()
   $('form').submit(function(e){
 	  e.preventDefault();
 	  
-	  this.hidekeyboard();
+	  MapView.prototype.hidekeyboard.call(this);
 	  
 	  deleteMarkers();
 	  
@@ -653,7 +657,7 @@ MapView.prototype.onDOMReady = function ()
 		  }
 	  }
 	  
-	  $('.search-close').addClass('pos-invisible');
+	  $('.search-close').addClass('p-invisible');
 	  $('.search').removeClass('active');
 	  $('input', this).val('');
   });

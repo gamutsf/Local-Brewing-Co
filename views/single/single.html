@@ -3,32 +3,32 @@
 	<div id="scroller">
 
 	<!--
-	<pos-json
+	<p-json
 		url="sampledata.json"
 		cachekey="beerlist"
 	>
 	<matches
 		beerskey="json.beers"
 	>
-		<pos-list key="json.beers" name="beer">
+		<p-list key="json.beers" name="beer">
 			
 			<div class="single-details scroller">
 				<header>
 					<div 
 						class="back btn left"
-						pos-action-1="(click) call: close"
-						pos-action-2="hideview: single/nu-slide-out-to-right"
-						pos-action-3="showview: results"
+						p-action-1="(click) call: close"
+						p-action-2="hideview: single/nu-slide-out-to-right"
+						p-action-3="showview: results"
 					>Back</div>
 					<div 
 						class="share btn right icon-share"
-						pos-action-1="(click) call: share"
-						pos-action-1-params="id: $beer.id;; name: $beer.name;;"
+						p-action-1="(click) call: share"
+						p-action-1-params="id: $beer.id;; name: $beer.name;;"
 					></div>
 					<div 
 						class="fave btn right"
-						pos-action-1="(click) call: fave"
-						pos-action-1-params="id: $beer.id;; name: $beer.name;;"
+						p-action-1="(click) call: fave"
+						p-action-1-params="id: $beer.id;; name: $beer.name;;"
 					>&#9733;</div>
 				</header>
 				
@@ -174,43 +174,95 @@
 			
 			</div>
 			
-		</pos-list>
+		</p-list>
 	</matches>
-	</pos-json>
+	</p-json>
 	
 	</div>
 	-->
 
-	<pos-json
+	<p-json
 		url="http://localbrewingco.com/cms/json?type=beerlist&callback="
 		jsonp="true"
 		cachekey="beerlist"
 		name="beers"
 	>
-	  <pos-list key="beers.beers" name="beer">
+	  <p-list key="beers.beers" name="beer">
 	  
-	  	<pos-if true="'$params.name;' == '$beer.name;'">
+	  	<p-if true="'$params.name;' == '$beer.name;'">
+		  	
+		  	<header>
+					<div 
+						class="back btn left"
+						p-action-1="(click) call: close"
+						p-action-2="hideview: single/nu-slide-out-to-right"
+						p-action-3="showview: results"
+					>Back</div>
+					<div 
+						class="share btn right ding facebook"
+						p-action-1="(click) call: shareFacebook"
+						p-action-1-params="id: $beer.id;; name: $beer.name;;"
+					>G</div>
+					<div 
+						class="share btn right ding twitter"
+						p-action-1="(click) call: shareTwitter"
+						p-action-1-params="id: $beer.id;; name: $beer.name;;"
+					>t</div>
+					
+					<p-localstorage key="lbc_user">
+						<p-if notempty="$localstorage.lbc_user;">
+							
+							<p-set name="isfavorite" value="inactive" context="view"></p-set>
+							
+							<p-json
+								url="http://localbrewingco.com/cms/user/?userid=$localstorage.lbc_user;"
+								name="user"
+								cachekey="userdata"
+							>
+							  <p-list key="user.favorites" name="favorite">
+								  		
+									<p-if true="'$beer.id;' == '$favorite.id;'">
+										<p-set name="isfavorite" value="active" context="view"></p-set>
+									</p-if>
+								  
+							  </p-list>
+							</p-json>
+							
+							<p-if true="'$isfavorite;' == 'active'">
+							  <div
+								  data-faveid="$beer.id;" 
+									class="fave btn right active"
+									p-action-1="(click) removeclass: active/p-this-element"
+									p-action-2="(click) call: unfave"
+									p-action-2-params="id: $beer.id;; name: $beer.name;;"
+								>&#9733;</div>
+							</p-if>
+							
+							<p-if true="'$isfavorite;' == 'inactive'">
+							  <div
+								  data-faveid="$beer.id;" 
+									class="fave btn right"
+									p-action-1="(click) addclass: active/p-this-element"
+									p-action-2="(click) call: fave"
+									p-action-2-params="id: $beer.id;; name: $beer.name;;"
+								>&#9733;</div>
+							</p-if>
+							
+						</p-if>
+						<p-if empty="$localstorage.lbc_user;">
+							<div 
+								class="fave btn right"
+								p-action-1="(click) refreshview: forms/nu-slide-in-from-right"
+								p-action-1-params="action: login;"
+								p-action-2="(click) refreshview: userlogin"
+								p-action-2-params="state: close;"
+							>&#9733;</div>
+						</p-if>
+					</p-localstorage>
+					
+				</header>
 	
 			  <div class="single-details scroller">
-					<header>
-						<div 
-							class="back btn left"
-							pos-action-1="(click) call: close"
-							pos-action-2="hideview: single/nu-slide-out-to-right"
-							pos-action-3="showview: results"
-						>Back</div>
-						<div 
-							class="share btn right icon-share"
-							pos-action-1="(click) call: share"
-							pos-action-1-params="id: $beer.id;; name: $beer.name;;"
-						></div>
-						<div 
-							class="fave btn right"
-							pos-action-1="(click) call: fave"
-							pos-action-1-params="id: $beer.id;; name: $beer.name;;"
-						>&#9733;</div>
-					</header>
-					
 					<div class="circle">
 						<h1>$beer.name;</h1>
 						<h3>$beer.short_description;</h3>
@@ -352,10 +404,10 @@
 					</div>
 			  </div>
 			
-	  	</pos-if>
+	  	</p-if>
 		
-		</pos-list>
+		</p-list>
 	
-	</pos-json>
+	</p-json>
 
 </div>

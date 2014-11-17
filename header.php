@@ -84,6 +84,28 @@
 </head>
 
 <body>
-	<section pos-view="menu" class="pos-invisible overlay"></section>
-	<section pos-view="forms" class="single pos-invisible" pos-view-params="action: login;"></section>
-	<section pos-view="single" class="single pos-invisible"></section>
+	
+	<script>
+	  window.fbAsyncInit = function() {
+	    FB.init({
+	      appId: '1530679393856403',
+	      status: true, 
+	      cookie: true, 
+	      xfbml: true, 
+	      oauth:true, 
+	      version    : 'v2.2'
+	    });
+	  };
+	
+	  (function(d, s, id){
+	     var js, fjs = d.getElementsByTagName(s)[0];
+	     if (d.getElementById(id)) {return;}
+	     js = d.createElement(s); js.id = id;
+	     js.src = "//connect.facebook.net/en_US/sdk.js";
+	     fjs.parentNode.insertBefore(js, fjs);
+	   }(document, 'script', 'facebook-jssdk'));
+	</script>
+	
+	<section p-view="menu" class="p-invisible overlay"></section>
+	<section p-view="forms" class="single forms p-invisible" p-view-params="action: login;"></section>
+	<section p-view="single" class="single p-invisible"></section>

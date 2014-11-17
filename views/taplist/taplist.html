@@ -1,4 +1,4 @@
-<div class="pos-visible shelf clearfix" pos-view="shelf:">
+<div class="p-visible shelf clearfix" p-view="shelf:">
 	
 	<div class="btn btn-left active">On Tap</div>
 	<div class="btn btn-right">Archive</div>
@@ -6,16 +6,16 @@
 </div>
 
 <div class="list">
-	<pos-json
+	<p-json
 		url="http://localbrewingco.com/cms/json?type=beerlist&callback="
-		jsonp="true"
+		cachekey="beerlist"
 		name="beers"
 	>
-	  <pos-list key="beers.beers" name="beer">
+	  <p-list key="beers.beers" name="beer">
 	
 			<div class="beer-sum $beer.style;" 
-				pos-action-1="refreshview: single/nu-slide-in-from-right"
-				pos-action-1-params="name: $beer.name;; hoppyness: $beer.hoppyness;; alcohol: $beer.alcohol;; complexity: $beer.complexity;;"
+				p-action-1="refreshview: single/nu-slide-in-from-right"
+				p-action-1-params="name: $beer.name;; hoppyness: $beer.hoppyness;; alcohol: $beer.alcohol;; complexity: $beer.complexity;;"
 			>
 				<div class="info">
 					<h2 class="name">$beer.name;</h2>
@@ -28,7 +28,6 @@
 				</div>
 			</div>
 		
-		</pos-list>
-	
-	</pos-json>
+		</p-list>	
+	</p-json>
 </div>

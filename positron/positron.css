@@ -1,37 +1,37 @@
-.pos-invisible
+.p-invisible
 {
 	display: none !important;
 }
 
-.pos-transition-visible
+.p-transition-visible
 {
 	animation-duration: 400ms;
-	animation-name: pos-fade-in;
+	animation-name: p-fade-in;
 }
 
-.pos-transition-visible-quick
+.p-transition-visible-quick
 {
 	animation-duration: 10ms;
-	animation-name: pos-fade-in;
+	animation-name: p-fade-in;
 }
 
-.pos-visible
+.p-visible
 {
 	opacity: 1;
 }
 
-.pos-transition-invisible
+.p-transition-invisible
 {
 	animation-duration: 400ms;
-	animation-name: pos-fade-out;
+	animation-name: p-fade-out;
 }
 
-.pos-visible
+.p-visible
 {
 	opacity: 1;
 }
 
-@keyframes pos-fade-in
+@keyframes p-fade-in
 {
 	0%
 	{
@@ -43,7 +43,7 @@
 	}
 }
 
-@keyframes pos-fade-out
+@keyframes p-fade-out
 {
 	0%
 	{
@@ -54,3 +54,4 @@
 		opacity: 0;
 	}
 }
+

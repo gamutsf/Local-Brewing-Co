@@ -89,18 +89,18 @@ ResultsView.prototype.rangeOutput = function (){
 	
 	 //console.log('input or change event fired');
 	 
-	 //console.log(gApplication.cache);
+	 console.log(gApplication.cache);
 		
-	 if(gApplication.cache.cache.userprofiles){
+	 if(gApplication.cache.cache.userdata && gApplication.cache.cache.userdata.profiles){
 	 
-		 for(x=0; x< gApplication.cache.cache.userprofiles.length; x++){
+		 for(x=0; x< gApplication.cache.cache.userdata.profiles.length; x++){
 			
-			 if((beerProfile.hoppy == parseInt(gApplication.cache.cache.userprofiles[x].hoppyness)) &&
-				  (beerProfile.boozy == parseInt(gApplication.cache.cache.userprofiles[x].alcohol)) &&
-				  (beerProfile.complex == parseInt(gApplication.cache.cache.userprofiles[x].complexity))
+			 if((beerProfile.hoppy == parseInt(gApplication.cache.cache.userdata.profiles[x].bitterness)) &&
+				  (beerProfile.boozy == parseInt(gApplication.cache.cache.userdata.profiles[x].alcohol)) &&
+				  (beerProfile.complex == parseInt(gApplication.cache.cache.userdata.profiles[x].complexity))
 			 ){
-				 var profileMatchID = gApplication.cache.cache.userprofiles[x].id;
-				 var profileMatchName = gApplication.cache.cache.userprofiles[x].name;
+				 var profileMatchID = gApplication.cache.cache.userdata.profiles[x].id;
+				 var profileMatchName = gApplication.cache.cache.userdata.profiles[x].name;
 			 }
 		 }
 		 
@@ -220,7 +220,7 @@ ResultsView.prototype.toggleSlider = function (){
 	
 	if( $('.results .'+ x).hasClass('active') ){
 		$('.results .'+ x).removeClass('active');
-		gApplication.hideView('slider', 'pos-transition-visible-quick');
+		gApplication.hideView('slider', 'p-transition-visible-quick');
 	}
 	else {
 		$('.results .tab').removeClass('active');
@@ -229,7 +229,7 @@ ResultsView.prototype.toggleSlider = function (){
 		var params = new Object();
 				params.section = section;
 				
-		gApplication.refreshView('slider', params, 'pos-transition-visible-quick');
+		gApplication.refreshView('slider', params, 'p-transition-visible-quick');
 		this.getProfile();
 	}
 

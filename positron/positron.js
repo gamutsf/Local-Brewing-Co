@@ -1,3 +1,26 @@
+/*
+Copyright (c) 2014 Monohm Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 /**
 *
 * @license
@@ -835,12 +858,12 @@ positron.DOM.getBooleanAttributeValueWithDefault = function (inElement, inParam,
 	return value;
 };
 
-positron.DOM.getCompositeElement = function (inElement, inViewKeyAttributeName, inSelectorAttributeName)
+positron.DOM.getCompositeElements = function (inElement, inViewKeyAttributeName, inSelectorAttributeName)
 {
 	var	viewKey = inElement.getAttribute (inViewKeyAttributeName);
 	var	selector = inElement.getAttribute (inSelectorAttributeName);
 
-	return positron.DOM.resolveCompositeElement (inElement, viewKey, selector);
+	return positron.DOM.resolveCompositeElements (inElement, viewKey, selector);
 }
 
 positron.DOM.getData = function (inElement, inKey)
@@ -1173,15 +1196,10 @@ positron.DOM.moveChildren = function (inParent, inNewParent)
 	while (child);
 };
 
-positron.DOM.setData = function (inElement, inKey, inValue)
+positron.DOM.queryPrefixedAttribute = function (inElement, inAttributeName)
 {
-	if (! inElement.data)
-	{
-		inElement.data = new Object ();
-	}
-	
-	inElement.data [inKey] = inValue;
-};
+	return inElement.querySelectorAll ("[" + gApplication.getAttributePrefix () + inAttributeName + "]");
+}
 
 positron.DOM.removeChildren = function (inElement)
 {
@@ -1207,6 +1225,11 @@ positron.DOM.removeNode = function (inNode)
 		console.error ("removeNode() cannot remove orphan");
 		console.error (inNode);
 	}
+}
+
+positron.DOM.removePrefixedAttribute = function (inElement, inAttributeName)
+{
+	inElement.removeAttribute (gApplication.getAttributePrefix () + inAttributeName);
 }
 
 positron.DOM.removePrefixedClass = function (inElement, inClassName)
@@ -1240,17 +1263,30 @@ positron.DOM.requestAnimationFrame = function (inCallback)
 	window.requestAnimationFrame (inCallback);
 };
 
-positron.DOM.resolveCompositeElement = function (inElement, inViewKey, inSelector)
+positron.DOM.resolveCompositeElements = function (inElement, inViewKey, inSelector)
 {
 	var	viewElement = null;
 
 	if (inViewKey && inViewKey.length)
 	{
-		var	view = gApplication.getView (inViewKey);
+		var	view = null;
+		
+		if (inViewKey == gApplication.getCSSClassPrefix () + "this-view-key")
+		{
+			view = positron.DOM.getParentView (inElement);
+		}
+		else
+		{
+			view = gApplication.getView (inViewKey);
+		}
 		
 		if (view)
 		{
 			viewElement = view.element;
+		}
+		else
+		{
+			console.error ("resolveCompositeElements() cannot find view with key " + inViewKey);
 		}
 	}
 
@@ -1260,6 +1296,14 @@ positron.DOM.resolveCompositeElement = function (inElement, inViewKey, inSelecto
 	{
 		if (inSelector == "this-element")
 		{
+			console.log
+				("this-element is deprecated, please use " + gApplication.getCSSClassPrefix () + "this-element instead");
+			
+			elements = [inElement];
+		}
+		else
+		if (inSelector == gApplication.getCSSClassPrefix () + "this-element")
+		{
 			elements = [inElement];
 		}
 		else
@@ -1268,22 +1312,34 @@ positron.DOM.resolveCompositeElement = function (inElement, inViewKey, inSelecto
 			{
 				viewElement = document;
 			}
-	
+			
 			elements = viewElement.querySelectorAll (inSelector);
 		}
 	}
 	else
 	{
-		elements = new Array ();
-		
 		if (viewElement)
 		{
-			elements.push (viewElement);
+			elements = [viewElement];
+		}
+		else
+		{
+			elements = new Array ();
 		}
 	}
-
+	
 	return elements;
 }
+
+positron.DOM.setData = function (inElement, inKey, inValue)
+{
+	if (! inElement.data)
+	{
+		inElement.data = new Object ();
+	}
+	
+	inElement.data [inKey] = inValue;
+};
 
 positron.DOM.setPrefixedAttribute = function (inElement, inAttributeName, inAttributeValue)
 {
@@ -1578,70 +1634,91 @@ positron.Util.ajax = function (inRequest)
 	var	async = inRequest.async ? true : false;
 
 	inRequest.dataType = inRequest.dataType.toLowerCase ();
-	
+
 	var	jsonp = positron.Util.isJSONPRequest (inRequest);
 	
 	if (jsonp)
 	{
-		console.log ("using jsonp for url: " + inRequest.url);
-		
+		// console.log ("using jsonp for url: " + inRequest.url);
 		positron.Util.jsonp (inRequest);
 	}
 	else
 	{
-		var	request = new XMLHttpRequest ();
+		var	xhr = new XMLHttpRequest ();
 	
-		request.onreadystatechange = function ()
+		xhr.onreadystatechange = function ()
 		{
 			if (this.readyState == 4)
 			{
-				var	textStatus = null;
-	
-				// status is 0 if loading off the filesystem (success or failure, sigh)
-				// status is 200 for success if loading off the network
-				if (this.status == 0 || this.status == 200)
+				var	textStatus = "OK";
+				
+				// otherwise we check EVERYWHERE
+				if (!inRequest.success)
 				{
-					textStatus = "OK";
-					
-					if (typeof (inRequest.success) == "function")
+					inRequest.success = function ()
 					{
-						var	data = this.responseText;
-	
-						// if loading off the filesystem, can"t tell the difference
-						// between a file not found and an empty file
-						// so if status = 0 and data is empty, call the error callback
-						if ((data && data.length) || this.status == 200)
+					}
+				}
+
+				if (!inRequest.error)
+				{
+					inRequest.error = function ()
+					{
+					}
+				}
+				
+				if (inRequest.dataType == "blob")
+				{
+					console.log ("data type is blob");
+					console.log ("response length is " + this.response.length);
+
+					if (this.response)
+					{
+						inRequest.success (this.response, textStatus, this);
+					}
+					else
+					{
+						textStatus = "error";
+						inRequest.error (this, textStatus, "Not Found");
+					}
+				}
+				else
+				if (inRequest.dataType == "json")
+				{
+					// if loading off the filesystem, can"t tell the difference
+					// between a file not found and an empty file
+					// so if status = 0 and data is empty, call the error callback
+					if ((this.responseText && this.responseText.length) || this.status == 200)
+					{
+						try
 						{
-							if (inRequest.dataType == "json")
-							{
-								try
-								{
-									data = JSON.parse (data);
-									inRequest.success (data, textStatus, this);
-								}
-								catch (inError)
-								{
-									inRequest.error (this, "ERROR", inError);
-								}
-							}
-							else
-							{
-								inRequest.success (data, textStatus, this);
-							}
+							inRequest.success (JSON.parse (this.responseText), textStatus, this);
 						}
-						else
+						catch (inError)
 						{
-							inRequest.error (this, "ERROR");
+							textStatus = "parsererror";
+							inRequest.error (this, textStatus, inError);
 						}
+					}
+					else
+					{
+						textStatus = "error";
+						inRequest.error (this, textStatus, "Not Found");
 					}
 				}
 				else
 				{
-					textStatus = "ERROR";
-					
-					if (typeof (inRequest.error) == "function")
+					// if loading off the filesystem, can"t tell the difference
+					// between a file not found and an empty file
+					// so if status = 0 and data is empty, call the error callback
+					if ((this.responseText && this.responseText.length) || this.status == 200)
 					{
-						inRequest.error (this, textStatus);
+						inRequest.success (this.responseText, textStatus, this);
+					}
+					else
+					{
+						textStatus = "error";
+						inRequest.error (this, textStatus, "Not Found");
 					}
 				}
 	
@@ -1665,8 +1742,14 @@ positron.Util.ajax = function (inRequest)
 			}
 		}
 	
-		request.open (type, url, async);
+		xhr.open (type, url, async);
 	
+		if (inRequest.dataType == "blob")
+		{
+			console.log ("setting response type to blob");
+			xhr.responseType = "blob";
+		}
+		
 		if (typeof (inRequest.headers) == "object")
 		{
 			for (var key in inRequest.headers)
@@ -1675,7 +1758,7 @@ positron.Util.ajax = function (inRequest)
 				
 				if (typeof (value) != "function")
 				{
-					request.setRequestHeader (key, value);
+					xhr.setRequestHeader (key, value);
 				}
 			}
 		}
@@ -1685,18 +1768,18 @@ positron.Util.ajax = function (inRequest)
 		{
 			if (inRequest.type == "POST")
 			{
-				request.send (data);
+				xhr.send (data);
 			}
 			else
 			{
-				request.send (null);
+				xhr.send (null);
 			}
 		}
 		catch (inError)
 		{
 			if (typeof (inRequest.error) == "function")
 			{
-				inRequest.error (inRequest, inError);
+				inRequest.error (inRequest, "error", inError.name);
 			}
 		}
 	}
@@ -1865,7 +1948,16 @@ positron.Util.evaluateArithmeticExpression = function (inString)
 			}
 			else
 			{
-				term = parseFloat (elements [i]);
+				var	number = elements [i];
+				
+				if (number.toLowerCase () == "random")
+				{
+					term = Math.random ();
+				}
+				else
+				{
+					term = parseFloat (number);
+				}
 				
 				if (isNaN (term))
 				{
@@ -1950,7 +2042,7 @@ positron.Util.evaluateExpressionChain = function (inExpressionChain)
 			if (expression.length == 3)
 			{
 				success = this.evaluateExpression (expression);
-				expression = new Array ();
+				expression.length = 0;
 				
 				// grab the logical expression next time
 				logical = true;
@@ -2201,7 +2293,8 @@ positron.Util.getJSON = function (inURL)
 			// wtf do we get undefined errors?
 			if (inError)
 			{
-				console.error (inError);
+				// ajax errors are useless anyway
+				// console.error (inError);
 			}
 		}
 	});
@@ -2298,6 +2391,8 @@ positron.Util.globalEval = function (inCode)
 	)(inCode);
 }
 
+// note this MUST throw on error
+// lots of code above it depends on this
 positron.Util.instantiate = function (inFullClassName)
 {
 	// console.log ("Util.instantiate(" + inFullClassName + ")");
@@ -2309,9 +2404,21 @@ positron.Util.instantiate = function (inFullClassName)
 	for (var i = 0; i < packageElements.length; i++)
 	{
 		object = object [packageElements [i]];
+		
+		if (!object)
+		{
+			break;
+		}
 	}
 	
-	return new object;
+	if (object)
+	{
+		return new object;
+	}
+	else
+	{
+		throw new Error ("unable to instantiate class " + inFullClassName);
+	}
 }
 
 // ok so a little clarification --
@@ -2358,7 +2465,7 @@ positron.Util.isJSONPRequest = function (inRequest)
 			if (browserName && browserName.length)
 			{
 				var	strategy = gApplication.config.crossDomainStrategy [browserName];
-					console.log ("browser cross-domain strategy is " + strategy);
+				// console.log ("browser cross-domain strategy is " + strategy);
 				
 				if (strategy && strategy.length)
 				{
@@ -2479,6 +2586,15 @@ positron.Util.jsonp = function (inRequest)
 			},
 			1
 		);
+	}
+	
+	// i am so grateful this exists
+	jsonTag.onerror = function ()
+	{
+		if (inRequest.error)
+		{
+			inRequest.error (null, "ERROR", null);
+		}
 	}
 	
 	document.querySelector ("head").appendChild (jsonTag);
@@ -2610,6 +2726,47 @@ positron.Util.logObject = function (inObject, inObjectName)
 			console.log (value);
 		}
 	}
+}
+
+positron.Util.kExtensionToContentType = 
+{
+	"css" : "text/css",
+	"gif" : "image/gif",
+	"htm" : "application/html",
+	"html" : "application/html",
+	"jpg" : "image/jpeg",
+	"jpeg" : "image/jpeg",
+	"json" : "application/json",
+	"js" : "application/javascript",
+	"mp3" : "audio/mpeg3",
+	"mpg" : "video/mpeg",
+	"png" : "image/png",
+	"rtf" : "application/rtf",
+	"xml" : "application/xml"
+};
+
+// pass any string in here
+positron.Util.mapExtensionToContentType = function (inString)
+{
+	var	extension = inString;
+	var	periodIndex = inString.lastIndexOf (".");
+	
+	if (periodIndex >= 0)
+	{
+		extension = inString.substring (periodIndex + 1);
+	}
+	
+	extension = extension.toLowerCase ();
+
+	var	contentType = positron.Util.kExtensionToContentType [extension];
+	
+	if (!contentType)
+	{
+		console.error ("no content type for extension (" + extension + ")");
+		contentType = "application/octet-stream";
+	}
+	
+	return contentType;
 }
 
 positron.Util.merge = function (inObject, outObject)
@@ -3248,6 +3405,7 @@ positron.provide ("positron.View");
 positron.View = function positron_View ()
 {
 	this.deferredActions = new Array ();
+	this.deferredTasks = new Array ();
 	this.cancellableActions = new Array ();
 }
 
@@ -3267,6 +3425,16 @@ function View_addDeferredAction (inAction)
 		console.log ("View(" + this.key + ").addDeferredAction(" + inAction.toString () + ")");
 	
 	this.deferredActions.push (inAction);
+}
+
+// this is for generic tasks
+positron.View.prototype.addDeferredTask =
+function View_addDeferredTask (inTask)
+{
+	if (gApplication.isLogging (gApplication.kLogViews))
+		console.log ("View(" + this.key + ").addDeferredTask()");
+	
+	this.deferredTasks.push (inTask);
 }
 
 // caution, this just cancels the walker
@@ -3463,6 +3631,7 @@ function View_refresh (inTransitionInClass)
 	if (gApplication.isLogging (gApplication.kLogViews)) console.log ("View.refresh(" + this.key + ")");
 
 	this.refreshing = true;
+	this.wasRefreshing = false;
 	
 	// if any of our subviews are refreshing, cancel them
 	this.cancelSubviewRefreshes ();
@@ -3528,6 +3697,7 @@ function View_show (inTransitionInClass)
 	// assume that we are NOT doing a visibility transition
 	// if the view is invisible and not transitioning, then we do one
 	this.showing = false;
+	this.wasRefreshing = false;
 	
 	if (this.isTransitioningIn ())
 	{
@@ -3752,7 +3922,7 @@ function View_prepareForDynamics ()
 	this.progressElement = document.createElement ("div");
 	positron.DOM.addPrefixedClass (this.progressElement, "view-progress");
 	
-	var	progressElements = positron.DOM.getCompositeElement
+	var	progressElements = positron.DOM.getCompositeElements
 		(this.element, positron.DOM.getPrefixedAttributeName ("progress-view"),
 			positron.DOM.getPrefixedAttributeName ("progress-selector"));
 	
@@ -3787,7 +3957,6 @@ function View_registerDeferredActions ()
 	}
 }
 
-// cancel *our* cancellable actions, as opposed to the subviews'
 positron.View.prototype.registerPrivateDeferredActions =
 function View_registerPrivateDeferredActions ()
 {
@@ -3825,6 +3994,62 @@ function View_registerPrivateDeferredActions ()
 	}
 	
 	this.deferredActions.length = 0;
+}
+
+positron.View.prototype.runDeferredTasks =
+function View_runDeferredTasks ()
+{
+	// console.log ("View(" + this.key + ").runDeferredTasks()");
+	
+	this.runPrivateDeferredTasks ();
+	
+	var	subviewElements = this.element.querySelectorAll ("[" + gApplication.getAttributePrefix () + "view]");
+	
+	if (subviewElements)
+	{
+		for (var i = 0; i < subviewElements.length; i++)
+		{
+			var	subview = positron.DOM.getData (subviewElements [i], "view");
+			
+			if (subview)
+			{
+				subview.runPrivateDeferredTasks ();
+			}
+		}
+	}
+}
+
+positron.View.prototype.runPrivateDeferredTasks =
+function View_runPrivateDeferredTasks ()
+{
+	// console.log ("View(" + this.key + ").runPrivateDeferredTasks(" + this.deferredTasks.length + ")");
+
+	for (var i = 0; i < this.deferredTasks.length; i++)
+	{
+		var	task = this.deferredTasks [i];
+		
+		try
+		{
+			if (gApplication.isLogging (gApplication.kLogViews))
+				console.log ("View(" + this.key + ") running deferred task ()");
+
+			if (task.run)
+			{
+				task.run ();
+			}
+			else
+			{
+				console.error ("deferred task as no run() function");
+			}
+		}
+		catch (inError)
+		{
+			console.error ("error trying to run task");
+			console.error (inError.message);
+		}
+	}
+	
+	this.deferredTasks.length = 0;
 }
 
 // CALLBACKS
@@ -3929,6 +4154,24 @@ function View_onVisible ()
 			
 			new positron.VisibleTreeWalker ().startWalkChildren (this.element);
 			
+			if (this.wasRefreshing)
+			{
+				this.wasRefreshing = false;
+				
+				// console.log ("view was refreshing, calling onRefreshComplete() from onVisible()");
+				this.onRefreshComplete ();
+			}
+			
+			var	event = positron.DOM.createEvent
+			(
+				gApplication.getEventPrefix () + "showview",
+				{
+					viewKey: this.key
+				}
+			);
+			
+			window.dispatchEvent (event);
+			
 			// HACK if we're a page, notify application
 			// can't do this in the subclass
 			if (!this.page)
@@ -3951,8 +4194,6 @@ function View_onDOMReady ()
 	
 	if (this.refreshing)
 	{
-		// caution here, this means that onVisible() can't test this
-		// fortunately, it should never need to
 		this.refreshing = false;
 		this.running = false;
 		
@@ -3967,6 +4208,8 @@ function View_onDOMReady ()
 
 				new positron.VisibleTreeWalker ().walkChildren (this.element);
 				
+				this.onRefreshComplete ();
+
 				// HACK if we're a page, notify application
 				// can't do this in the subclass
 				if (!this.page)
@@ -3974,11 +4217,39 @@ function View_onDOMReady ()
 					gApplication.onPageVisible (this.key);
 				}
 			}
+			else
+			{
+				// wait for onVisible()
+				this.wasRefreshing = true;
+			}
+		}
+		else
+		{
+			this.onRefreshComplete ();
 		}
 
-		// now that the view is quiescent, register any deferred actions
-		this.registerDeferredActions ();
 	}
+}
+
+// this is called once all refresh-related activity is done
+// DOM is ready, view is visible, all that
+positron.View.prototype.onRefreshComplete =
+function View_onRefreshComplete ()
+{
+	if (gApplication.isLogging (gApplication.kLogViews)) console.log ("View.onRefreshComplete(" + this.key + ")");
+	
+	this.runDeferredTasks ();
+	this.registerDeferredActions ();
+
+	var	event = positron.DOM.createEvent
+	(
+		gApplication.getEventPrefix () + "refreshview",
+		{
+			viewKey: this.key
+		}
+	);
+	
+	window.dispatchEvent (event);
 }
 
 positron.View.prototype.onBeforeInvisible =
@@ -4048,14 +4319,15 @@ positron.provide ("positron.ActionFactory");
 
 // STATIC
 
-positron.ActionFactory = function ()
+positron.ActionFactory =
+function ActionFactory ()
 {
 }
 
 // note this now passes back an action which is *created* but not *registered*
 positron.ActionFactory.createAction =
 function ActionFactory_createAction
-	(inElement, inContext, inActionAttributeName, inParamAttributeName, inParamKeyAttributeName, inParamAliasAttributeName)
+	(inElement, inContext, inActionAttributeName, inParamAttributeName, inParamKeysAttributeName, inParamFireKeysAttributeName)
 {
 	var	action = null;
 	
@@ -4079,7 +4351,7 @@ function ActionFactory_createAction
 			
 			// also keep track of parameter keys
 			// which are substituted by key at walk time
-			actionSpec.paramKeys = this.parseParams (inElement, inParamKeyAttributeName);
+			actionSpec.paramKeys = this.parseParams (inElement, inParamKeysAttributeName);
 
 			for (var paramKey in actionSpec.paramKeys)
 			{
@@ -4095,7 +4367,7 @@ function ActionFactory_createAction
 			
 			// also keep track of parameter keys
 			// which are substituted at action time, not walk time
-			actionSpec.paramAliases = this.parseParams (inElement, inParamAliasAttributeName);
+			actionSpec.paramFireKeys = this.parseParams (inElement, inParamFireKeysAttributeName);
 			
 			action.configure (actionSpec);
 		}
@@ -4108,7 +4380,47 @@ function ActionFactory_createAction
 	return action;
 }
 
-positron.ActionFactory.parseAction = function (inActionString)
+// intended for use by Js clients
+positron.ActionFactory.fireAction =
+function ActionFactory_fireAction (inActionString, inActionParams)
+{
+	var	response = null;
+	var	action = null;
+	var	actionSpec = positron.ActionFactory.parseAction (inActionString);
+	
+	if (actionSpec.actionName)
+	{
+		action = gApplication.getActionlet (actionSpec.actionName);
+		
+		if (action)
+		{
+			// there's no associated element with a manually fired action
+			actionSpec.element = document.body;
+			
+			// we don't support param-keys or fire-param-keys
+			// as the params come in as Js
+			// and this is fire time, not walk time
+			actionSpec.params = inActionParams;
+			actionSpec.explicitParams = inActionParams;
+			
+			action.configure (actionSpec);
+			response = action.fire ();
+		}
+		else
+		{
+			console.error ("no actionlet for action name " + actionSpec.actionName);
+		}
+	}
+	else
+	{
+		console.error ("no action name in action " + inActionString);
+	}
+	
+	return response;
+}
+
+positron.ActionFactory.parseAction =
+function ActionFactory_parseAction (inActionString)
 {
 	// console.log ("ActionFactory.parseAction(" + inActionString + ")");
 
@@ -4303,7 +4615,7 @@ positron.action.Action.prototype.configure = function (inActionSpec)
 	this.explicitParams = inActionSpec.explicitParams;
 
 	this.paramKeys = inActionSpec.paramKeys;
-	this.paramAliases = inActionSpec.paramAliases;
+	this.paramFireKeys = inActionSpec.paramFireKeys;
 	
 	this.preventDefault = inActionSpec.preventDefault;
 	this.stopPropagation = inActionSpec.stopPropagation;
@@ -4319,8 +4631,11 @@ positron.action.Action.prototype.register = function (inContext)
 	{
 		if (gApplication.isLogging (gApplication.kLogTrigger)) console.log ("found trigger (" + this.triggerName + ")");
 		
-		if (this.trigger.isDeferred ())
+		// move the deferral decision to config
+		if (gApplication.config.deferredTriggers && gApplication.config.deferredTriggers [this.triggerName])
 		{
+			if (gApplication.isLogging (gApplication.kLogTrigger)) console.log ("deferring trigger (" + this.triggerName + ")");
+			
 			// let the trigger find things in context
 			this.trigger.preRegister (this, inContext);
 			
@@ -4442,33 +4757,33 @@ positron.action.Action.prototype.fire = function (inEvent)
 	}
 
 	// delay this until the params are updated by any eventlet
-	for (var aliasKey in this.paramAliases)
+	for (var fireKey in this.paramFireKeys)
 	{
-		var	paramAliasValue = this.paramAliases [aliasKey];
+		var	paramFireKeyValue = this.paramFireKeys [fireKey];
 
-		if (paramAliasValue && paramAliasValue.length)
+		if (paramFireKeyValue && paramFireKeyValue.length)
 		{
 			// strip any extraneous "params." at the start, which is forgiveable
-			paramAliasValue = paramAliasValue.replace (/^params\./, "");
+			paramFireKeyValue = paramFireKeyValue.replace (/^params\./, "");
 
 			// can only reference off params in param keys
 			var	object = this.params;
 	
-			var	aliasValueElements = paramAliasValue.split (".");
+			var	fireKeyValueElements = paramFireKeyValue.split (".");
 			
-			for (var i = 0; (i < aliasValueElements.length) && object; i++)
+			for (var i = 0; (i < fireKeyValueElements.length) && object; i++)
 			{
-				object = object [aliasValueElements [i]];
+				object = object [fireKeyValueElements [i]];
 			}
 			
 			if (object)
 			{
-				this.params [aliasKey] = object;
-				this.explicitParams [aliasKey] = object;
+				this.params [fireKey] = object;
+				this.explicitParams [fireKey] = object;
 			}
 			else
 			{
-				console.error ("failed to traverse alias at element " + aliasValueElements [i]);
+				console.error ("failed to traverse param fire key at element " + fireKeyValueElements [i]);
 			}
 		}
 	}
@@ -4480,48 +4795,77 @@ positron.action.Action.prototype.fire = function (inEvent)
 // for some nice cause and effect
 positron.action.Action.prototype.fireAnalyticsEvent = function ()
 {
-	var	view = positron.DOM.getParentView (this.element);
+	var	view = null;
+	
+	if (this.element)
+	{
+		view = positron.DOM.getParentView (this.element);
+	}
+	
+	var	page = null;
 	
 	if (view)
 	{
-		// ensure that the action event goes after the trigger one
-		var	timestamp = new Date ().getTime ();
-		
-		// if the trigger fires its own events, don't do it here
-		if (!this.trigger || !this.trigger.firesAnalyticsEvents ())
+		// caution, the enclosing view might *be* a page
+		if (view.page)
 		{
-			gApplication.fireAnalyticsEvent
-			({
-				domain: "trigger",
-				timestamp: timestamp,
-				page: view.page ? view.page.key : view.key,
-				view: view.page ? view.key : null,
-				name: this.triggerName,
-				detail: "args=" + this.triggerArgString
-			});
+			page = view.page;
 		}
-		
-		gApplication.fireAnalyticsEvent
-		({
-			timestamp: timestamp + 1,
-			domain: "action",
-			page: view.page ? view.page.key : view.key,
-			view: view.page ? view.key : null,
-			name: this.actionName,
-			detail: "args=" + this.actionArgString + "&params=" + positron.Util.unparseParams (this.params)
-		});
+		else
+		{
+			// view.page is null, therefore view is a page
+			page = view;
+			view = null;
+		}
 	}
 	else
 	{
-		console.error ("Action.fireAnalyticsEvent() with no parent view");
-		console.error (this.element);
+		page = gApplication.page;
+	}
+	
+	// ensure that the action event goes after the trigger one
+	var	timestamp = new Date ().getTime ();
+	
+	// if the trigger fires its own events, don't do it here
+	if (!this.trigger || !this.trigger.firesAnalyticsEvents ())
+	{
+		gApplication.fireAnalyticsEvent
+		({
+			domain: "trigger",
+			timestamp: timestamp,
+			page: page.key,
+			view: view ? view.key : null,
+			name: this.triggerName,
+			detail: "args=" + this.triggerArgString
+		});
+	}
+	
+	gApplication.fireAnalyticsEvent
+	({
+		timestamp: timestamp + 1,
+		domain: "action",
+		page: page.key,
+		view: view ? view.key : null,
+		name: this.actionName,
+		detail: "args=" + this.actionArgString + "&params=" + positron.Util.unparseParams (this.params)
+	});
+}
+
+// a little nicer for triggers than setting in params directly
+positron.action.Action.prototype.setParam = function (inKey, inValue)
+{
+	this.params [inKey] = inValue;
+}
+
+// a little nicer for triggers than setting in params directly
+positron.action.Action.prototype.setParams = function (inParams)
+{
+	for (var key in inParams)
+	{
+		this.setParam (key, inParams [key]);
 	}
 }
 
-positron.action.Action.prototype.toString = function ()
-{
-	return this.triggerName + ": " + this.actionName;
-}
 
 /**
 *
@@ -4857,11 +5201,11 @@ positron.action.AddClassAction.prototype.fire = function (inEvent)
 		{
 			if (this.actionArgs.length > 2)
 			{
-				receivers = positron.DOM.resolveCompositeElement (this.element, argument1, argument2);
+				receivers = positron.DOM.resolveCompositeElements (this.element, argument1, argument2);
 			}
 			else
 			{
-				receivers = positron.DOM.resolveCompositeElement (this.element, null, argument1);
+				receivers = positron.DOM.resolveCompositeElements (this.element, null, argument1);
 			}
 		}
 		
@@ -4878,6 +5222,9 @@ positron.action.AddClassAction.prototype.fire = function (inEvent)
 		console.error ("bad arguments to AddClassAction:");
 		console.error (this.actionArgString);
 	}
+
+	this.element.dispatchEvent
+		(positron.DOM.createEvent (gApplication.getEventPrefix () + "addclass"));
 };
 
 
@@ -4967,9 +5314,12 @@ positron.action.AddToListAction.prototype.fire = function (inEvent, inContext)
 				{
 					list [i] = positron.Util.clone (this.explicitParams);
 
-					this.element.dispatchEvent
-						(positron.DOM.createEvent (gApplication.getEventPrefix () + "addedtolist"));
-
+					if (this.element)
+					{
+						this.element.dispatchEvent
+							(positron.DOM.createEvent (gApplication.getEventPrefix () + "addtolist"));
+					}
+					
 					break;
 				}
 			}
@@ -4979,7 +5329,7 @@ positron.action.AddToListAction.prototype.fire = function (inEvent, inContext)
 				list.push (positron.Util.clone (this.explicitParams));
 
 				this.element.dispatchEvent
-					(positron.DOM.createEvent (gApplication.getEventPrefix () + "addedtolist"));
+					(positron.DOM.createEvent (gApplication.getEventPrefix () + "addtolist"));
 			}
 		}
 		else
@@ -4995,8 +5345,11 @@ positron.action.AddToListAction.prototype.fire = function (inEvent, inContext)
 
 				gApplication.context.put (listKey, list);
 
-				this.element.dispatchEvent
-					(positron.DOM.createEvent (gApplication.getEventPrefix () + "addedtolist"));
+				if (this.element)
+				{
+					this.element.dispatchEvent
+						(positron.DOM.createEvent (gApplication.getEventPrefix () + "addtolist"));
+				}
 			}
 		}
 	}
@@ -5042,8 +5395,11 @@ positron.action.AddToMapAction.prototype.fire = function (inEvent, inContext)
 
 			map [this.explicitParams [key]] = positron.Util.clone (this.explicitParams);
 
-			this.element.dispatchEvent
-				(positron.DOM.createEvent (gApplication.getEventPrefix () + "addedtomap"));
+			if (this.element)
+			{
+				this.element.dispatchEvent
+					(positron.DOM.createEvent (gApplication.getEventPrefix () + "addtomap"));
+			}
 		}
 		else
 		{
@@ -5179,33 +5535,39 @@ positron.action.AjaxFormAction.prototype.fire = function (inEvent)
 				if (gApplication && gApplication.isLogging (gApplication.kLogLoader))
 					console.log ("success");
 	
-				var	event = positron.DOM.createEvent
-				(
-					gApplication.getEventPrefix () + "ajaxformsuccess",
-					{
-						data: inData
-					}
-				);
-				
-				self.element.dispatchEvent (event);
+				if (self.element)
+				{
+					var	event = positron.DOM.createEvent
+					(
+						gApplication.getEventPrefix () + "ajaxform",
+						{
+							data: inData
+						}
+					);
+					
+					self.element.dispatchEvent (event);
+				}
 			},
 			error: function (inXHR, inTextStatus, inError)
 			{
 				if (gApplication && gApplication.isLogging (gApplication.kLogLoader))
 				{
-					console.error ("load of " + inURL + " failed");
-					console.error (inError.message);
+					console.error ("load of " + action + " failed");
+					console.error (inError);
 				}
 
-				var	event = positron.DOM.createEvent
-				(
-					gApplication.getEventPrefix () + "error",
-					{
-						error: inError
-					}
-				);
-				
-				self.element.dispatchEvent (event);
+				if (self.element)
+				{
+					var	event = positron.DOM.createEvent
+					(
+						gApplication.getEventPrefix () + "ajaxform-error",
+						{
+							error: inError
+						}
+					);
+					
+					self.element.dispatchEvent (event);
+				}
 			}
 		});
 	}
@@ -5250,15 +5612,18 @@ positron.action.AjaxAction.prototype.fire = function (inEvent)
 			type: this.actionName == "ajaxget" ? "GET" : "POST",
 			success: function (inData, inTextStatus, inXHR)
 			{
-				var	event = positron.DOM.createEvent
-				(
-					gApplication.getEventPrefix () + "ajax",
-					{
-						data: inData
-					}
-				);
-				
-				self.element.dispatchEvent (event);
+				if (self.element)
+				{
+					var	event = positron.DOM.createEvent
+					(
+						gApplication.getEventPrefix () + "ajax",
+						{
+							data: inData
+						}
+					);
+					
+					self.element.dispatchEvent (event);
+				}
 			},
 			error: function (inXHR, inTextStatus, inError)
 			{
@@ -5268,15 +5633,18 @@ positron.action.AjaxAction.prototype.fire = function (inEvent)
 					console.error (inError.message);
 				}
 
-				var	event = positron.DOM.createEvent
-				(
-					gApplication.getEventPrefix () + "error",
-					{
-						error: inError
-					}
-				);
-				
-				self.element.dispatchEvent (event);
+				if (self.element)
+				{
+					var	event = positron.DOM.createEvent
+					(
+						gApplication.getEventPrefix () + "ajax-error",
+						{
+							error: inError
+						}
+					);
+					
+					self.element.dispatchEvent (event);
+				}
 			}
 		});
 	}
@@ -5301,7 +5669,14 @@ positron.action.AlertAction.prototype.fire = function (inEvent)
 {
 	positron.action.Action.prototype.fire.call (this, inEvent);
 	
-	alert (this.actionArgString);
+	if (this.actionArgString && this.actionArgString.length)
+	{
+		alert (this.actionArgString);
+	}
+	else
+	{
+		alert (positron.Util.unparseParams (this.params));
+	}
 };
 
 
@@ -5422,8 +5797,109 @@ positron.action.CallAction.prototype.fire = function (inEvent)
 		console.error ("CallAction.process() called with insufficient arguments");
 		console.error (this.element);
 	}
+
+	this.element.dispatchEvent
+		(positron.DOM.createEvent (gApplication.getEventPrefix () + "call"));
 };
 
+
+/**
+*
+* @license
+* Copyright © 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
+positron.provide ("positron.action.ClearListAction");
+
+positron.action.ClearListAction = function ()
+{
+	positron.action.Action.call (this);
+}
+positron.inherits (positron.action.ClearListAction, positron.action.Action);
+
+positron.action.ClearListAction.prototype.fire = function (inEvent, inContext)
+{
+	positron.action.Action.prototype.fire.call (this, inEvent);
+	
+	if (this.actionArgs.length > 0 && this.actionArgs [0].length > 0)
+	{
+		var	listKey = this.actionArgs [0];
+
+		var	list = gApplication.getContextReference (listKey, gApplication.context);
+		
+		if (list && Array.isArray (list))
+		{
+			list.length = 0;
+
+			if (this.element)
+			{
+				this.element.dispatchEvent
+					(positron.DOM.createEvent (gApplication.getEventPrefix () + "clearlist"));
+			}
+		}
+		else
+		{
+			console.error ("ClearListAction can't find list with key " + mapKey);
+		}
+	}
+	else
+	{
+		console.error ("ClearListAction with no list key in arguments");
+	}
+};
+
+/**
+*
+* @license
+* Copyright © 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
+positron.provide ("positron.action.ClearMapAction");
+
+positron.action.ClearMapAction = function ()
+{
+	positron.action.Action.call (this);
+}
+positron.inherits (positron.action.ClearMapAction, positron.action.Action);
+
+positron.action.ClearMapAction.prototype.fire = function (inEvent, inContext)
+{
+	positron.action.Action.prototype.fire.call (this, inEvent);
+	
+	if (this.actionArgs.length > 0 && this.actionArgs [0].length > 0)
+	{
+		var	mapKey = this.actionArgs [0];
+		
+		var	map = gApplication.getContextReference (mapKey, gApplication.context);
+		
+		if (map)
+		{
+			for (var key in map)
+			{
+				if (map.hasOwnProperty (key))
+				{
+					delete map [key];
+				}
+			}
+
+			if (this.element)
+			{
+				this.element.dispatchEvent
+					(positron.DOM.createEvent (gApplication.getEventPrefix () + "clearmap"));
+			}
+		}
+		else
+		{
+			console.error ("ClearMapAction can't find map with key " + mapKey);
+		}
+	}
+	else
+	{
+		console.error ("ClearMapAction with no map key arguments");
+	}
+};
 
 /**
 *
@@ -5537,10 +6013,13 @@ positron.action.DispatchFormAction.prototype.fire = function (inEvent)
 	
 	if (dispatch)
 	{
-		var	event = positron.DOM.createEvent
-			(gApplication.getEventPrefix () + "formdispatch", eventDetail);
-		
-		this.element.dispatchEvent (event);
+		if (this.element)
+		{
+			var	event = positron.DOM.createEvent
+				(gApplication.getEventPrefix () + "dispatchform", eventDetail);
+			
+			this.element.dispatchEvent (event);
+		}
 	}
 	else
 	{
@@ -5684,11 +6163,11 @@ positron.action.IndexedInsertAction.prototype.fire = function (inEvent)
 		
 		putRequest.onsuccess = function (inPutEvent)
 		{
-			if (inEvent)
+			if (inEvent && self.element)
 			{
 				var	event = positron.DOM.createEvent
 				(
-					gApplication.getEventPrefix () + "indexedinsertsuccess",
+					gApplication.getEventPrefix () + "indexedinsert",
 					{
 						result: inPutEvent.target.result
 					}
@@ -5703,7 +6182,7 @@ positron.action.IndexedInsertAction.prototype.fire = function (inEvent)
 			console.error ("store.put.onerror()");
 			console.error (inPutEvent.target.result);
 
-			if (inEvent)
+			if (inEvent && self.element)
 			{
 				var	event = positron.DOM.createEvent
 				(
@@ -5746,7 +6225,7 @@ positron.action.LogAction.prototype.fire = function (inEvent)
 		}
 		else
 		{
-			console.log ("LogAction with no action argument to log");
+			console.log (positron.Util.unparseParams (this.params));
 		}
 	}
 };
@@ -5816,11 +6295,11 @@ positron.action.RemoveClassAction.prototype.fire = function (inEvent)
 		{
 			if (this.actionArgs.length > 2)
 			{
-				receivers = positron.DOM.resolveCompositeElement (this.element, argument1, argument2);
+				receivers = positron.DOM.resolveCompositeElements (this.element, argument1, argument2);
 			}
 			else
 			{
-				receivers = positron.DOM.resolveCompositeElement (this.element, null, argument1);
+				receivers = positron.DOM.resolveCompositeElements (this.element, null, argument1);
 			}
 		}
 		
@@ -5837,6 +6316,9 @@ positron.action.RemoveClassAction.prototype.fire = function (inEvent)
 		console.error ("bad arguments to RemoveClassAction:");
 		console.error (this.actionArgString);
 	}
+
+	this.element.dispatchEvent
+		(positron.DOM.createEvent (gApplication.getEventPrefix () + "removeclass"));
 };
 
 
@@ -5886,9 +6368,12 @@ positron.action.RemoveFromListAction.prototype.fire = function (inEvent, inConte
 				{
 					list.splice (i, 1);
 
-					this.element.dispatchEvent
-						(positron.DOM.createEvent (gApplication.getEventPrefix () + "removedfromlist"));
-
+					if (this.element)
+					{
+						this.element.dispatchEvent
+							(positron.DOM.createEvent (gApplication.getEventPrefix () + "removefromlist"));
+					}
+					
 					// assume the list doesn't have dupes
 					break;
 				}
@@ -5896,7 +6381,7 @@ positron.action.RemoveFromListAction.prototype.fire = function (inEvent, inConte
 		}
 		else
 		{
-			console.error ("RemoveFromMapAction can't find list with key " + mapKey);
+			console.error ("RemoveFromListAction can't find list with key " + listKey);
 		}
 	}
 	else
@@ -5937,8 +6422,11 @@ positron.action.RemoveFromMapAction.prototype.fire = function (inEvent, inContex
 			{
 				delete map [this.explicitParams [key]];
 
-				this.element.dispatchEvent
-					(positron.DOM.createEvent (gApplication.getEventPrefix () + "removedfrommap"));
+				if (this.element)
+				{
+					this.element.dispatchEvent
+						(positron.DOM.createEvent (gApplication.getEventPrefix () + "removefrommap"));
+				}
 			}
 			else
 			{
@@ -5984,6 +6472,68 @@ positron.action.RunViewAction.prototype.fire = function (inEvent)
 	else
 	{
 		console.error ("RunViewAction: no view key argument");
+	}
+};
+
+/**
+*
+* @license
+* Copyright © 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
+positron.provide ("positron.action.ScrollAction");
+
+positron.action.ScrollAction = function ()
+{
+	positron.action.Action.call (this);
+}
+positron.inherits (positron.action.ScrollAction, positron.action.Action);
+
+positron.action.ScrollAction.prototype.fire = function (inEvent)
+{
+	positron.action.Action.prototype.fire.call (this, inEvent);
+	
+	if (this.actionArgs.length > 0 && this.actionArgs [0].length > 0)
+	{
+		var	arg = this.actionArgs [0];
+		var	position = parseInt (arg);
+		
+		if (isNaN (position))
+		{
+			if (arg.charAt (0) == '#')
+			{
+				arg = arg.substring (1);
+				
+				var	element = document.getElementById (arg);
+				
+				if (!element)
+				{
+					element = document.querySelector ("a[name=" + arg + "]");
+				}
+				
+				if (element)
+				{
+					element.scrollIntoView ();
+				}
+				else
+				{
+					console.error ("ScrollAction: can't find anchor #" + arg);
+				}
+			}
+			else
+			{
+				console.error ("ScrollAction: argument is neither position nor anchor");
+			}
+		}
+		else
+		{
+			documentElement.scrollTop (0, position);
+		}
+	}
+	else
+	{
+		console.error ("ScrollAction: no position or anchor argument");
 	}
 };
 
@@ -6048,68 +6598,59 @@ positron.action.SelectClassAction.prototype.fire = function (inEvent)
 {
 	positron.action.Action.prototype.fire.call (this, inEvent);
 
-	// ok try to find the element we should select
-	var	receivers = null;
-
-	var	className = null;
-	var	viewKey = null;
+	var	deselectors = null;
+	var	selectors = null;
 	
-	// if there is only one action argument, assume just the selector
-	if (this.actionArgs.length > 0)
+	// action args are view/selector/class
+	// view & selector specify the element to be selected
+	// class specifies the other elements to be deselected
+	
+	if (this.actionArgs.length > 1)
 	{
-		if (this.actionArgs.length > 1)
+		var	deselector = null;
+
+		if (this.actionArgs.length > 2)
 		{
-			viewKey = this.actionArgs [0];
-			className = this.actionArgs [1];
+			deselector = this.actionArgs [2];
+			
+			if (deselector.length)
+			{
+				selectors = positron.DOM.resolveCompositeElements (this.element, this.actionArgs [0], this.actionArgs [1]);
+				deselectors = positron.DOM.resolveCompositeElements (this.element, this.actionArgs [0], this.actionArgs [2]);
+			}
 		}
 		else
 		{
-			className = this.actionArgs [0];
+			deselector = this.actionArgs [1];
+			
+			if (deselector.length)
+			{
+				selectors = positron.DOM.resolveCompositeElements (this.element, null, this.actionArgs [0]);
+				deselectors = positron.DOM.resolveCompositeElements (this.element, null, this.actionArgs [1]);
+			}
 		}
 	}
 	
-	if (className)
+	if (deselectors)
 	{
-		var	selectedClassName = className + "-selected";
-		
-		var	classSelector = "." + className;
-	
-		if (viewKey)
+		for (var i = 0; i < deselectors.length; i++)
 		{
-			receivers = positron.DOM.resolveCompositeElement (this.element, viewKey, classSelector);
-		}
-		else
-		{
-			receivers = positron.DOM.resolveCompositeElement (this.element, null, classSelector);
-		}
-	
-		if (receivers)
-		{
-			for (var i = 0; i < receivers.length; i++)
-			{
-				for (var key in this.params)
-				{
-					positron.DOM.removeClass (receivers [i], selectedClassName);
-				}
-			}
+			positron.DOM.removeClass (deselectors [i], "selected");
 		}
 
-		for (var parentNode = this.element; parentNode; parentNode = parentNode.parentNode)
+		for (var i = 0; i < selectors.length; i++)
 		{
-			if (positron.DOM.hasClass (parentNode, className))
-			{
-				if (! positron.DOM.hasClass (parentNode, selectedClassName))
-				{
-					removeClass = true;
-					
-					positron.DOM.addClass (parentNode, selectedClassName);
-					parentNode.classList.add (selectedClassName);
-				}
-				
-				break;
-			}
+			positron.DOM.addClass (selectors [i], "selected");
 		}
 	}
+	else
+	{
+		console.error ("SelectClassAction with bad action arguments");
+		console.error (this.actionArgs);
+	}
+	
+	this.element.dispatchEvent
+		(positron.DOM.createEvent (gApplication.getEventPrefix () + "selectclass"));
 };
 
 /**
@@ -6138,11 +6679,11 @@ positron.action.SetAttributeAction.prototype.fire = function (inEvent)
 	{
 		if (this.actionArgs.length > 1)
 		{
-			receivers = positron.DOM.resolveCompositeElement (this.element, this.actionArgs [0], this.actionArgs [1]);
+			receivers = positron.DOM.resolveCompositeElements (this.element, this.actionArgs [0], this.actionArgs [1]);
 		}
 		else
 		{
-			receivers = positron.DOM.resolveCompositeElement (this.element, null, this.actionArgs [0]);
+			receivers = positron.DOM.resolveCompositeElements (this.element, null, this.actionArgs [0]);
 		}
 	}
 	
@@ -6172,6 +6713,9 @@ positron.action.SetAttributeAction.prototype.fire = function (inEvent)
 		// this will likely happen a lot
 		console.error ("SetAttributeAction could not resolve receiving element");
 	}
+
+	this.element.dispatchEvent
+		(positron.DOM.createEvent (gApplication.getEventPrefix () + "setattribute"));
 };
 
 /**
@@ -6212,6 +6756,9 @@ positron.action.SetLocalStorageAction.prototype.fire = function (inEvent)
 	{
 		console.error ("SetLocalStorage with no localStorage functionality");
 	}
+
+	this.element.dispatchEvent
+		(positron.DOM.createEvent (gApplication.getEventPrefix () + "setlocalstorage"));
 };
 
 /**
@@ -6328,6 +6875,9 @@ positron.action.SetParamsAction.prototype.fire = function (inEvent)
 	{
 		console.error ("setparams with no first argument");
 	}
+
+	this.element.dispatchEvent
+		(positron.DOM.createEvent (gApplication.getEventPrefix () + "setparams"));
 };
 
 /**
@@ -6356,11 +6906,11 @@ positron.action.SetStyleAction.prototype.fire = function (inEvent)
 	{
 		if (this.actionArgs.length > 1)
 		{
-			receivers = positron.DOM.resolveCompositeElement (this.element, this.actionArgs [0], this.actionArgs [1]);
+			receivers = positron.DOM.resolveCompositeElements (this.element, this.actionArgs [0], this.actionArgs [1]);
 		}
 		else
 		{
-			receivers = positron.DOM.resolveCompositeElement (this.element, null, this.actionArgs [0]);
+			receivers = positron.DOM.resolveCompositeElements (this.element, null, this.actionArgs [0]);
 		}
 	}
 	
@@ -6379,6 +6929,9 @@ positron.action.SetStyleAction.prototype.fire = function (inEvent)
 		// this will likely happen a lot
 		console.error ("SetStyleAction could not resolve receiving element");
 	}
+
+	this.element.dispatchEvent
+		(positron.DOM.createEvent (gApplication.getEventPrefix () + "setstyle"));
 };
 
 /**
@@ -6407,11 +6960,11 @@ positron.action.SetTransformAction.prototype.fire = function (inEvent)
 	{
 		if (this.actionArgs.length > 1)
 		{
-			receivers = positron.DOM.resolveCompositeElement (this.element, this.actionArgs [0], this.actionArgs [1]);
+			receivers = positron.DOM.resolveCompositeElements (this.element, this.actionArgs [0], this.actionArgs [1]);
 		}
 		else
 		{
-			receivers = positron.DOM.resolveCompositeElement (this.element, null, this.actionArgs [0]);
+			receivers = positron.DOM.resolveCompositeElements (this.element, null, this.actionArgs [0]);
 		}
 	}
 
@@ -6464,6 +7017,9 @@ positron.action.SetTransformAction.prototype.fire = function (inEvent)
 		// this will likely happen a lot
 		console.error ("SetTransformAction could not resolve receiving element");
 	}
+
+	this.element.dispatchEvent
+		(positron.DOM.createEvent (gApplication.getEventPrefix () + "settransform"));
 };
 
 /**
@@ -6516,7 +7072,7 @@ positron.action.SubmitFormAction.prototype.fire = function (inEvent)
 		// which is a huge bug IMHO
 		// so instead we fake up a submit event
 		// rubbish web
-		formElement.dispatchEvent (positron.DOM.createEvent ("submit", {}));
+		formElement.dispatchEvent (positron.DOM.createEvent ("submitform", {}));
 	}
 	else
 	{
@@ -6589,11 +7145,11 @@ positron.action.ToggleClassAction.prototype.fire = function (inEvent)
 		{
 			if (this.actionArgs.length > 2)
 			{
-				receivers = positron.DOM.resolveCompositeElement (this.element, argument1, argument2);
+				receivers = positron.DOM.resolveCompositeElements (this.element, argument1, argument2);
 			}
 			else
 			{
-				receivers = positron.DOM.resolveCompositeElement (this.element, null, argument1);
+				receivers = positron.DOM.resolveCompositeElements (this.element, null, argument1);
 			}
 		}
 		
@@ -6610,6 +7166,9 @@ positron.action.ToggleClassAction.prototype.fire = function (inEvent)
 		console.error ("bad arguments to ToggleClassAction:");
 		console.error (this.actionArgString);
 	}
+
+	this.element.dispatchEvent
+		(positron.DOM.createEvent (gApplication.getEventPrefix () + "toggleclass"));
 };
 
 
@@ -6630,7 +7189,6 @@ positron.inherits (positron.action.ToggleViewAction, positron.action.Action);
 
 positron.action.ToggleViewAction.prototype.fire = function (inEvent)
 {
-	// resolve aliases
 	positron.action.Action.prototype.fire.call (this, inEvent);
 	
 	var	argument1 = this.actionArgs.length > 0 ? this.actionArgs [0] : undefined;
@@ -6716,27 +7274,27 @@ function (inElement, inContext, inAttributeName, inAttributeNumber)
 		paramAttributeName += "params";
 
 		// param keys are evaluated as keys at walk time
-		var	paramKeyAttributeName = prefix + "action-";
+		var	paramKeysAttributeName = prefix + "action-";
 		
 		if (inAttributeNumber >= 0)
 		{
-			paramKeyAttributeName += inAttributeNumber + "-";
+			paramKeysAttributeName += inAttributeNumber + "-";
 		}
 
-		paramKeyAttributeName += "param-keys";
+		paramKeysAttributeName += "param-keys";
 
-		// param aliases are evaluated as keys at fire time
-		var	paramAliasAttributeName = prefix + "action-";
+		// param fire keys are evaluated as keys at fire time
+		var	fireParamKeysAttributeName = prefix + "action-";
 		
 		if (inAttributeNumber >= 0)
 		{
-			paramAliasAttributeName += inAttributeNumber + "-";
+			fireParamKeysAttributeName += inAttributeNumber + "-";
 		}
 
-		paramAliasAttributeName += "param-aliases";
+		fireParamKeysAttributeName += "fire-param-keys";
 
 		var	action = positron.ActionFactory.createAction
-			(inElement, inContext, actionAttributeName, paramAttributeName, paramKeyAttributeName, paramAliasAttributeName);
+			(inElement, inContext, actionAttributeName, paramAttributeName, paramKeysAttributeName, fireParamKeysAttributeName);
 		
 		if (action)
 		{
@@ -6922,6 +7480,11 @@ positron.attribute.ViewAttribute.prototype.process = function (inElement, inCont
 	if (className && className.length)
 	{
 		view = positron.Util.instantiate (className);
+		
+		if (view == null)
+		{
+			console.error ("ViewAttribute cannot instantiate specified view class " + className);
+		}
 	}
 	else
 	{
@@ -6929,10 +7492,19 @@ positron.attribute.ViewAttribute.prototype.process = function (inElement, inCont
 		{
 			view = gApplication.getViewlet (viewName, loadFlags);
 		}
+	}
+	
+	if (view == null)
+	{
+		className = gApplication.getConfigEntry ("viewClassName");
 		
+		view = positron.Util.instantiate (className);
+
 		if (view == null)
 		{
-			view = positron.Util.instantiate (gApplication.getConfigEntry ("viewClassName"));
+			console.error ("ViewAttribute cannot instantiate configured default view class " + className);
+			
+			view = new positron.View ();
 		}
 	}
 	
@@ -7634,8 +8206,8 @@ positron.tag.AjaxTag.prototype.cacheResponse = function (inElement, inData)
 **/
 
 /*
-	note we *can't* use pos-action here because it would go through the regular action stuff
-	and the deal with <pos-action> is that its actions fire immediately
+	note we *can't* use p-action here because it would go through the regular action stuff
+	and the deal with <p-action> is that its actions fire immediately
 */
 
 positron.provide ("positron.tag.ActionTag");
@@ -7685,30 +8257,30 @@ positron.tag.ActionTag.prototype.process = function (inElement, inContext, inTre
 				paramAttributeName = "action-params";
 			}
 
-			var	paramKeyAttributeName = null;
+			var	paramKeysAttributeName = null;
 			
 			if (i >= 0)
 			{
-				paramKeyAttributeName = "action-" + i + "-param-keys";
+				paramKeysAttributeName = "action-" + i + "-param-keys";
 			}
 			else
 			{
-				paramKeyAttributeName = "action-param-keys";
+				paramKeysAttributeName = "action-param-keys";
 			}
 
-			var	paramAliasAttributeName = null;
+			var	fireParamKeysAttributeName = null;
 			
 			if (i >= 0)
 			{
-				paramAliasAttributeName = "action-" + i + "-param-aliases";
+				fireParamKeysAttributeName = "action-" + i + "-fire-param-keys";
 			}
 			else
 			{
-				paramAliasAttributeName = "action-param-aliases";
+				fireParamKeysAttributeName = "action-fire-param-keys";
 			}
 
 			var	action = positron.ActionFactory.createAction (inElement, inContext,
-				actionAttributeName, paramAttributeName, paramKeyAttributeName, paramAliasAttributeName);
+				actionAttributeName, paramAttributeName, paramKeysAttributeName, fireParamKeysAttributeName);
 			
 			if (action)
 			{
@@ -7726,7 +8298,7 @@ positron.tag.ActionTag.prototype.process = function (inElement, inContext, inTre
 	
 	if (!foundAction)
 	{
-		console.error ("<pos-action> found no actions on element");
+		console.error ("ActionTag found no actions on element");
 		console.error (inElement);
 	}
 
@@ -8923,7 +9495,42 @@ positron.inherits (positron.tag.MoveTag, positron.tag.Tag);
 
 positron.tag.MoveTag.prototype.process = function (inElement, inContext, inTreeWalker)
 {
+	// schedule us to show any deferred views
+	positron.DOM.getParentView (inElement).addDeferredTask (this);
+	
 	return this.walkChildren (inElement, inContext, inTreeWalker);
+}
+
+// runs when the parent refresh is complete
+// to show any views which are marked deferred
+positron.tag.MoveTag.prototype.run = function ()
+{
+	// console.log ("MoveTag.run()");
+	
+	if (this.destinationElement)
+	{
+		var	deferredViewElements = positron.DOM.queryPrefixedAttribute (this.destinationElement, "defer-show");
+
+		for (var i = 0; i < deferredViewElements.length; i++)
+		{
+			var	deferredViewElement = deferredViewElements [i];
+			
+			var	deferredView = positron.DOM.getData (deferredViewElement, "view");
+			
+			if (deferredView && !deferredView.isVisible ())
+			{
+				deferredView.show ();
+			}
+			else
+			{
+				console.error ("element with defer-show attribute has no view");
+				console.error (deferredViewElement);
+			}
+			
+			// ensure we only do this once
+			positron.DOM.removePrefixedAttribute (deferredViewElement, "defer-show");
+		}
+	}
 }
 
 positron.tag.MoveTag.prototype.onWalkComplete = function (inTreeWalker)
@@ -8934,17 +9541,18 @@ positron.tag.MoveTag.prototype.onWalkComplete = function (inTreeWalker)
 	var	unique = positron.DOM.getBooleanAttributeValueWithDefault (element, "unique", false);
 	var	update = positron.DOM.getBooleanAttributeValueWithDefault (element, "update", true);
 	
-	var	destinationElements = positron.DOM.getCompositeElement (element, "view", "selector");
+	var	destinationElements = positron.DOM.getCompositeElements (element, "view", "selector");
 	
 	if (destinationElements && destinationElements.length)
 	{
-		var	destinationElement = destinationElements [0];
+		// HACK we only honour the first found destination element
+		this.destinationElement = destinationElements [0];
 
 		if (unique)
 		{
-			for (var i = 0; i < destinationElement.childNodes.length; i++)
+			for (var i = 0; i < this.destinationElement.childNodes.length; i++)
 			{
-				var	destinationChild = destinationElement.childNodes [i];
+				var	destinationChild = this.destinationElement.childNodes [i];
 				
 				if (destinationChild.nodeType == destinationChild.ELEMENT_NODE)
 				{
@@ -9003,7 +9611,7 @@ positron.tag.MoveTag.prototype.onWalkComplete = function (inTreeWalker)
 				
 				if (newChild.nodeType == newChild.ELEMENT_NODE)
 				{
-					destinationElement.appendChild (newChild);
+					this.destinationElement.appendChild (newChild);
 				}
 			}
 		}
@@ -9012,7 +9620,7 @@ positron.tag.MoveTag.prototype.onWalkComplete = function (inTreeWalker)
 			// not tracking uniques, so just bung the new ones on the end of the destination
 			while (element.childNodes.length > 0)
 			{
-				destinationElement.appendChild (element.childNodes [0]);
+				this.destinationElement.appendChild (element.childNodes [0]);
 			}
 		}
 	}
@@ -9209,6 +9817,36 @@ positron.tag.PrefixedPropertyTag.prototype.process = function (inElement, inCont
   this Tag does basic string substitution
 */
 
+positron.provide ("positron.tag.QuerySelectorTag");
+positron.require ("positron.DelegateHashMap");
+positron.require ("positron.tag");
+
+/**
+ * @constructor
+ */
+positron.tag.QuerySelectorTag = function ()
+{
+	positron.tag.Tag.call (this);
+};
+positron.inherits (positron.tag.QuerySelectorTag, positron.tag.Tag);
+
+positron.tag.QuerySelectorTag.prototype.process = function (inElement, inContext, inTreeWalker)
+{
+	this.walkChildren (inElement, inContext, inTreeWalker,
+		positron.DOM.getCompositeElements (element, "view", "selector"));
+}
+
+/**
+*
+* @license
+* Copyright � 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
+/*
+  this Tag does basic string substitution
+*/
+
 positron.provide ("positron.tag.ReplaceTag");
 positron.require ("positron.DelegateHashMap");
 positron.require ("positron.tag");
@@ -9222,7 +9860,6 @@ positron.tag.ReplaceTag = function ()
 
 	this.requiredAttributes.push ("string");
 	this.requiredAttributes.push ("replace");
-	this.requiredAttributes.push ("with");
 };
 positron.inherits (positron.tag.ReplaceTag, positron.tag.Tag);
 
@@ -9233,6 +9870,12 @@ positron.tag.ReplaceTag.prototype.process = function (inElement, inContext, inTr
 	var withString = inElement.getAttribute ("with");
 	var	regexp = positron.DOM.getBooleanAttributeValueWithDefault (inElement, "regexp", false);
 	var	all = positron.DOM.getBooleanAttributeValueWithDefault (inElement, "all", false);
+	
+	// should be possible to have a blank string for "with"
+	if (!withString)
+	{
+		withString = "";
+	}
 	
 	var	newString = null;
 	
@@ -9868,11 +10511,6 @@ positron.trigger.Trigger.prototype.firesAnalyticsEvents = function ()
 	return false;
 }
 
-positron.trigger.Trigger.prototype.isDeferred = function ()
-{
-	return false;
-};
-
 // this is for deferred triggers to get a look at context before it goes away
 positron.trigger.Trigger.prototype.preRegister = function (inAction, inContext)
 {
@@ -9902,12 +10540,6 @@ positron.trigger.AnimationFrameTrigger.prototype.cancel = function (inAction)
 	console.log ("AnimationFrameTrigger.cancel()");
 
 	this.canContinue = false;
-}
-
-// we only start firing once the treewalk finishes
-positron.trigger.AnimationFrameTrigger.prototype.isDeferred = function ()
-{
-	return true;
 }
 
 positron.trigger.AnimationFrameTrigger.prototype.register = function (inAction)
@@ -9982,12 +10614,6 @@ positron.trigger.CircleTrigger.prototype.cancel = function (inAction)
 		clearInterval (this.interval);
 		this.interval = null;
 	}
-}
-
-// we only start firing once the treewalk finishes
-positron.trigger.CircleTrigger.prototype.isDeferred = function ()
-{
-	return true;
 }
 
 positron.trigger.CircleTrigger.prototype.register = function (inAction)
@@ -10178,11 +10804,6 @@ positron.trigger.DeferTrigger = function ()
 }
 positron.inherits (positron.trigger.DeferTrigger, positron.trigger.Trigger);
 
-positron.trigger.DeferTrigger.prototype.isDeferred = function (inAction, inContext)
-{
-	return true;
-}
-
 positron.trigger.DeferTrigger.prototype.register = function (inAction, inContext)
 {
 	if (gApplication.isLogging (gApplication.kLogTrigger)) console.log ("DeferTrigger.register/fire(" + inAction.toString () + ")");
@@ -10212,11 +10833,6 @@ positron.trigger.DelayTrigger.prototype.cancel = function ()
 		clearTimeout (this.timeout);
 		this.timeout = null;
 	}
-}
-
-positron.trigger.DelayTrigger.prototype.isDeferred = function ()
-{
-	return true;
 }
 
 positron.trigger.DelayTrigger.prototype.register = function (inAction)
@@ -10339,7 +10955,7 @@ positron.inherits (positron.trigger.IntervalTrigger, positron.trigger.Trigger);
 
 positron.trigger.IntervalTrigger.prototype.cancel = function (inAction)
 {
-	console.log ("IntervalTrigger.cancel()");
+	// console.log ("IntervalTrigger.cancel()");
 
 	if (this.interval)
 	{
@@ -10350,15 +10966,9 @@ positron.trigger.IntervalTrigger.prototype.cancel = function (inAction)
 	}
 }
 
-// we only start firing once the treewalk finishes
-positron.trigger.IntervalTrigger.prototype.isDeferred = function ()
-{
-	return true;
-}
-
 positron.trigger.IntervalTrigger.prototype.register = function (inAction)
 {
-	console.log ("IntervalTrigger.register()");
+	// console.log ("IntervalTrigger.register()");
 	
 	var	time = positron.Util.parseTime (inAction.triggerArgs [0], 1000);
 
@@ -10395,41 +11005,48 @@ positron.trigger.KeyDownTrigger = function ()
 }
 positron.inherits (positron.trigger.KeyDownTrigger, positron.trigger.Trigger);
 
+positron.trigger.KeyDownTrigger.prototype.cancel = function ()
+{
+	window.removeEventListener ("keydown", this.onKeyDownBound);
+}
+
+positron.trigger.KeyDownTrigger.prototype.onKeyDown = function (inEvent)
+{
+	if (this.keyCode == 0 || this.keyCode == inEvent.keyCode || this.keyCode == inEvent.keyIdentifier.toLowerCase ())
+	{
+		this.action.fire (inEvent);
+	}
+}
+
 positron.trigger.KeyDownTrigger.prototype.register = function (inAction)
 {
 	console.log ("KeyDownTrigger.register()");
 	
-	var	keyCode = 0;
+	this.action = inAction;
+	this.keyCode = 0;
 	
 	if (inAction.triggerArgs.length > 0)
 	{
 		var	keyName = inAction.triggerArgs [0];
 		
-		keyCode = parseInt (keyName);
+		this.keyCode = parseInt (keyName);
 		
 		if (isNaN (keyCode))
 		{
 			// could be a key identifier
-			keyCode = keyName;
+			this.keyCode = keyName;
 		}
 	}
-		
-	// KeyDown elements always on document
-	// window is legal on everything except IE9-
-	document.addEventListener
-	(
-		"keydown",
-		function (inEvent)
-		{
-			if (keyCode == 0 || keyCode == inEvent.keyCode || keyCode == inEvent.keyIdentifier.toLowerCase ())
-			{
-				inAction.fire (inEvent);
-			}
-		},
-		false
-	);
+	
+	this.onKeyDownBound = this.onKeyDown.bind (this);
+	
+	window.addEventListener ("keydown", this.onKeyDownBound, false);
 }
 
+positron.trigger.KeyDownTrigger.prototype.requiresCancel = function ()
+{
+	return true;
+}
 /**
 *
 * @license
@@ -10445,41 +11062,48 @@ positron.trigger.KeyPressTrigger = function ()
 }
 positron.inherits (positron.trigger.KeyPressTrigger, positron.trigger.Trigger);
 
+positron.trigger.KeyPressTrigger.prototype.cancel = function ()
+{
+	window.removeEventListener ("keydown", this.onKeyPressBound);
+}
+
+positron.trigger.KeyPressTrigger.prototype.onKeyPress = function (inEvent)
+{
+	if (this.keyCode == 0 || this.keyCode == inEvent.keyCode || this.keyCode == inEvent.keyIdentifier.toLowerCase ())
+	{
+		this.action.fire (inEvent);
+	}
+}
+
 positron.trigger.KeyPressTrigger.prototype.register = function (inAction)
 {
 	console.log ("KeyPressTrigger.register()");
 	
-	var	keyCode = 0;
+	this.action = inAction;
+	this.keyCode = 0;
 	
 	if (inAction.triggerArgs.length > 0)
 	{
 		var	keyName = inAction.triggerArgs [0];
 		
-		keyCode = parseInt (keyName);
+		this.keyCode = parseInt (keyName);
 		
 		if (isNaN (keyCode))
 		{
 			// could be a key identifier
-			keyCode = keyName;
+			this.keyCode = keyName;
 		}
 	}
-		
-	// keypress elements always on document
-	// window is legal on everything except IE9-
-	document.addEventListener
-	(
-		"keypress",
-		function (inEvent)
-		{
-			if (keyCode == 0 || keyCode == inEvent.keyCode || keyCode == inEvent.keyIdentifier.toLowerCase ())
-			{
-				inAction.fire (inEvent);
-			}
-		},
-		false
-	);
+	
+	this.onKeyPressBound = this.onKeyPress.bind (this);
+	
+	window.addEventListener ("keypress", this.onKeyPressBound, false);
 }
 
+positron.trigger.KeyPressTrigger.prototype.requiresCancel = function ()
+{
+	return true;
+}
 /**
 *
 * @license
@@ -10504,11 +11128,6 @@ positron.trigger.LocationTrigger.prototype.cancel = function ()
 	}
 }
 
-positron.trigger.LocationTrigger.prototype.isDeferred = function ()
-{
-	return true;
-}
-
 positron.trigger.LocationTrigger.prototype.register = function (inAction)
 {
 	console.log ("LocationTrigger.register()");
@@ -10523,7 +11142,7 @@ positron.trigger.LocationTrigger.prototype.register = function (inAction)
 			{
 				if (positron.DOM.isValidNode (inAction.element))
 				{
-					inAction.params.position = inPosition;
+					inAction.setParam ("position", inPosition);
 					inAction.fire ();
 				}
 				else
@@ -10885,6 +11504,110 @@ positron.trigger.PrefixedEventTrigger.prototype.register = function (inAction)
 *
 **/
 
+positron.provide ("positron.trigger.RefreshViewTrigger");
+
+positron.trigger.RefreshViewTrigger = function ()
+{
+	positron.trigger.Trigger.call (this);
+}
+positron.inherits (positron.trigger.RefreshViewTrigger, positron.trigger.Trigger);
+
+positron.trigger.RefreshViewTrigger.prototype.cancel = function ()
+{
+	window.removeEventListener (gApplication.getEventPrefix () + "refreshview", this.onRefreshViewBound);
+}
+
+positron.trigger.RefreshViewTrigger.prototype.onRefreshView = function (inEvent)
+{
+	if (inEvent.detail && (inEvent.detail.viewKey == this.viewKey))
+	{
+		this.action.fire (inEvent);
+	}
+}
+
+positron.trigger.RefreshViewTrigger.prototype.register = function (inAction)
+{
+	// console.log ("RefreshViewTrigger.register()");
+	
+	if (inAction.triggerArgs.length > 0 && inAction.triggerArgs [0].length > 0)
+	{
+		this.action = inAction;
+		this.viewKey = inAction.triggerArgs [0];
+		
+		this.onRefreshViewBound = this.onRefreshView.bind (this);
+
+		window.addEventListener (gApplication.getEventPrefix () + "refreshview", this.onRefreshViewBound, false);
+	}
+	else
+	{
+		console.error ("RefreshViewTrigger with no view key");
+	}
+	
+}
+
+positron.trigger.RefreshViewTrigger.prototype.requiresCancel = function ()
+{
+	return this.action != null;
+}
+/**
+*
+* @license
+* Copyright © 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
+positron.provide ("positron.trigger.ShowViewTrigger");
+
+positron.trigger.ShowViewTrigger = function ()
+{
+	positron.trigger.Trigger.call (this);
+}
+positron.inherits (positron.trigger.ShowViewTrigger, positron.trigger.Trigger);
+
+positron.trigger.ShowViewTrigger.prototype.cancel = function ()
+{
+	window.removeEventListener (gApplication.getEventPrefix () + "showview", this.onShowViewBound);
+}
+
+positron.trigger.ShowViewTrigger.prototype.onShowView = function (inEvent)
+{
+	if (inEvent.detail && (inEvent.detail.viewKey == this.viewKey))
+	{
+		this.action.fire (inEvent);
+	}
+}
+
+positron.trigger.ShowViewTrigger.prototype.register = function (inAction)
+{
+	// console.log ("ShowViewTrigger.register()");
+	
+	if (inAction.triggerArgs.length > 0 && inAction.triggerArgs [0].length > 0)
+	{
+		this.action = inAction;
+		this.viewKey = inAction.triggerArgs [0];
+		
+		this.onShowViewBound = this.onShowView.bind (this);
+
+		window.addEventListener (gApplication.getEventPrefix () + "showview", this.onShowViewBound, false);
+	}
+	else
+	{
+		console.error ("ShowViewTrigger with no view key");
+	}
+	
+}
+
+positron.trigger.ShowViewTrigger.prototype.requiresCancel = function ()
+{
+	return this.action != null;
+}
+/**
+*
+* @license
+* Copyright © 2013 Jason Proctor.  All rights reserved.
+*
+**/
+
 positron.provide ("positron.trigger.WebSocketMessageTrigger");
 
 positron.trigger.WebSocketMessageTrigger = function ()
@@ -10900,11 +11623,6 @@ positron.trigger.WebSocketMessageTrigger.prototype.cancel = function ()
 		this.webSocket.onmessage = null;
 		this.webSocket = null;
 	}
-}
-
-positron.trigger.WebSocketMessageTrigger.prototype.isDeferred = function ()
-{
-	return true;
 }
 
 positron.trigger.WebSocketMessageTrigger.prototype.register = function (inAction, inContext)
@@ -10971,6 +11689,485 @@ positron.trigger.WebSocketMessageTrigger.prototype.requiresCancel = function ()
 {
 	return true;
 }
+
+positron.provide ("positron.view.MediaClientView");
+
+positron.view.MediaClientView = function ()
+{
+	positron.View.call (this);
+};
+positron.inherits (positron.view.MediaClientView, positron.View);
+
+// VIEW OVERRIDES
+
+// EVENT HANDLERS
+
+positron.view.MediaClientView.prototype.onMouseDown = function (inEvent)
+{
+	this.mouseDown = true;
+
+	var	width = parseInt (window.getComputedStyle (this.element).width);
+	
+	if (inEvent.changedTouches)
+	{
+		this.setPositionFromFraction ((inEvent.changedTouches [0].pageX - inEvent.target.offsetLeft) / width);
+	}
+	else
+	{
+		this.setPositionFromFraction (inEvent.offsetX / width);
+	}
+}
+
+positron.view.MediaClientView.prototype.onMouseMove = function (inEvent)
+{
+	if (this.mouseDown)
+	{
+		var	width = parseInt (window.getComputedStyle (this.element).width);
+	
+		if (inEvent.changedTouches)
+		{
+			this.setPositionFromFraction ((inEvent.changedTouches [0].pageX - inEvent.target.offsetLeft) / width);
+		}
+		else
+		{
+			this.setPositionFromFraction (inEvent.offsetX / width);
+		}
+	}
+}
+
+positron.view.MediaClientView.prototype.onMouseUp = function (inEvent)
+{
+	this.mouseDown = false;
+}
+
+// API
+
+positron.view.MediaClientView.prototype.play = function ()
+{
+	// console.log ("positron.view.MediaClientView.play()");
+
+	var	mediaView = gApplication.getView (positron.DOM.getPrefixedAttribute (this.element, "media-view"));
+	
+	if (mediaView)
+	{
+		mediaView.play ();
+	}
+	else
+	{
+		console.error ("play() called with no media server view");
+	}
+}
+
+positron.view.MediaClientView.prototype.pause = function ()
+{
+	// console.log ("positron.view.MediaClientView.pause()");
+
+	var	mediaView = gApplication.getView (positron.DOM.getPrefixedAttribute (this.element, "media-view"));
+	
+	if (mediaView)
+	{
+		mediaView.pause ();
+	}
+	else
+	{
+		console.error ("pause() called with no media server view");
+	}
+}
+
+// fraction runs 0..1
+positron.view.MediaClientView.prototype.setPositionFromFraction = function (inFraction)
+{
+	// console.log ("positron.view.MediaClientView.setPositionFromFraction() " + inFraction);
+
+	var	mediaView = gApplication.getView (positron.DOM.getPrefixedAttribute (this.element, "media-view"));
+	
+	if (mediaView)
+	{
+		mediaView.setPositionFromFraction (inFraction);
+	}
+	else
+	{
+		console.error ("positron.view.MediaClientView.setPositionFromFraction() called with no media server view");
+	}
+}
+
+// percent runs 0..100
+positron.view.MediaClientView.prototype.setPositionFromPercent = function (inPercent)
+{
+	// console.log ("positron.view.MediaClientView.setPositionFromPercent() " + inPercent);
+
+	var	mediaView = gApplication.getView (positron.DOM.getPrefixedAttribute (this.element, "media-view"));
+	
+	if (mediaView)
+	{
+		mediaView.setPositionFromPercent (inPercent);
+	}
+	else
+	{
+		console.error ("positron.view.MediaClientView.setPositionFromPercent() called with no media server view");
+	}
+}
+
+
+positron.provide ("positron.view.MediaServerView");
+
+positron.view.MediaServerView = function ()
+{
+	positron.View.call (this);
+	
+	this.events = 
+	[
+		"canplay",
+		"canplaythrough",
+		"ended",
+		"loadedmetadata",
+		"pause",
+		"play",
+		"progress",
+		"timeupdate"
+	];
+	
+};
+
+positron.inherits (positron.view.MediaServerView, positron.View);
+
+// VIEW OVERRIDES
+
+positron.view.MediaServerView.prototype.onDOMReady = function ()
+{
+	positron.View.prototype.onDOMReady.call (this);
+	
+	this.mediaElement = this.element.querySelector ("video,audio");
+	
+	if (this.mediaElement)
+	{
+		// can't cleanly decide whether to add autoplay attribute in markup, so...
+		if (this.params.autoplay && (this.params.autoplay == "true"))
+		{
+			this.mediaElement.setAttribute ("autoplay", "true");
+		}
+		
+		var	self = this;
+		
+		// we COULD do this in markup, but since there are 7 of them...
+		for (var i = 0; i < this.events.length; i++)
+		{
+			this.mediaElement.addEventListener
+			(
+				this.events [i],
+				function (inEvent)
+				{
+					self.onMediaEvent (inEvent);
+				},
+				false
+			);
+		}
+	}
+	
+	// first init, or new source, results in reset status
+	this.mediaState = new Object ();
+	this.mediaState.loadedmetadata = false;
+	this.mediaState.playing = false;
+	this.mediaState.ended = false;
+	this.mediaState.canplay = false;
+	this.mediaState.canplaythrough = false;
+	
+	this.mediaState.progress = new Object ();
+	this.mediaState.progress.percent = 0;
+	this.mediaState.progress.ratio = 0;
+	this.mediaState.progress.hours = 0;
+	this.mediaState.progress.minutes = 0;
+	this.mediaState.progress.seconds = 0;
+	this.mediaState.progress.milliseconds = 0;
+
+	this.mediaState.play = new Object ();
+	this.mediaState.play.percent = 0;
+	this.mediaState.play.ratio = 0;
+	this.mediaState.play.hours = 0;
+	this.mediaState.play.minutes = 0;
+	this.mediaState.play.seconds = 0;
+	this.mediaState.play.milliseconds = 0;
+
+	this.mediaState.remaining = new Object ();
+	this.mediaState.remaining.hours = 0;
+	this.mediaState.remaining.minutes = 0;
+	this.mediaState.remaining.seconds = 0;
+	this.mediaState.remaining.milliseconds = 0;
+
+	this.mediaState.duration = new Object ();
+	this.mediaState.duration.hours = 0;
+	this.mediaState.duration.minutes = 0;
+	this.mediaState.duration.seconds = 0;
+	this.mediaState.duration.milliseconds = 0;
+
+}
+
+// API
+
+positron.view.MediaServerView.prototype.play = function ()
+{
+	if (this.mediaElement)
+	{
+		if (! this.mediaState.playing)
+		{
+			this.mediaElement.play ();
+		}
+	}
+	else
+	{
+		console.error ("media element is not present");
+	}
+}
+
+positron.view.MediaServerView.prototype.pause = function ()
+{
+	if (this.mediaElement)
+	{
+		this.mediaElement.pause ();
+	}
+	else
+	{
+		console.error ("media element is not present");
+	}
+}
+
+// fraction runs 0..1
+positron.view.MediaServerView.prototype.setPositionFromFraction = function (inFraction)
+{
+	if (this.mediaElement)
+	{
+		if (typeof (this.mediaElement.duration) == "number")
+		{
+			if (inFraction >= 0 && inFraction <= 1)
+			{
+				this.mediaElement.currentTime = inFraction * this.mediaElement.duration;
+			}
+			else
+			{
+				console.error ("setPositionFromFraction() called with bad fraction: " + inFraction);
+			}
+		}
+		else
+		{
+			console.error ("setPositionFromFraction() called before duration known");
+		}
+	}
+	else
+	{
+		console.error ("setPositionFromFraction() called with no media element");
+	}
+}
+
+// percent runs 0..100
+positron.view.MediaServerView.prototype.setPositionFromPercent = function (inPercent)
+{
+	if (this.mediaElement)
+	{
+		if (typeof (this.mediaElement.duration) == "number")
+		{
+			if (inPercent >= 0 && inPercent <= 100)
+			{
+				var	fraction = inPercent / 100;
+				
+				this.mediaElement.currentTime = fraction * this.mediaElement.duration;
+			}
+			else
+			{
+				console.error ("setPositionFromPercent() called with bad percent: " + inPercent);
+			}
+		}
+		else
+		{
+			console.error ("setPositionFromPercent() called before duration known");
+		}
+	}
+	else
+	{
+		console.error ("setPositionFromPercent() called with no media element");
+	}
+}
+
+// CALLBACKS
+
+positron.view.MediaServerView.prototype.onMediaEvent = function (inEvent)
+{
+	// console.log ("positron.view.MediaServerView.onMediaEvent() with type " + inEvent.type);
+	// console.log (inEvent);
+	
+	// we keep our own status around to account for browser irregularities, etc
+	// and so clients always have the current state available
+	this.updateState (inEvent);
+	
+	// find the media clients with this view as their server
+	// TODO may want to cache this list during playback?
+	var	clients = document.querySelectorAll
+		("[" + gApplication.getCSSClassPrefix () + "media-view=" + this.key + "]");
+	
+	for (var i = 0; i < clients.length; i++)
+	{
+		var	sendEvent = true;
+		
+		var	listenerEvents = positron.DOM.getPrefixedAttribute (clients [i], "media-events");
+		
+		if (listenerEvents && listenerEvents.length)
+		{
+			sendEvent = false;
+			
+			var	listenerEventElements = listenerEvents.split (',');
+			
+			for (var j = 0; j < listenerEventElements.length; j++)
+			{
+				if (inEvent.type == positron.Util.stripSpaces (listenerEventElements [j]))
+				{
+					sendEvent = true;
+					break;
+				}
+			}
+		}
+		else
+		{
+			// the default is "receive all events"
+		}
+		
+		if (sendEvent)
+		{
+			var	clientView = positron.DOM.getData (clients [i], "view");
+
+			if (clientView)
+			{
+				// get rid of onMediaEvent()
+				// because we're just doing regular Positron mechanics here
+				clientView.setParam ("event", inEvent);
+				clientView.setParam ("mediastate", this.mediaState);
+				clientView.refresh ();
+			}
+		}
+	}
+}
+
+// PRIVATE METHODS
+
+positron.view.MediaServerView.prototype.convertTime = function (inTime, outConverted)
+{
+	var	fullSeconds = Math.floor (inTime);
+	
+	outConverted.milliseconds = Math.floor ((inTime - fullSeconds) * 1000);
+	outConverted.seconds = fullSeconds % 60;
+	outConverted.minutes = Math.floor ((fullSeconds / 60) % 60);
+	outConverted.hours = Math.floor (fullSeconds / 3600);
+}
+
+positron.view.MediaServerView.prototype.updateState = function (inEvent)
+{
+	if (inEvent.type == "loadedmetadata")
+	{
+		this.mediaState.loadedmetadata = true;
+		
+		this.mediaState.duration.value = this.mediaElement.duration;
+		this.convertTime (this.mediaElement.duration, this.mediaState.duration);
+	}
+	else
+	if (inEvent.type == "canplay")
+	{
+		this.mediaState.canplay = true;
+	}
+	else
+	if (inEvent.type == "canplaythrough")
+	{
+		this.mediaState.canplaythrough = true;
+	}
+	else
+	if (inEvent.type == "progress")
+	{
+		// careful, some browsers give us progress without duration, sigh
+		if (typeof (this.mediaElement.duration) == "number" && !isNaN (this.mediaElement.duration))
+		{
+			this.mediaState.progress.value = this.mediaElement.currentTime;
+
+			var	bufferedEnd = 0;
+			
+			// careful again, can get issues with end(0) here :-\
+			try
+			{
+				bufferedEnd = this.mediaElement.buffered.end (0);
+			}
+			catch (inError)
+			{
+				this.mediaState.progress.percent = 0;
+			}
+
+			// percent is 0..100
+			this.mediaState.progress.percent = bufferedEnd / this.mediaElement.duration;
+			this.mediaState.progress.percent = Math.round (this.mediaState.progress.percent * 100);
+			
+			// ratio is 0..1 in 100ths
+			this.mediaState.progress.ratio = this.mediaState.progress.percent / 100;
+			
+			// calculate real time
+			this.convertTime (bufferedEnd, this.mediaState.progress);
+		}
+	}
+	else
+	if (inEvent.type == "play")
+	{
+		this.mediaState.playing = true;
+		this.mediaState.paused = false;
+		this.mediaState.ended = false;
+	}
+	else
+	if (inEvent.type == "pause")
+	{
+		this.mediaState.playing = false;
+		this.mediaState.paused = true;
+	}
+	else
+	if (inEvent.type == "ended")
+	{
+		this.mediaState.playing = false;
+		this.mediaState.ended = true;
+		
+		if (! this.mediaState.paused)
+		{
+			// ok so we didn't get a pause event prior to the ended event
+			// which means that the next time we call play() we won't get a play event
+			// known Safari problem
+			// solution is to call pause() ourselves
+			this.mediaElement.pause ();
+		}
+	}
+	else
+	if (inEvent.type == "timeupdate")
+	{
+		// careful, some browsers give us progress without duration, sigh
+		if (typeof (this.mediaElement.duration) == "number" && !isNaN (this.mediaElement.duration))
+		{
+			this.mediaState.play.value = this.mediaElement.currentTime;
+
+			// percent is 0..100
+			this.mediaState.play.percent = this.mediaElement.currentTime / this.mediaElement.duration;
+			this.mediaState.play.percent = Math.round (this.mediaState.play.percent * 100);
+
+			// ratio is 0..1 in 100ths
+			this.mediaState.play.ratio = this.mediaState.play.percent / 100;
+			
+			// calculate real time
+			this.convertTime (this.mediaElement.currentTime, this.mediaState.play);
+			
+			this.mediaState.remaining.value = this.mediaElement.duration - this.mediaElement.currentTime;
+
+			// percent is 0..100
+			this.mediaState.remaining.percent = this.mediaState.remaining.value / this.mediaElement.duration;
+			this.mediaState.remaining.percent = Math.round (this.mediaState.remaining.percent * 100);
+			
+			// ratio is 0..1 in 100ths
+			this.mediaState.remaining.ratio = this.mediaState.remaining.percent / 100;
+
+			// calculate real time
+			this.convertTime (this.mediaState.remaining.value, this.mediaState.remaining);
+		}
+	}
+}
+
 /**
 *
 * @license
@@ -11415,6 +12612,12 @@ function RefreshTreeWalker_onElement (inElement, inContext)
 		
 		var	tagName = inElement.tagName.toLowerCase ();
 		var	taglet = gApplication.getTaglet (tagName);
+		
+		// post-prefix change, squawk if a tag with a prefix doesn't have a taglet
+		if (!taglet && (tagName.indexOf ('-') > 0))
+		{
+			console.error ("tag with prefix <" + tagName + "> does not have associated taglet");
+		}
 		
 		if (taglet)
 		{
@@ -12018,7 +13221,7 @@ function Application_getCSSClassPrefix ()
 }
 
 positron.Application.prototype.getEventPrefix = 
-function Application_getCSSClassPrefix ()
+function Application_getEventPrefix ()
 {
 	return this.config.eventPrefix;
 }
@@ -12157,6 +13360,7 @@ positron.Application.prototype.getViewlet =
 function Application_getViewlet (inViewName, inLoadFlags)
 {
 	var	view = null;
+	var	error = null;
 	
 	// try the view name mapping first
 	var	viewClass = this.config.views [inViewName];
@@ -12245,6 +13449,11 @@ function Application_getWebSocket (inName)
 	return this.webSockets [inName];
 }
 
+positron.Application.prototype.readWebSocket = 
+function Application_readWebSocket (inName, inCallback)
+{
+}
+
 positron.Application.prototype.removeWebSocket = 
 function Application_removeWebSocket (inName)
 {
@@ -12275,6 +13484,12 @@ function Application_removeWebSocket (inName)
 		// as a result of the call from add() above
 		// so don't log this
 	}
+}
+
+positron.Application.prototype.fireAction = 
+function Application_fireAction (inActionString, inActionParams)
+{
+	return positron.ActionFactory.fireAction (inActionString, inActionParams);
 }
 
 positron.Application.prototype.fireAnalyticsEvent = 
@@ -12336,9 +13551,16 @@ function Application_getConfigEntryWithDefault (inConfigKey, inDefaultValue)
 	return value;
 }
 
-// escape awkward characters
+// escape just quotes
 positron.Application.prototype.escapeText = 
 function Application_escapeText (inText)
+{
+	return positron.Util.replaceAll (inText, "'", "&#39;");
+}		
+
+// this one does way too much and messes up URLs in params etc
+positron.Application.prototype.escapeTextOld = 
+function Application_escapeTextOld (inText)
 {
 	var	escapedText = "";
 	var	entity = null;
@@ -12547,7 +13769,7 @@ function Application_expandText (inText, inContext, inEscapeText)
 			textBuffer += ch;
 		}
 		else
-		if (ch == '_' || ch == '.' || ch == ':' || ch == '-')
+		if (ch == '_' || ch == '.' || ch == ':' || ch == '-' || ch == '#')
 		{
 			textBuffer += ch;
 		}

@@ -10,55 +10,66 @@
 		Save a custom flavor profile to compare our beers, and keep a list of your favorites.
 	</div>
 	
-	<pos-if true="'$params.action;' == 'login'">
-		<div pos-view="forms-login:" id="login" class="form">
+	<p-if true="'$params.action;' == 'login'">
+		<div p-view="forms-login:" id="login" class="form">
+			
+			<form id="facebook">
+				<input type="hidden" name="protocol" value="fb">
+				<button type="submit" style="background: #3b5998;">
+					<span class="signin"><span class="ding">G</span> SIGN IN</span>
+					<span class="loading p-invisible"><img src="img/ajax_loader_gray_512.gif" width="26" height="26"></span>
+				</button>
+			</form>
 			
 			<form
-				pos-action-1="(submit) ajaxform"
-				pos-action-2="(pos-ajaxformsuccess) hideview: forms"
+				class="p-invisible"
+				p-action-1="(submit) ajaxform"
+				p-action-2="(p-ajaxform) call: login"
 				method="GET"
-				action="#urltoregister"
+				action="http://localbrewingco.com/cms/wp-admin/admin-ajax.php?action=ajaxLogin"
 			>
-				<input type="email" id="email" name="email" required="true" placeholder="Email">
-				<input type="password" id="password" name="password" required="true" placeholder="Password">
+				<input type="email" id="email" name="user_login" required="true" placeholder="Email">
+				<input type="password" id="password" name="user_password" required="true" placeholder="Password">
+				<input type="hidden" name="protocol" value="wp">
 				<button type="submit">SIGN IN</button>
 			</form>
 			
 			<div
-				pos-action-1="refreshview: forms"
-				pos-action-1-params="action: register;"
-				class="switch"
+				p-action-1="refreshview: forms"
+				p-action-1-params="action: register;"
+				class="switch p-invisible"
 			>Don't have an account? <span class="red">Register</span></div>
 			
-			<!-- <div pos-action-1="hideview: forms/nu-slide-out-to-right">CLOSE</div> -->
+			<!-- <div p-action-1="hideview: forms/nu-slide-out-to-right">CLOSE</div> -->
 			
 		</div>
-	</pos-if>
+	</p-if>
 	
-	<pos-if true="'$params.action;' == 'register'">
-		<div pos-view="forms-register:" id="register" class="form">
+	<p-if true="'$params.action;' == 'register'">
+		<div p-view="forms-register:" id="register" class="form">
 						
 			<form
-				pos-action-1="(submit) ajaxform"
-				pos-action-2="(pos-ajaxformsuccess) hideview: forms"
+				p-action-1="(submit) ajaxform"
+				p-action-2="(p-ajaxform) call: register"
 				method="GET"
-				action="#urltoregister"
+				action="http://localbrewingco.com/cms/wp-admin/admin-ajax.php?action=ajaxRegister"
 			>
-				<input type="text" id="name" name="name" required="true" placeholder="Name">
 				<input type="email" id="email" name="email" required="true" placeholder="Email">
 				<input type="password" id="password" name="password" required="true" placeholder="Password">
+				<input type="password" id="confirm_password" name="confirm_password" required="true" placeholder="Confirm Password">
+				<input type="hidden" id="honeypot" name="honeypot">
 				<button type="submit">REGISTER</button>
 			</form>
 			
 			<div
-				pos-action-1="refreshview: forms"
-				pos-action-1-params="action: login;"
+				p-action-1="refreshview: forms"
+				p-action-1-params="action: login;"
 				class="switch"
 			>Already got one? <span class="red">Sign In</span></div>
 			
-			<!-- <div pos-action-1="hideview: forms/nu-slide-out-to-right">CLOSE</div> -->
+			<!-- <div p-action-1="hideview: forms/nu-slide-out-to-right">CLOSE</div> -->
 			
 		</div>
-	</pos-if>
+	</p-if>
 	
 </div>

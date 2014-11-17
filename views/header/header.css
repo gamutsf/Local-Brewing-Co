@@ -16,7 +16,8 @@ header {
 		position: absolute;
 		text-align: center;
 	}
-		header .btn:active:before {
+		header .btn:active:before,
+		header .btn:active {
 			color: #383838;
 		}
 		header .btn.icon-dots, 
@@ -34,6 +35,22 @@ header {
 			header .btn.right.share {
 				right: 50px;
 			}
+			header .btn.right .avatar {
+				border-radius: 50%;
+				overflow: hidden;
+				width: 32px;
+				height: 32px;
+				margin: 0 auto;
+				display: block;
+				margin-top: 14px;
+				position: relative;
+			}
+				header .btn.right .avatar img {
+					position: absolute;
+					left: 0px;
+					top: 0px;
+					width: 100%;
+				}
 	header .section-name {
 		text-align: center;
 		color: white;
