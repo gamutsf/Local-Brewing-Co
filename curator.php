@@ -8,7 +8,35 @@
 	<section p-view="beerfinder" class="p-visible beer-finder"></section>
 	-->
 	<!-- <section p-view="forms" class="single p-invisible" p-view-params="action: login;"></section> -->
+	
+	<p-localstorage key="lbc_user">
+		<p-if notempty="$localstorage.lbc_user;">
+	
+			<p-json
+				url="http://localbrewingco.com/cms/user/?userid=$localstorage.lbc_user;"
+				name="user"
+				cachekey="userdata"
+			>
+				
+				<p-if true="'$user.onboard;' == 'false'">
+					<section p-view="onboard" class="onboard p-visible"></section>
+				</p-if>
+
+			</p-json>
+			
+		</p-if>
+		
+		<p-if empty="$localstorage.lbc_user;">
+			<p-localstorage key="lbc_onboard">
+				<p-if empty="$localstorage.lbc_onboard;">
+					<section p-view="onboard" class="onboard p-visible"></section>
+				</p-if>
+			</p-localstorage>
+		</p-if>
+	</p-localstorage>
+	
 	<section p-view="results" class="results p-visible"></section>
+	
 	<!-- <section p-view="single" class="single p-invisible"></section> -->
 	
 	<!--

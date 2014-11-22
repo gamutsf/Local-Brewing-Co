@@ -61,6 +61,7 @@
 			color: white;
 			font-family: 'Trade Gothic Bold', Arial, Helvetica, sans-serif;
 			font-weight: 300;
+			max-height: 62px;
 		}
 			#forms form button .ding {
 				font-size: 35px;

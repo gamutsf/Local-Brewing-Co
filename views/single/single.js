@@ -10,6 +10,12 @@ SingleView.prototype.onDOMReady = function ()
 {
 	console.log ("SingleView.onDOMReady()");
 	
+	// If we're saving something after logging in, save it
+	if(this.params.action == "savefavorite"){
+		$('.fave[data-faveid="'+ this.params.id +'"]').addClass('active');
+		SingleView.prototype.fave.call(this);
+	}
+	
 	//window.scrollTo(0, 0);
 	
 	/*

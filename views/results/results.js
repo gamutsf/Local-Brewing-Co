@@ -16,9 +16,54 @@ positron.inherits (ResultsView, positron.View);
 
 ResultsView.prototype.onDOMReady = function ()
 {
-	//console.log ("ResultsView.onDOMReady()");
+	console.log ("ResultsView.onDOMReady()");
 	
 	var self = this;
+	
+	// If we have something in history, run when the page loads
+	$(window).load(function(){
+		if( localStorage.lbc_saveprofile ){
+			
+			var profile = JSON.parse( localStorage.getItem('lbc_saveprofile') );
+			
+			// Now that we have it, remove it from LS
+			localStorage.removeItem('lbc_saveprofile');
+			
+			beerProfile.hoppy = profile.hoppy;
+			beerProfile.boozy = profile.boozy;
+			beerProfile.complex = profile.complex;
+			
+			var params = new Object();
+					params.section = 'save-profile';
+			gApplication.showView('menu', params);
+			
+			$('.tab.hoppyness .filter-value').text(beerProfile.hoppy);
+			$('.tab.alcohol .filter-value').text(beerProfile.boozy);
+			$('.tab.complexity .filter-value').text(beerProfile.complex);
+			
+		}
+		
+		if( localStorage.lbc_favorite ){
+			
+			var favorite = JSON.parse( localStorage.getItem('lbc_favorite') );
+			
+			// Now that we have it, remove it from LS
+			localStorage.removeItem('lbc_favorite');
+			
+			var params = new Object();
+					params.id = favorite.id;
+					params.name = favorite.name;
+					params.hoppyness = favorite.hoppyness;
+					params.alcohol = favorite.alcohol;
+					params.complexity = favorite.complexity;
+					params.action = 'savefavorite';
+					 
+			gApplication.showView('single', params);
+			
+			$('.beer-sum').addClass('noclick');
+			
+		}
+	});
 	
 	self.rangeOutput();
 	

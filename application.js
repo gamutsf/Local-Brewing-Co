@@ -22,7 +22,7 @@ Application.prototype.findMatches = function (){
 	 var variability = 1;
 	 
 	 $.ajax({
-	   url: "http://localbrewingco.com/cms/json?type=beerlist",
+	   url: "http://localbrewingco.com/cms/json/?type=beerlist",
 	   dataType: "jsonp",
 	   success: function(inData){
 		   //console.log(inData);
@@ -269,4 +269,55 @@ Application.prototype.clearUserdata = function ()
 {
 	var current_user = null;
 	delete gApplication.cache.cache.userdata;
+}
+
+Application.prototype.history = function ()
+{
+	var params = this.params;
+	console.log(params);
+	
+	if(params.action == "saveprofile"){
+		
+		if( (beerProfile.hoppy > 0) && (beerProfile.boozy > 0) && (beerProfile.complex > 0) ){
+		
+			// Get profile info
+			var profile = { 'hoppy': beerProfile.hoppy, 'boozy': beerProfile.boozy, 'complex': beerProfile.complex };
+			localStorage.setItem('lbc_saveprofile', JSON.stringify(profile));
+			
+			console.log('profile stored');
+		
+		}
+		
+	}
+	
+	if(params.action == "savefavorite"){
+		
+		// Get profile info
+		var favorite = { 'id': params.id, 'name': params.name, 'hoppyness': params.hoppyness, 'alcohol': params.alcohol, 'complexity': params.complexity };
+		localStorage.setItem('lbc_favorite', JSON.stringify(favorite));
+		
+		console.log('favorite stored');
+		
+	}
+}
+
+Application.prototype.isOnboard = function ()
+{
+	console.log('fire onboard success');
+	
+	if(localStorage.lbc_user){
+		$.ajax({
+			url: "http://localbrewingco.com/cms/wp-admin/admin-ajax.php?action=ajaxOnboard&user_id="+ localStorage.lbc_user,
+			dataType: "jsonp",
+			success: function(inData){
+				
+				console.log(inData);
+				
+				if(inData.status == "success"){
+					Application.prototype.refreshUserdata.call(this);
+				}
+			  
+			}
+		});
+	}	
 }

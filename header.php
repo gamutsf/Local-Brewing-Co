@@ -39,10 +39,6 @@
 	// Global matches array
 			
 	var output = [];
-			
-	/* Test user account related stuff */
-	
-	var user = new Object();
 	
 			
 	/* Libs */

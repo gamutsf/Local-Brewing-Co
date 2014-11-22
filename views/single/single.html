@@ -182,7 +182,7 @@
 	-->
 
 	<p-json
-		url="http://localbrewingco.com/cms/json?type=beerlist&callback="
+		url="http://localbrewingco.com/cms/json/?type=beerlist"
 		jsonp="true"
 		cachekey="beerlist"
 		name="beers"
@@ -256,6 +256,8 @@
 								p-action-1-params="action: login;"
 								p-action-2="(click) refreshview: userlogin"
 								p-action-2-params="state: close;"
+								p-action-3="(click) call: history"
+								p-action-3-params="action: savefavorite;; id: $beer.id;; name: $beer.name;; hoppyness: $beer.hoppyness;; alcohol: $beer.alcohol;; complexity: $beer.complexity;;"
 							>&#9733;</div>
 						</p-if>
 					</p-localstorage>

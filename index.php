@@ -56,7 +56,7 @@
 			<a href="./curator.php">
 				<h3>Find your <span>perfect brew</span></h3>
 				<div class="preview clearfix">
-					<img src="img/roundy.png" alt="home-selector-img" />
+					<img src="img/guide-1.png" alt="home-selector-img" />
 				</div>
 				<ul class="clearfix">
 					<li>Explore our beer list by Bitterness, Alcohol Volume, and Complexity</li>
