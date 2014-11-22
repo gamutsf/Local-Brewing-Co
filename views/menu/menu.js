@@ -129,6 +129,8 @@ MenuView.prototype.addProfile = function (e)
 	gApplication.refreshView('profile', params);
 	gApplication.hideView('menu');
 	
+	window.scrollTo(0,0);
+	
 	
 	// Actually save it...
 	
